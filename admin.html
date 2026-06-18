@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Sophic Rentals — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#08090B;--surface:#15181D;--line:#262B33;--text:#F4F6F8;--muted:#9AA1AC;--accent:#00E0A4;--accent-ink:#04140F;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:24px}
+  .wrap{max-width:1200px;margin:0 auto}
+  h1{font-size:24px;font-weight:900;letter-spacing:-.02em}
+  .mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:linear-gradient(120deg,#00E0A4,#19B6FF);color:var(--accent-ink);font-weight:900;margin-right:8px;vertical-align:middle}
+  .sub{color:var(--muted);font-size:14px;margin-top:4px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:22px}
+  label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+  input{background:#0E1013;border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-size:15px;font-family:inherit;width:280px;max-width:100%}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px}
+  button{background:linear-gradient(120deg,#00E0A4,#19B6FF);color:var(--accent-ink);border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer;font-family:inherit;font-size:15px;margin-top:12px}
+  button.ghost{background:#1C2026;color:var(--text);border:1px solid var(--line)}
+  .bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:14px}
+  .count{font-size:14px;color:var(--muted)}
+  .err{color:#FF6B6B;font-size:14px;margin-top:10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.05em;position:sticky;top:0;background:var(--surface)}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  .tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:12px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:rgba(0,224,164,.12);color:var(--accent);border:1px solid rgba(0,224,164,.3)}
+  .muted{color:var(--muted)}
+  a.dl{color:var(--accent);font-size:13px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="mark">S</span>Sophic Rentals — Admin</h1>
+  <p class="sub">Driver applications. Authorized access only.</p>
+
+  <div class="card" id="loginCard">
+    <label for="pw">Admin password</label>
+    <input id="pw" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()" />
+    <div><button onclick="login()">Sign in</button></div>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div class="card" id="dataCard" style="display:none">
+    <div class="bar">
+      <div class="count" id="count"></div>
+      <div>
+        <button class="ghost" onclick="load()">Refresh</button>
+        <a class="dl" onclick="exportCsv()">Export CSV</a>
+        <button class="ghost" onclick="logout()">Sign out</button>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table id="tbl"><thead><tr>
+        <th>Received</th><th>Name</th><th>Phone</th><th>Email</th><th>Platform</th>
+        <th>Preferred car</th><th>License #</th><th>State</th><th>Insurance</th>
+      </tr></thead><tbody id="rows"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<script>
+  let PW = '';
+  let DATA = [];
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  async function login(){
+    PW = document.getElementById('pw').value;
+    document.getElementById('loginErr').textContent='';
+    const ok = await load();
+    if(ok){ document.getElementById('loginCard').style.display='none'; document.getElementById('dataCard').style.display='block'; }
+  }
+  function logout(){ PW=''; DATA=[]; document.getElementById('pw').value=''; document.getElementById('dataCard').style.display='none'; document.getElementById('loginCard').style.display='block'; }
+  async function load(){
+    try{
+      const r = await fetch('/api/applications', { headers: { 'x-admin-password': PW } });
+      if(r.status===401){ document.getElementById('loginErr').textContent='Incorrect password.'; return false; }
+      const d = await r.json();
+      if(!r.ok){ document.getElementById('loginErr').textContent='Error loading data.'; return false; }
+      DATA = d.applications || [];
+      render();
+      return true;
+    }catch(e){ document.getElementById('loginErr').textContent='Network error.'; return false; }
+  }
+  function fmt(ts){ if(!ts) return ''; const dt=new Date(ts); return dt.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
+  function render(){
+    document.getElementById('count').textContent = DATA.length + ' application' + (DATA.length===1?'':'s');
+    document.getElementById('rows').innerHTML = DATA.map(a=>`<tr>
+      <td class="muted">${esc(fmt(a.created_at))}</td>
+      <td><b>${esc(a.name)}</b></td>
+      <td>${esc(a.phone)}</td>
+      <td>${esc(a.email)}</td>
+      <td><span class="pill">${esc(a.platform)}</span></td>
+      <td>${esc(a.preferred_car)}</td>
+      <td>${esc(a.license_number)}</td>
+      <td>${esc(a.license_state)}</td>
+      <td>${esc(a.has_insurance)}</td>
+    </tr>`).join('') || '<tr><td colspan="9" class="muted" style="padding:24px">No applications yet.</td></tr>';
+  }
+  function exportCsv(){
+    const cols=['created_at','name','phone','email','platform','preferred_car','license_number','license_state','has_insurance'];
+    const lines=[cols.join(',')].concat(DATA.map(a=>cols.map(c=>'"'+String(a[c]==null?'':a[c]).replace(/"/g,'""')+'"').join(',')));
+    const blob=new Blob([lines.join('\n')],{type:'text/csv'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download='sophic-applications.csv'; a.click(); URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>

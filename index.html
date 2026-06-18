@@ -387,6 +387,7 @@
           <div class="field"><label for="f-license">Valid CA license?</label><select id="f-license" name="license"><option>Yes</option><option>No</option></select></div>
           <div class="field"><label for="f-insurance">Have auto insurance?</label><select id="f-insurance" name="insurance"><option>Yes</option><option>Yes — with rideshare</option><option>Not yet</option></select></div>
         </div>
+        <div class="field"><label for="f-licensenum">Driver's license number</label><input id="f-licensenum" required name="license_number" placeholder="e.g. Y1234567" autocomplete="off" /></div>
         <p class="req-note">To rent, you’ll need to be 21+ with a valid CA license and active insurance (rideshare coverage if you drive apps). The $9.99 fee covers verification.</p>
         <div class="fee-box"><span>One-time application fee</span><b class="accent">$9.99</b></div>
         <button class="btn btn-primary" type="submit" id="applySubmit">Pay $9.99 &amp; submit application</button>
@@ -493,17 +494,25 @@
     if(lastFocus&&lastFocus.focus) lastFocus.focus();
   }
   function sani(s){return (s||'').toString().replace(/[^a-zA-Z0-9]+/g,'-').slice(0,40);}
-  function submitApply(e){
+  function val(id){var el=document.getElementById(id);return el?el.value:'';}
+  async function submitApply(e){
     e.preventDefault();
     const btn=document.getElementById('applySubmit');
-    btn.disabled=true; btn.textContent='Redirecting to secure checkout…';
+    btn.disabled=true; btn.textContent='Submitting…';
+    const payload={
+      name:val('f-name'), phone:val('f-phone'), email:val('f-email'),
+      platform:val('f-platform'), car:val('f-car'),
+      license:val('f-license'), license_number:val('f-licensenum'), insurance:val('f-insurance')
+    };
+    // Save the application to our backend first (so even abandoned-at-Stripe apps are captured)
+    try{
+      await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    }catch(_){/* don't block the applicant if the save hiccups */}
     if(STRIPE_APPLICATION_LINK){
-      const f=e.target;
-      const email=encodeURIComponent(f.email.value||'');
-      // pass qualifying info to Stripe so the owner sees it on the payment
-      const ref=['car',sani(f.car.value),'plat',sani(f.platform.value),'lic',sani(f.license.value),'ins',sani(f.insurance.value)].join('-').slice(0,190);
-      const url=STRIPE_APPLICATION_LINK+'?prefilled_email='+email+'&client_reference_id='+encodeURIComponent(ref);
-      window.location.href=url;
+      btn.textContent='Redirecting to secure checkout…';
+      const email=encodeURIComponent(payload.email||'');
+      const ref=['car',sani(payload.car),'plat',sani(payload.platform),'lic',sani(payload.license),'ins',sani(payload.insurance)].join('-').slice(0,190);
+      window.location.href=STRIPE_APPLICATION_LINK+'?prefilled_email='+email+'&client_reference_id='+encodeURIComponent(ref);
       return false;
     }
     document.getElementById('formWrap').style.display='none';
