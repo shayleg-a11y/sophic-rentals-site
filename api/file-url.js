@@ -6,6 +6,11 @@ export default async function handler(req, res) {
   try {
     const path = String((req.query && req.query.path) || '').replace(/^\/+/, '');
     if (!path) { res.status(400).json({ error: 'missing_path' }); return; }
+    // Only allow the expected shape: <uuid>/<slot>/<filename>; block traversal and stray chars.
+    if (path.includes('..') || !/^[0-9a-fA-F-]+\/(license_front|license_back|supporting)\/[^/]+$/.test(path)) {
+      res.status(400).json({ error: 'invalid_path' });
+      return;
+    }
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SECRET_KEY;
     const r = await fetch(url + '/storage/v1/object/sign/applicant-documents/' + path, {

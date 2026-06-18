@@ -177,9 +177,9 @@
 
   .overlay{position:fixed;inset:0;background:rgba(4,5,7,.78);backdrop-filter:blur(6px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
   .overlay.show{display:flex}
-  .modal{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);max-width:520px;width:100%;box-shadow:var(--shadow);animation:pop .25s ease}
+  .modal{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);max-width:520px;width:100%;box-shadow:var(--shadow);animation:pop .25s ease;max-height:calc(100dvh - 48px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
-  .modal .mhead{padding:26px 26px 0;display:flex;justify-content:space-between;align-items:flex-start}
+  .modal .mhead{padding:22px 26px 14px;display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--bg-2);z-index:2}
   .modal h3{font-size:23px}
   .modal .mhead p{color:var(--muted);font-size:14px;margin-top:6px}
   .modal .close{background:var(--surface);border:1px solid var(--line);color:var(--muted);width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:20px;flex-shrink:0}
@@ -193,7 +193,7 @@
   @media(max-width:520px){.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr}}
   .field input[type=file]{padding:9px;font-size:13px;color:var(--muted)}
   .field input[type=file]::file-selector-button{background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;margin-right:10px;cursor:pointer;font-family:inherit;font-size:13px}
-  .secnote{font-size:12px;color:var(--muted);margin-top:-4px}
+  .secnote{font-size:13px;color:var(--muted);margin-top:-4px}
   .upstatus{font-size:13px;color:var(--accent);min-height:18px}
   .req-note{background:rgba(25,182,255,.08);border:1px solid rgba(25,182,255,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--muted)}
   .fee-box{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
@@ -392,7 +392,7 @@
         <div class="row3">
           <div class="field"><label for="f-city">City</label><input id="f-city" required name="city" placeholder="City" autocomplete="address-level2" /></div>
           <div class="field"><label for="f-state">State</label><input id="f-state" required name="state" value="CA" maxlength="2" autocomplete="address-level1" /></div>
-          <div class="field"><label for="f-zip">ZIP</label><input id="f-zip" required name="zip_code" placeholder="ZIP" inputmode="numeric" autocomplete="postal-code" /></div>
+          <div class="field"><label for="f-zip">ZIP</label><input id="f-zip" required name="zip_code" placeholder="ZIP" inputmode="numeric" maxlength="10" pattern="\d{5}(-\d{4})?" autocomplete="postal-code" /></div>
         </div>
         <div class="row2">
           <div class="field"><label for="f-platform">Which platform?</label>
@@ -409,7 +409,7 @@
         </div>
         <p class="secnote">Your license photos are uploaded securely and visible only to Sophic Rentals. You must be 21+ with a valid license and active insurance.</p>
         <div class="fee-box"><span>One-time application fee</span><b class="accent">$9.99</b></div>
-        <div class="upstatus" id="upStatus"></div>
+        <div class="upstatus" id="upStatus" role="status" aria-live="polite"></div>
         <button class="btn btn-primary" type="submit" id="applySubmit">Submit application &amp; pay $9.99</button>
         <p class="fineprint">Secure payment via Stripe. You only choose a car and pay your weekly rate after you’re approved.</p>
       </form>
@@ -561,11 +561,18 @@
     return false;
   }
 
-  // Esc closes modal/menu
+  // Esc closes modal/menu; Tab is trapped inside the open modal
   document.addEventListener('keydown',(e)=>{
-    if(e.key==='Escape'){
-      if(document.getElementById('overlay').classList.contains('show')) closeApply();
-      closeMenu();
+    const open=document.getElementById('overlay').classList.contains('show');
+    if(e.key==='Escape'){ if(open) closeApply(); closeMenu(); return; }
+    if(e.key==='Tab' && open){
+      const modal=document.querySelector('.overlay .modal');
+      const f=modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea,[tabindex]:not([tabindex="-1"])');
+      const vis=[...f].filter(el=>el.offsetParent!==null);
+      if(!vis.length) return;
+      const first=vis[0], last=vis[vis.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
     }
   });
 
@@ -579,6 +586,8 @@
   }
   addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('scrolled',scrollY>10)});
   document.getElementById('yr').textContent=new Date().getFullYear();
+  // Enforce 21+ and no future date on the DOB picker
+  (function(){var d=document.getElementById('f-dob'); if(d){var t=new Date(); t.setFullYear(t.getFullYear()-21); d.max=t.toISOString().slice(0,10);}})();
   renderFleet();renderFaq();initReveal();
 </script>
 </body>
