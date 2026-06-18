@@ -90,7 +90,27 @@
   function fmt(ts){ if(!ts) return ''; const d=new Date(ts); return d.toLocaleString('en-US',{month:'short',day:'numeric',year:'2-digit',hour:'numeric',minute:'2-digit'}); }
   function name(a){ return [a.first_name,a.last_name].filter(Boolean).join(' ') || a.name || '—'; }
   function loc(a){ return [a.city,a.state].filter(Boolean).join(', ') || '—'; }
-  function idphotos(a){ const n=(a.license_front_path?1:0)+(a.license_back_path?1:0); const sup=(a.supporting_doc_paths&&a.supporting_doc_paths.length)||0; return n? `<span class="yes">${n}/2</span>${sup?` +${sup}`:''}` : '<span class="muted">—</span>'; }
+  async function viewDoc(path){
+    try{
+      const r=await fetch('/api/file-url?path='+encodeURIComponent(path),{headers:{'x-admin-password':PW}});
+      const data=await r.json();
+      if(data&&data.url){ window.open(data.url,'_blank','noopener'); }
+      else { alert('Could not open document.'); }
+    }catch(e){ alert('Could not open document.'); }
+  }
+  function docLink(path,label){
+    const safe=String(path).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<a class="dl" onclick="viewDoc('${safe}')">${esc(label)}</a>`;
+  }
+  function idphotos(a){
+    const links=[];
+    if(a.license_front_path) links.push(docLink(a.license_front_path,'Front'));
+    if(a.license_back_path) links.push(docLink(a.license_back_path,'Back'));
+    if(a.supporting_doc_paths&&a.supporting_doc_paths.length){
+      a.supporting_doc_paths.forEach((p,i)=>{ if(p) links.push(docLink(p,'Doc '+(i+1))); });
+    }
+    return links.length ? `<span style="display:inline-flex;gap:8px;flex-wrap:wrap">${links.join('')}</span>` : '<span class="muted">—</span>';
+  }
   function render(){
     const paid=DATA.filter(a=>a.payment_status==='paid'||a.status==='paid').length;
     document.getElementById('stats').innerHTML=
