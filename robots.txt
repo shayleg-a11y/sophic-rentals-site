@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sophic-rentals.vercel.app/sitemap.xml
