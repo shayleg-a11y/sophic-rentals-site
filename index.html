@@ -263,7 +263,7 @@
 
   <section class="stats">
     <div class="wrap"><div class="grid">
-      <div class="stat"><div class="num accent">13</div><div class="lab">Teslas in the fleet</div></div>
+      <div class="stat"><div class="num accent">73</div><div class="lab">Teslas in the fleet</div></div>
       <div class="stat"><div class="num accent">$0</div><div class="lab">Spent on gas</div></div>
       <div class="stat"><div class="num accent">1 wk</div><div class="lab">Minimum to start</div></div>
       <div class="stat"><div class="num accent">24/7</div><div class="lab">Driver support</div></div>
@@ -428,12 +428,9 @@
   const STRIPE_APPLICATION_LINK = "https://buy.stripe.com/3cIdR8ag9ce10LMgmYbo42x";
 
   const FLEET = [
-    {name:"Tesla Model 3", trim:"2022 • Standard Range", price:500, status:"available", img:"images/m3-side.jpg", feats:["5 seats","~270 mi range","Autopilot"]},
-    {name:"Tesla Model 3", trim:"2020 • Long Range", price:500, status:"available", img:"images/m3-rear.jpg", feats:["5 seats","Supercharging","Great MPGe"]},
-    {name:"Tesla Model Y", trim:"2022 • Long Range AWD", price:600, status:"available", img:"images/my-front.jpg", feats:["5 seats","SUV space","Dual motor"]},
-    {name:"Tesla Model 3", trim:"2019 • Standard", price:475, status:"rented", img:"images/m3-rear2.jpg", feats:["5 seats","Efficient","Autopilot"]},
-    {name:"Tesla Model X", trim:"2016 • Premium SUV", price:700, status:"rented", img:"images/mx-front.jpg", feats:["Falcon doors","White interior","6 seats"]},
-    {name:"Tesla Model 3", trim:"2023 • Newest", price:525, status:"available", img:"images/m3-front.jpg", feats:["5 seats","Newest model","Long range"]},
+    {name:"Tesla Model 3", trim:"Rideshare favorite", price:500, status:"available", img:"images/m3-front.jpg", feats:["5 seats","~270 mi range","Autopilot"]},
+    {name:"Tesla Model Y", trim:"SUV space & comfort", price:600, status:"waitlist", img:"images/my-front.jpg", feats:["5 seats","SUV space","Dual motor"]},
+    {name:"Tesla Model X", trim:"Premium 6-seater", price:700, status:"waitlist", img:"images/mx-front.jpg", feats:["Falcon doors","Premium","6 seats"]},
   ];
 
   const carSVG = `<svg viewBox="0 0 200 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 62c0-4 3-7 7-7h146c4 0 7 3 7 7v6c0 3-2 5-5 5h-6a8 8 0 01-16 0H47a8 8 0 01-16 0h-6c-3 0-5-2-5-5v-6z" fill="#2a3038"/><path d="M40 55l14-22c2-3 5-5 9-5h74c4 0 7 2 9 5l14 22" stroke="#00E0A4" stroke-width="3" fill="#1b1f25"/><circle cx="55" cy="68" r="9" fill="#0c0e12" stroke="#454d59" stroke-width="3"/><circle cx="151" cy="68" r="9" fill="#0c0e12" stroke="#454d59" stroke-width="3"/></svg>`;
@@ -448,7 +445,7 @@
         ? `<button class="btn btn-primary" onclick="openApply('${label}')">Reserve this car</button>`
         : `<button class="btn wait" onclick="openApply('${label} (waitlist)')">Join the waitlist</button>`;
       return `<div class="car reveal">
-        <div class="img">${media}<span class="badge ${avail?'avail':'soon'}">${avail?'● Available now':'Currently rented'}</span></div>
+        <div class="img">${media}<span class="badge ${avail?'avail':'soon'}">${avail?'● Available now':'Waitlist'}</span></div>
         <div class="body">
           <h3>${c.name}</h3>
           <div class="meta">${c.trim}</div>
