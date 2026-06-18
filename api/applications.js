@@ -10,17 +10,6 @@ export default async function handler(req, res) {
   try {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SECRET_KEY;
-    if (req.query && req.query.debug === '1') {
-      let host = '';
-      try { host = new URL(url).host; } catch (e) { host = 'INVALID_URL:' + JSON.stringify(url); }
-      let probe = '';
-      try {
-        const pr = await fetch(url + '/rest/v1/', { headers: { apikey: key } });
-        probe = 'status ' + pr.status;
-      } catch (e) { probe = 'fetch_error: ' + String(e); }
-      res.status(200).json({ has_url: !!url, has_key: !!key, url_len: (url || '').length, host: host, probe: probe });
-      return;
-    }
     const r = await fetch(url + '/rest/v1/applications?select=*&order=created_at.desc', {
       headers: { apikey: key, Authorization: 'Bearer ' + key }
     });
