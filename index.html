@@ -189,7 +189,12 @@
   .field input,.field select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:15px}
   .field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  .row3{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:14px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr}}
+  .field input[type=file]{padding:9px;font-size:13px;color:var(--muted)}
+  .field input[type=file]::file-selector-button{background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;margin-right:10px;cursor:pointer;font-family:inherit;font-size:13px}
+  .secnote{font-size:12px;color:var(--muted);margin-top:-4px}
+  .upstatus{font-size:13px;color:var(--accent);min-height:18px}
   .req-note{background:rgba(25,182,255,.08);border:1px solid rgba(25,182,255,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--muted)}
   .fee-box{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
   .fee-box b{font-size:20px}
@@ -370,10 +375,24 @@
         <button class="close" aria-label="Close" onclick="closeApply()">×</button>
       </div>
       <form id="applyForm" onsubmit="return submitApply(event)">
-        <div class="field"><label for="f-name">Full name</label><input id="f-name" required name="name" placeholder="Your full name" /></div>
         <div class="row2">
-          <div class="field"><label for="f-phone">Phone</label><input id="f-phone" required name="phone" type="tel" placeholder="(555) 555-5555" /></div>
-          <div class="field"><label for="f-email">Email</label><input id="f-email" required name="email" type="email" placeholder="you@email.com" /></div>
+          <div class="field"><label for="f-first">First name</label><input id="f-first" required name="first_name" placeholder="First" autocomplete="given-name" /></div>
+          <div class="field"><label for="f-last">Last name</label><input id="f-last" required name="last_name" placeholder="Last" autocomplete="family-name" /></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-phone">Phone</label><input id="f-phone" required name="phone" type="tel" placeholder="(555) 555-5555" autocomplete="tel" /></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" required name="email" type="email" placeholder="you@email.com" autocomplete="email" /></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-dob">Date of birth</label><input id="f-dob" required name="date_of_birth" type="date" /></div>
+          <div class="field"><label for="f-licensenum">Driver's license number</label><input id="f-licensenum" required name="license_number" placeholder="e.g. Y1234567" autocomplete="off" /></div>
+        </div>
+        <div class="field"><label for="f-addr1">Address</label><input id="f-addr1" required name="address_line1" placeholder="Street address" autocomplete="address-line1" /></div>
+        <div class="field"><label for="f-addr2">Apt / unit (optional)</label><input id="f-addr2" name="address_line2" placeholder="Apt, suite, unit" autocomplete="address-line2" /></div>
+        <div class="row3">
+          <div class="field"><label for="f-city">City</label><input id="f-city" required name="city" placeholder="City" autocomplete="address-level2" /></div>
+          <div class="field"><label for="f-state">State</label><input id="f-state" required name="state" value="CA" maxlength="2" autocomplete="address-level1" /></div>
+          <div class="field"><label for="f-zip">ZIP</label><input id="f-zip" required name="zip_code" placeholder="ZIP" inputmode="numeric" autocomplete="postal-code" /></div>
         </div>
         <div class="row2">
           <div class="field"><label for="f-platform">Which platform?</label>
@@ -383,14 +402,15 @@
             <select id="f-car" name="car"></select>
           </div>
         </div>
+        <div class="field"><label for="f-insurance">Auto insurance status</label><select id="f-insurance" name="insurance_status"><option>Yes — with rideshare coverage</option><option>Yes — personal only</option><option>Not yet</option></select></div>
         <div class="row2">
-          <div class="field"><label for="f-license">Valid CA license?</label><select id="f-license" name="license"><option>Yes</option><option>No</option></select></div>
-          <div class="field"><label for="f-insurance">Have auto insurance?</label><select id="f-insurance" name="insurance"><option>Yes</option><option>Yes — with rideshare</option><option>Not yet</option></select></div>
+          <div class="field"><label for="f-front">Driver's license — front</label><input id="f-front" type="file" accept="image/*" required /></div>
+          <div class="field"><label for="f-back">Driver's license — back</label><input id="f-back" type="file" accept="image/*" required /></div>
         </div>
-        <div class="field"><label for="f-licensenum">Driver's license number</label><input id="f-licensenum" required name="license_number" placeholder="e.g. Y1234567" autocomplete="off" /></div>
-        <p class="req-note">To rent, you’ll need to be 21+ with a valid CA license and active insurance (rideshare coverage if you drive apps). The $9.99 fee covers verification.</p>
+        <p class="secnote">Your license photos are uploaded securely and visible only to Sophic Rentals. You must be 21+ with a valid license and active insurance.</p>
         <div class="fee-box"><span>One-time application fee</span><b class="accent">$9.99</b></div>
-        <button class="btn btn-primary" type="submit" id="applySubmit">Pay $9.99 &amp; submit application</button>
+        <div class="upstatus" id="upStatus"></div>
+        <button class="btn btn-primary" type="submit" id="applySubmit">Submit application &amp; pay $9.99</button>
         <p class="fineprint">Secure payment via Stripe. You only choose a car and pay your weekly rate after you’re approved.</p>
       </form>
     </div>
@@ -486,37 +506,58 @@
       const sel=document.getElementById('f-car');
       [...sel.options].forEach(o=>{if(o.value===car)sel.value=car;});
     } else {pick.textContent='Get verified and pick your Tesla.';}
-    setTimeout(()=>{const n=document.getElementById('f-name'); if(n) n.focus();},60);
+    setTimeout(()=>{const n=document.getElementById('f-first'); if(n) n.focus();},60);
   }
   function closeApply(){
     document.getElementById('overlay').classList.remove('show');
     document.body.style.overflow='';
     if(lastFocus&&lastFocus.focus) lastFocus.focus();
   }
-  function sani(s){return (s||'').toString().replace(/[^a-zA-Z0-9]+/g,'-').slice(0,40);}
   function val(id){var el=document.getElementById(id);return el?el.value:'';}
+  async function uploadFile(appId, slot, file){
+    const r=await fetch('/api/sign-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({application_id:appId,slot:slot,filename:file.name})});
+    const d=await r.json();
+    if(!r.ok||!d.uploadUrl) throw new Error('Could not prepare upload');
+    const up=await fetch(d.uploadUrl,{method:'PUT',headers:{'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},body:file});
+    if(!up.ok) throw new Error('Upload failed');
+    return d.path;
+  }
   async function submitApply(e){
     e.preventDefault();
-    const btn=document.getElementById('applySubmit');
+    const btn=document.getElementById('applySubmit'); const stat=document.getElementById('upStatus');
     btn.disabled=true; btn.textContent='Submitting…';
     const payload={
-      name:val('f-name'), phone:val('f-phone'), email:val('f-email'),
-      platform:val('f-platform'), car:val('f-car'),
-      license:val('f-license'), license_number:val('f-licensenum'), insurance:val('f-insurance')
+      first_name:val('f-first'), last_name:val('f-last'), phone:val('f-phone'), email:val('f-email'),
+      date_of_birth:val('f-dob'), license_number:val('f-licensenum'),
+      address_line1:val('f-addr1'), address_line2:val('f-addr2'), city:val('f-city'), state:val('f-state'), zip_code:val('f-zip'),
+      platform:val('f-platform'), car:val('f-car'), insurance_status:val('f-insurance')
     };
-    // Save the application to our backend first (so even abandoned-at-Stripe apps are captured)
     try{
-      await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    }catch(_){/* don't block the applicant if the save hiccups */}
-    if(STRIPE_APPLICATION_LINK){
-      btn.textContent='Redirecting to secure checkout…';
-      const email=encodeURIComponent(payload.email||'');
-      const ref=['car',sani(payload.car),'plat',sani(payload.platform),'lic',sani(payload.license),'ins',sani(payload.insurance)].join('-').slice(0,190);
-      window.location.href=STRIPE_APPLICATION_LINK+'?prefilled_email='+email+'&client_reference_id='+encodeURIComponent(ref);
-      return false;
+      stat.textContent='Saving your application…';
+      const r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const d=await r.json();
+      if(!r.ok||!d.id) throw new Error(d.error||'save failed');
+      const appId=d.id;
+      const front=document.getElementById('f-front').files[0];
+      const back=document.getElementById('f-back').files[0];
+      const paths={};
+      if(front){ stat.textContent='Uploading license (front)…'; paths.license_front_path=await uploadFile(appId,'license_front',front); }
+      if(back){ stat.textContent='Uploading license (back)…'; paths.license_back_path=await uploadFile(appId,'license_back',back); }
+      if(paths.license_front_path||paths.license_back_path){
+        stat.textContent='Finishing up…';
+        await fetch('/api/finalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({application_id:appId},paths))});
+      }
+      if(STRIPE_APPLICATION_LINK){
+        btn.textContent='Redirecting to secure checkout…';
+        const url=STRIPE_APPLICATION_LINK+'?prefilled_email='+encodeURIComponent(payload.email||'')+'&client_reference_id='+encodeURIComponent(d.reference_number||appId);
+        window.location.href=url; return false;
+      }
+      document.getElementById('formWrap').style.display='none';
+      document.getElementById('success').classList.add('show');
+    }catch(err){
+      stat.textContent=''; btn.disabled=false; btn.textContent='Submit application & pay $9.99';
+      alert('Sorry — something went wrong submitting your application. Please try again or text us. ('+((err&&err.message)||'error')+')');
     }
-    document.getElementById('formWrap').style.display='none';
-    document.getElementById('success').classList.add('show');
     return false;
   }
 
