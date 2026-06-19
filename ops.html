@@ -132,40 +132,7 @@ const STORE = 'sophicOps_v1';
 const CONN_KEY = 'sophicOps_conn';
 const WEEKLY = {'Model 3':500,'Model Y':600,'Model X':700};
 
-function seed(){return {
-  fleet:[
-    {id:'TT',  model:'Model 3', year:2020, vin:'', plate:'', owner:'', status:'Rented',   driver:'Carlos',          rate:500, miles:''},
-    {id:'Whip',model:'Model 3', year:2021, vin:'', plate:'', owner:'', status:'Rented',   driver:'Jeremiah',        rate:500, miles:''},
-    {id:'OM2', model:'Model 3', year:2019, vin:'', plate:'', owner:'', status:'Rented',   driver:'Keysha',          rate:500, miles:''},
-    {id:'OXF', model:'Model 3', year:2021, vin:'', plate:'', owner:'', status:'Rented',   driver:'Joseph (RTO)',    rate:500, miles:''},
-    {id:'Cali',model:'Model 3', year:2022, vin:'', plate:'', owner:'', status:'Rented',   driver:'Aaron & Alexa (RTO)', rate:500, miles:''},
-    {id:'NDD', model:'Model 3', year:2022, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
-    {id:'GWD', model:'Model 3', year:2018, vin:'', plate:'', owner:'', status:'Down',      driver:'',               rate:500, miles:''},
-    {id:'LEN', model:'Model 3', year:2019, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
-    {id:'WHS', model:'Model 3', year:2020, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
-    {id:'Model 3', model:'Model 3', year:2023, vin:'', plate:'', owner:'', status:'Available', driver:'',           rate:500, miles:''},
-    {id:'Model Y', model:'Model Y', year:2022, vin:'5YJ...404826', plate:'9ESY123', owner:'', status:'Rented', driver:'Johnathan Sparks', rate:600, miles:'149234'},
-    {id:'Model Y 2', model:'Model Y', year:2022, vin:'', plate:'', owner:'', status:'Available', driver:'',         rate:600, miles:''},
-    {id:'Electra', model:'Model X', year:2016, vin:'', plate:'', owner:'', status:'Rented', driver:'Jamie Cabada',  rate:700, miles:''},
-  ],
-  insurance:[
-    {id:1, driver:'Carlos',          car:'TT',      carrier:'GEICO',       policy:'VERIFY', effective:'2026-01-15', expiry:'2026-07-15', addlInterest:false, lastVerified:'2026-06-18', method:'AI call', lastResult:'Active (confirmed)', recording:''},
-    {id:2, driver:'Jeremiah',        car:'Whip',    carrier:'Progressive', policy:'VERIFY', effective:'2025-12-01', expiry:'2026-12-01', addlInterest:true,  lastVerified:'2026-06-10', method:'Dec page', lastResult:'Active', recording:''},
-    {id:3, driver:'Keysha',          car:'OM2',     carrier:'Mercury',     policy:'VERIFY', effective:'2025-11-30', expiry:'2026-05-30', addlInterest:false, lastVerified:'2026-06-05', method:'AI call', lastResult:'No answer', recording:''},
-    {id:4, driver:'Joseph (RTO)',    car:'OXF',     carrier:'State Farm',  policy:'VERIFY', effective:'2026-03-01', expiry:'2026-09-01', addlInterest:false, lastVerified:'2026-06-17', method:'AI call', lastResult:'Active (confirmed)', recording:''},
-    {id:5, driver:'Aaron & Alexa (RTO)', car:'Cali', carrier:'AAA',       policy:'VERIFY', effective:'2026-02-10', expiry:'2026-08-10', addlInterest:false, lastVerified:'2026-06-01', method:'Dec page', lastResult:'Active', recording:''},
-    {id:6, driver:'Johnathan Sparks', car:'Model Y', carrier:'Allstate',  policy:'VERIFY', effective:'2026-01-20', expiry:'2027-01-20', addlInterest:true,  lastVerified:'2026-06-19', method:'AI call', lastResult:'Active (confirmed)', recording:''},
-    {id:7, driver:'Jamie Cabada',    car:'Electra', carrier:'Farmers',     policy:'VERIFY', effective:'2025-12-25', expiry:'2026-06-25', addlInterest:false, lastVerified:'2026-06-19', method:'AI call', lastResult:'Active (confirmed)', recording:''},
-  ],
-  repairs:[
-    {id:1, car:'GWD', date:'2026-06-12', desc:'12V battery + rear tire replacement (sample — edit)', vendor:'OC Tesla Service', cost:840, status:'Open'},
-    {id:2, car:'Whip', date:'2026-05-20', desc:'Windshield chip repair', vendor:'Safelite', cost:120, status:'Done'},
-    {id:3, car:'Electra', date:'2026-04-08', desc:'Falcon door alignment', vendor:'Indie EV shop', cost:560, status:'Done'},
-  ],
-  applications:[
-    {id:'sample-1',ref:'SAMPLE',name:'Maria Lopez (sample)',email:'maria@example.com',phone:'(714) 555-0182',type:'rental',plan:'rental',status:'under_review',payment:'paid',license:'D1234567',insurance:'has',city:'Santa Ana',state:'CA',experience:'',hours:'',notes:'',created:'2026-06-18'}
-  ],
-  settings:{reVerifyDays:3, callCadenceDays:2, expiringWindow:14}
+function seed(){return {fleet:[],insurance:[],repairs:[],applications:[],settings:{reVerifyDays:3, callCadenceDays:2, expiringWindow:14}
 };}
 
 let data = load();
