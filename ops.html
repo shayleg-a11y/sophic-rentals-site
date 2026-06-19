@@ -347,6 +347,7 @@ function editApp(i){
       <div><label>License #</label><div class="small" style="padding-top:6px">${esc(a.license)||'—'}</div></div>
       <div><label>Self-reported insurance</label><div class="small" style="padding-top:6px">${esc(a.insurance)||'—'}</div></div>
     </div>
+    <div class="field"><label>License photos</label>${(a.license_front||a.license_back)?`<div style="display:flex;gap:8px">${a.license_front?`<button class="btn ghost" onclick="viewDoc('${esc(a.license_front)}')">View front ↗</button>`:''}${a.license_back?`<button class="btn ghost" onclick="viewDoc('${esc(a.license_back)}')">View back ↗</button>`:''}</div>`:'<div class="small">None uploaded</div>'}</div>
     ${a.type==='driver'?`<div class="field row2"><div><label>Rideshare exp.</label><div class="small" style="padding-top:6px">${esc(a.experience)||'—'}</div></div><div><label>Weekly hours</label><div class="small" style="padding-top:6px">${esc(a.hours)||'—'}</div></div></div>`:''}
     <div class="field"><label>Status</label><select id="a_status">${APP_STATUSES.map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}</select></div>
     <div class="field"><label>Reviewer notes</label><textarea id="a_notes" rows="2">${esc(a.notes)}</textarea></div>
@@ -382,6 +383,13 @@ async function makeClient(i){
 async function authFetchApp(id,patch){
   if(typeof authFetch==='function'){const r=await authFetch('POST',{op:'app_update',id,patch});return r.row;}
   const r=await api('POST',{op:'app_update',id,patch});return r.row;
+}
+// open a short-lived signed link to a private license photo
+async function viewDoc(path){
+  try{
+    const r=(typeof authFetch==='function')?await authFetch('POST',{op:'file_url',path}):await api('POST',{op:'file_url',path});
+    if(r&&r.url)window.open(r.url,'_blank');else toast('Could not load photo');
+  }catch(e){toast('Could not load photo');}
 }
 
 /* ============================ DAILY CHECK ============================ */
@@ -473,10 +481,8 @@ const OPS_API=SUPA_URL+'/functions/v1/ops-api';
 const SESS_KEY='sophicOps_session';
 let session=(()=>{try{return JSON.parse(localStorage.getItem(SESS_KEY)||'null');}catch(e){return null;}})();
 let online=false;
-
 function setStatus(s){const p=document.getElementById('connPill');if(!p)return;if(s==='live'){p.textContent='● Live';p.className='pill green';}else if(s==='syncing'){p.textContent='Syncing…';p.className='pill amber';}else{p.textContent='Offline';p.className='pill gray';}}
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:8px;z-index:99;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.4)';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(t._h);t._h=setTimeout(()=>t.style.opacity='0',2600);}
-
 async function authFetch(method,body){
   const r=await fetch(OPS_API,{method,headers:{'content-type':'application/json','authorization':'Bearer '+(session&&session.access_token)},body:body?JSON.stringify(body):undefined});
   if(r.status===401){if(await refresh())return authFetch(method,body);showLogin('Session expired — please sign in again.');throw new Error('401');}
@@ -500,7 +506,6 @@ async function login(){
 function logout(){session=null;localStorage.removeItem(SESS_KEY);showLogin('Signed out.');}
 function showLogin(msg){document.getElementById('loginOverlay').style.display='flex';document.getElementById('appShell').style.display='none';const e=$('#lg_err');if(e&&msg)e.textContent=msg;const b=$('#lg_btn');if(b)b.disabled=false;}
 function hideLogin(){document.getElementById('loginOverlay').style.display='none';document.getElementById('appShell').style.display='';}
-
 async function pullLive(){
   setStatus('syncing');
   try{const d=await authFetch('GET');data={fleet:d.fleet||[],insurance:d.insurance||[],repairs:d.repairs||[],applications:d.applications||[],settings:data.settings};online=true;setStatus('live');const w=document.getElementById('whoami');if(w)w.textContent=d.user||session.email;save();render();}
@@ -508,9 +513,7 @@ async function pullLive(){
 }
 async function syncRow(table,row){if(!online)return row;try{const res=await authFetch('POST',{op:'upsert',table,row});return res.row||row;}catch(e){toast('Saved locally — sync failed');return row;}}
 async function syncDelete(table,id){if(!online)return;try{await authFetch('POST',{op:'delete',table,id});}catch(e){toast('Deleted locally — sync failed');}}
-
 async function boot(){hideLogin();save();await pullLive();}
-
 /* ============================ INIT ============================ */
 if(session&&session.access_token){boot();}else{showLogin();}
 
