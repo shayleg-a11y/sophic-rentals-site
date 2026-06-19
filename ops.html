@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sophic Rentals — Ops Dashboard (Team)</title>
+<style>
+  :root{
+    --bg:#0b0c0f; --panel:#15171c; --panel2:#1c1f26; --line:#2a2e38;
+    --txt:#e8eaed; --muted:#9aa0ac; --accent:#e6332a; --accent2:#3b82f6;
+    --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --gray:#6b7280;
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,12,15,.92);backdrop-filter:blur(8px);z-index:20;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:18px;letter-spacing:.3px}
+  .brand b{color:var(--accent)}
+  .spacer{flex:1}
+  .btn{background:var(--panel2);color:var(--txt);border:1px solid var(--line);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+  .btn:hover{border-color:var(--muted)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.ghost{background:transparent}
+  .saved{color:var(--muted);font-size:12px}
+  nav{display:flex;gap:4px;padding:10px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  nav button{background:transparent;border:none;color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600}
+  nav button.active{background:var(--panel);color:var(--txt)}
+  main{padding:24px;max-width:1400px;margin:0 auto}
+  h2{font-size:16px;margin:0 0 14px;font-weight:700}
+  .grid{display:grid;gap:16px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:24px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .kpi .val{font-size:30px;font-weight:700;margin-top:6px}
+  .kpi .sub{color:var(--muted);font-size:12px;margin-top:2px}
+  .kpi.warn .val{color:var(--amber)} .kpi.bad .val{color:var(--red)} .kpi.good .val{color:var(--green)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+  .two{grid-template-columns:1fr 1fr}
+  @media(max-width:900px){.two{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  tr:hover td{background:var(--panel2)}
+  .pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .pill.green{background:rgba(34,197,94,.15);color:var(--green)}
+  .pill.amber{background:rgba(245,158,11,.15);color:var(--amber)}
+  .pill.red{background:rgba(239,68,68,.15);color:var(--red)}
+  .pill.gray{background:rgba(107,114,128,.18);color:#c0c6d0}
+  .pill.blue{background:rgba(59,130,246,.15);color:var(--accent2)}
+  .badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:10.5px;font-weight:700;border:1px solid var(--line)}
+  .badge.no{color:var(--amber);border-color:rgba(245,158,11,.4)}
+  .badge.yes{color:var(--green);border-color:rgba(34,197,94,.4)}
+  .rowact{display:flex;gap:6px}
+  .ico{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px}
+  .ico:hover{color:var(--txt);border-color:var(--muted)}
+  select,input,textarea{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font:inherit;font-size:13px;width:100%}
+  .inlinesel{width:auto;padding:4px 8px}
+  .note{color:var(--muted);font-size:12.5px}
+  .banner{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);color:#f2c879;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:18px}
+  .alertitem{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .alertitem:last-child{border-bottom:none}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .dot.red{background:var(--red)} .dot.amber{background:var(--amber)} .dot.green{background:var(--green)}
+  .bars{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .bar{display:flex;align-items:center;gap:10px;font-size:13px}
+  .bar .track{flex:1;height:10px;background:var(--panel2);border-radius:999px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:999px}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;width:520px;max-width:100%;max-height:90vh;overflow:auto}
+  .modal h3{margin:0 0 16px;font-size:16px}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600}
+  .field.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .modal-act{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+  .sectionhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .small{font-size:12px;color:var(--muted)}
+  code{background:var(--panel2);padding:1px 6px;border-radius:5px;font-size:12px}
+  .arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:8px}
+  .arch .step{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .arch .step .n{color:var(--accent);font-weight:700;font-size:12px}
+  .arch .step .t{font-weight:600;margin:4px 0 4px;font-size:13.5px}
+</style>
+</head>
+<body>
+<div id="loginOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);align-items:center;justify-content:center;z-index:200">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:30px;width:360px;max-width:92%">
+    <div style="font-weight:700;font-size:20px;margin-bottom:2px">SOPHIC <span style="color:var(--accent)">RENTALS</span></div>
+    <div class="note" style="margin-bottom:18px">Ops dashboard — team sign in</div>
+    <div class="field"><label>Email</label><input id="lg_email" type="email" autocomplete="username"></div>
+    <div class="field"><label>Password</label><input id="lg_pw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"></div>
+    <div id="lg_err" style="color:var(--red);font-size:12.5px;min-height:16px;margin-bottom:10px"></div>
+    <button class="btn primary" id="lg_btn" style="width:100%" onclick="login()">Sign in</button>
+  </div>
+</div>
+<div id="appShell">
+<header>
+  <div class="brand">SOPHIC <b>RENTALS</b> · Ops</div>
+  <div class="spacer"></div>
+  <span class="pill gray" id="connPill" title="Data source">Offline</span>
+  <span class="saved" id="savedNote"></span>
+  <button class="btn ghost" id="syncBtn" onclick="pullLive()" aria-label="Sync from Supabase">⟳ Sync</button>
+  <span class="small" id="whoami" style="margin-right:6px"></span>
+  <button class="btn ghost" onclick="logout()">Logout</button>
+  <button class="btn ghost" onclick="exportData()">Export</button>
+  <button class="btn ghost" onclick="document.getElementById('importFile').click()">Import</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  <button class="btn ghost" onclick="resetData()">Reset to sample</button>
+</header>
+
+<nav id="nav">
+  <button data-tab="overview" class="active">Overview</button>
+  <button data-tab="fleet">Fleet</button>
+  <button data-tab="insurance">Insurance</button>
+  <button data-tab="repairs">Repairs</button>
+  <button data-tab="applicants">Applicants</button>
+</nav>
+
+<main id="app"></main>
+
+</div><!-- /appShell -->
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================ STATE ============================ */
+const TODAY = (()=>{const d=new Date();d.setHours(0,0,0,0);return d;})(); // live current date
+const STORE = 'sophicOps_v1';
+const CONN_KEY = 'sophicOps_conn';
+const WEEKLY = {'Model 3':500,'Model Y':600,'Model X':700};
+
+function seed(){return {
+  fleet:[
+    {id:'TT',  model:'Model 3', year:2020, vin:'', plate:'', owner:'', status:'Rented',   driver:'Carlos',          rate:500, miles:''},
+    {id:'Whip',model:'Model 3', year:2021, vin:'', plate:'', owner:'', status:'Rented',   driver:'Jeremiah',        rate:500, miles:''},
+    {id:'OM2', model:'Model 3', year:2019, vin:'', plate:'', owner:'', status:'Rented',   driver:'Keysha',          rate:500, miles:''},
+    {id:'OXF', model:'Model 3', year:2021, vin:'', plate:'', owner:'', status:'Rented',   driver:'Joseph (RTO)',    rate:500, miles:''},
+    {id:'Cali',model:'Model 3', year:2022, vin:'', plate:'', owner:'', status:'Rented',   driver:'Aaron & Alexa (RTO)', rate:500, miles:''},
+    {id:'NDD', model:'Model 3', year:2022, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
+    {id:'GWD', model:'Model 3', year:2018, vin:'', plate:'', owner:'', status:'Down',      driver:'',               rate:500, miles:''},
+    {id:'LEN', model:'Model 3', year:2019, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
+    {id:'WHS', model:'Model 3', year:2020, vin:'', plate:'', owner:'', status:'Available', driver:'',               rate:500, miles:''},
+    {id:'Model 3', model:'Model 3', year:2023, vin:'', plate:'', owner:'', status:'Available', driver:'',           rate:500, miles:''},
+    {id:'Model Y', model:'Model Y', year:2022, vin:'5YJ...404826', plate:'9ESY123', owner:'', status:'Rented', driver:'Johnathan Sparks', rate:600, miles:'149234'},
+    {id:'Model Y 2', model:'Model Y', year:2022, vin:'', plate:'', owner:'', status:'Available', driver:'',         rate:600, miles:''},
+    {id:'Electra', model:'Model X', year:2016, vin:'', plate:'', owner:'', status:'Rented', driver:'Jamie Cabada',  rate:700, miles:''},
+  ],
+  insurance:[
+    {id:1, driver:'Carlos',          car:'TT',      carrier:'GEICO',       policy:'VERIFY', effective:'2026-01-15', expiry:'2026-07-15', addlInterest:false, lastVerified:'2026-06-18', method:'AI call', lastResult:'Active (confirmed)', recording:''},
+    {id:2, driver:'Jeremiah',        car:'Whip',    carrier:'Progressive', policy:'VERIFY', effective:'2025-12-01', expiry:'2026-12-01', addlInterest:true,  lastVerified:'2026-06-10', method:'Dec page', lastResult:'Active', recording:''},
+    {id:3, driver:'Keysha',          car:'OM2',     carrier:'Mercury',     policy:'VERIFY', effective:'2025-11-30', expiry:'2026-05-30', addlInterest:false, lastVerified:'2026-06-05', method:'AI call', lastResult:'No answer', recording:''},
+    {id:4, driver:'Joseph (RTO)',    car:'OXF',     carrier:'State Farm',  policy:'VERIFY', effective:'2026-03-01', expiry:'2026-09-01', addlInterest:false, lastVerified:'2026-06-17', method:'AI call', lastResult:'Active (confirmed)', recording:''},
+    {id:5, driver:'Aaron & Alexa (RTO)', car:'Cali', carrier:'AAA',       policy:'VERIFY', effective:'2026-02-10', expiry:'2026-08-10', addlInterest:false, lastVerified:'2026-06-01', method:'Dec page', lastResult:'Active', recording:''},
+    {id:6, driver:'Johnathan Sparks', car:'Model Y', carrier:'Allstate',  policy:'VERIFY', effective:'2026-01-20', expiry:'2027-01-20', addlInterest:true,  lastVerified:'2026-06-19', method:'AI call', lastResult:'Active (confirmed)', recording:''},
+    {id:7, driver:'Jamie Cabada',    car:'Electra', carrier:'Farmers',     policy:'VERIFY', effective:'2025-12-25', expiry:'2026-06-25', addlInterest:false, lastVerified:'2026-06-19', method:'AI call', lastResult:'Active (confirmed)', recording:''},
+  ],
+  repairs:[
+    {id:1, car:'GWD', date:'2026-06-12', desc:'12V battery + rear tire replacement (sample — edit)', vendor:'OC Tesla Service', cost:840, status:'Open'},
+    {id:2, car:'Whip', date:'2026-05-20', desc:'Windshield chip repair', vendor:'Safelite', cost:120, status:'Done'},
+    {id:3, car:'Electra', date:'2026-04-08', desc:'Falcon door alignment', vendor:'Indie EV shop', cost:560, status:'Done'},
+  ],
+  applications:[
+    {id:'sample-1',ref:'SAMPLE',name:'Maria Lopez (sample)',email:'maria@example.com',phone:'(714) 555-0182',type:'rental',plan:'rental',status:'under_review',payment:'paid',license:'D1234567',insurance:'has',city:'Santa Ana',state:'CA',experience:'',hours:'',notes:'',created:'2026-06-18'}
+  ],
+  settings:{reVerifyDays:3, callCadenceDays:2, expiringWindow:14}
+};}
+
+let data = load();
+function load(){ try{const r=localStorage.getItem(STORE); return r?JSON.parse(r):seed();}catch(e){return seed();} }
+function save(){ localStorage.setItem(STORE, JSON.stringify(data)); document.getElementById('savedNote').textContent='Saved '+new Date().toLocaleTimeString(); }
+
+/* ============================ HELPERS ============================ */
+const $=(s,el=document)=>el.querySelector(s);
+function daysBetween(a,b){return Math.floor((b-a)/86400000);}
+function parse(d){return d?new Date(d+'T00:00:00'):null;}
+function fmt(n){return '$'+(Number(n)||0).toLocaleString();}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function emptyRow(cols,msg){return `<tr><td colspan="${cols}" class="note" style="text-align:center;padding:26px">${msg}</td></tr>`;}
+
+// Insurance status engine
+function insStatus(p){
+  const exp=parse(p.expiry), lv=parse(p.lastVerified);
+  const s=data.settings;
+  if(exp && exp<TODAY) return {label:'EXPIRED', cls:'red', reason:'Policy expired '+p.expiry};
+  if(exp && daysBetween(TODAY,exp)<=s.expiringWindow) return {label:'EXPIRING', cls:'amber', reason:'Expires in '+daysBetween(TODAY,exp)+'d ('+p.expiry+')'};
+  if(/no answer|fail|unconfirm|lapse|cancel/i.test(p.lastResult||'')) return {label:'UNCONFIRMED', cls:'red', reason:'Last check: '+p.lastResult};
+  if(lv && daysBetween(lv,TODAY)>s.reVerifyDays) return {label:'STALE', cls:'amber', reason:'Not re-verified in '+daysBetween(lv,TODAY)+'d'};
+  return {label:'ACTIVE', cls:'green', reason:'Verified '+(p.lastVerified||'—')};
+}
+function nextCallDue(p){const lv=parse(p.lastVerified); if(!lv)return null; const d=new Date(lv); d.setDate(d.getDate()+data.settings.callCadenceDays); return d;}
+
+/* ============================ RENDER ============================ */
+let activeTab='overview';
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{activeTab=b.dataset.tab;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));render();});
+
+function kpis(){
+  const f=data.fleet;
+  const rented=f.filter(c=>c.status==='Rented').length;
+  const avail=f.filter(c=>c.status==='Available').length;
+  const down=f.filter(c=>c.status==='Down').length;
+  const util=f.length?Math.round(rented/f.length*100):0;
+  const rev=f.filter(c=>c.status==='Rented').reduce((s,c)=>s+(Number(c.rate)||0),0);
+  const risk=data.insurance.filter(p=>['EXPIRED','EXPIRING','STALE','UNCONFIRMED'].includes(insStatus(p).label)).length;
+  const apps=(data.applications||[]).length;
+  const appsPending=(data.applications||[]).filter(a=>['draft','pending_payment','paid','under_review'].includes(a.status)).length;
+  return {rented,avail,down,util,rev,risk,apps,appsPending,total:f.length};
+}
+
+function render(){
+  const k=kpis();
+  let h='';
+  h+=`<div class="grid kpis">
+    <div class="kpi good"><div class="label">Rented</div><div class="val">${k.rented}</div><div class="sub">of ${k.total} cars</div></div>
+    <div class="kpi"><div class="label">Available</div><div class="val">${k.avail}</div><div class="sub">idle inventory</div></div>
+    <div class="kpi ${k.down?'bad':''}"><div class="label">Down</div><div class="val">${k.down}</div><div class="sub">in repair / OOS</div></div>
+    <div class="kpi ${k.util<40?'warn':'good'}"><div class="label">Utilization</div><div class="val">${k.util}%</div><div class="sub">rented ÷ fleet</div></div>
+    <div class="kpi"><div class="label">Weekly revenue</div><div class="val">${fmt(k.rev)}</div><div class="sub">active rentals</div></div>
+    <div class="kpi ${k.risk?'bad':'good'}"><div class="label">Insurance risk</div><div class="val">${k.risk}</div><div class="sub">need attention</div></div>
+    <div class="kpi ${k.appsPending?'warn':''}"><div class="label">Applicants</div><div class="val">${k.apps}</div><div class="sub">${k.appsPending} need review</div></div>
+  </div>`;
+
+  if(activeTab==='overview') h+=overview(k);
+  if(activeTab==='fleet') h+=fleetTab();
+  if(activeTab==='insurance') h+=insuranceTab();
+  if(activeTab==='repairs') h+=repairsTab();
+  if(activeTab==='applicants') h+=applicantsTab();
+  $('#app').innerHTML=h;
+}
+
+function overview(k){
+  // attention items
+  const items=[];
+  data.insurance.forEach(p=>{const s=insStatus(p); if(['EXPIRED','UNCONFIRMED'].includes(s.label))items.push({dot:'red',t:`${p.driver} (${p.car}) — ${s.label}`,d:s.reason});});
+  data.insurance.forEach(p=>{const s=insStatus(p); if(['EXPIRING','STALE'].includes(s.label))items.push({dot:'amber',t:`${p.driver} (${p.car}) — ${s.label}`,d:s.reason});});
+  data.fleet.filter(c=>c.status==='Down').forEach(c=>items.push({dot:'amber',t:`${c.id} is DOWN`,d:'No revenue while out of service'}));
+  data.insurance.filter(p=>!p.addlInterest).forEach(p=>items.push({dot:'amber',t:`${p.driver} — not listed as Additional Interest`,d:'You won’t get an auto lapse notice from the insurer'}));
+  const list=items.length?items.map(i=>`<div class="alertitem"><span class="dot ${i.dot}"></span><div><div style="font-weight:600">${esc(i.t)}</div><div class="small">${esc(i.d)}</div></div></div>`).join(''):'<div class="note">All clear — nothing needs attention.</div>';
+
+  // fleet breakdown bars
+  const f=data.fleet, t=f.length||1;
+  const bar=(label,n,color)=>`<div class="bar"><span style="width:90px;color:var(--muted)">${label}</span><div class="track"><div class="fill" style="width:${n/t*100}%;background:${color}"></div></div><b>${n}</b></div>`;
+
+  return `<div class="grid two">
+    <div class="panel">
+      <h2>Needs attention today</h2>
+      ${list}
+    </div>
+    <div class="panel">
+      <h2>Fleet status</h2>
+      <div class="bars">
+        ${bar('Rented', k.rented, 'var(--green)')}
+        ${bar('Available', k.avail, 'var(--accent2)')}
+        ${bar('Down', k.down, 'var(--amber)')}
+      </div>
+      <h2 style="margin-top:22px">Repair spend</h2>
+      <div class="note">Open: <b style="color:var(--amber)">${fmt(data.repairs.filter(r=>r.status==='Open').reduce((s,r)=>s+(+r.cost||0),0))}</b>
+       · All-time logged: <b>${fmt(data.repairs.reduce((s,r)=>s+(+r.cost||0),0))}</b></div>
+    </div>
+  </div>`;
+}
+
+function fleetTab(){
+  let rows=data.fleet.map((c,i)=>{
+    const sc=c.status==='Rented'?'green':c.status==='Available'?'blue':'amber';
+    return `<tr>
+      <td><b>${esc(c.id)}</b></td>
+      <td>${esc(c.model)}</td><td>${esc(c.year)||'—'}</td>
+      <td class="small">${esc(c.vin)||'—'}</td><td>${esc(c.plate)||'—'}</td>
+      <td>${esc(c.owner)||'—'}</td>
+      <td><span class="pill ${sc}">${c.status}</span></td>
+      <td>${esc(c.driver)||'—'}</td>
+      <td>${fmt(c.rate)}/wk</td>
+      <td class="small">${c.miles?Number(c.miles).toLocaleString()+' mi':'—'}</td>
+      <td class="rowact"><button class="ico" onclick="editFleet(${i})">Edit</button><button class="ico" onclick="delRow('fleet',${i})">✕</button></td>
+    </tr>`;}).join('');
+  return `<div class="panel">
+    <div class="sectionhead"><h2>Fleet — ${data.fleet.length} vehicles</h2><button class="btn primary" onclick="editFleet(-1)">+ Add vehicle</button></div>
+    <div style="overflow:auto"><table>
+      <thead><tr><th>Car</th><th>Model</th><th>Year</th><th>VIN</th><th>Plate</th><th>Owner</th><th>Status</th><th>Driver</th><th>Rate</th><th>Miles</th><th></th></tr></thead>
+      <tbody>${rows||emptyRow(11,'No vehicles yet — add one.')}</tbody></table></div>
+  </div>`;
+}
+
+function insuranceTab(){
+  let rows=data.insurance.map((p,i)=>{
+    const s=insStatus(p); const due=nextCallDue(p);
+    const overdue=due && due<TODAY;
+    return `<tr>
+      <td><b>${esc(p.driver)}</b><div class="small">${esc(p.car)}</div></td>
+      <td>${esc(p.carrier)}<div class="small">#${esc(p.policy)}</div></td>
+      <td>${esc(p.expiry)||'—'}</td>
+      <td>${p.addlInterest?'<span class="badge yes">Yes</span>':'<span class="badge no">No</span>'}</td>
+      <td>${esc(p.lastVerified)||'—'}<div class="small">${esc(p.method)} · ${esc(p.lastResult)}</div></td>
+      <td>${due?(`<span class="${overdue?'pill red':'small'}">${due.toISOString().slice(0,10)}${overdue?' (due)':''}</span>`):'—'}</td>
+      <td><span class="pill ${s.cls}">${s.label}</span><div class="small">${esc(s.reason)}</div></td>
+      <td class="rowact"><button class="ico" onclick="editIns(${i})">Edit</button><button class="ico" onclick="delRow('insurance',${i})">✕</button></td>
+    </tr>`;}).join('');
+  return `<div class="banner">⚠️ Insurance figures below are <b>placeholders</b> — replace each row with the driver's real carrier, policy #, and dates. Policy <code>#VERIFY</code> = not yet entered.</div>
+  <div class="panel">
+    <div class="sectionhead"><h2>Active policies — daily verification</h2>
+      <div style="display:flex;gap:8px"><button class="btn" onclick="runDailyCheck()">▶ Run daily check</button><button class="btn primary" onclick="editIns(-1)">+ Add policy</button></div>
+    </div>
+    <div style="overflow:auto"><table>
+      <thead><tr><th>Driver / Car</th><th>Carrier / Policy</th><th>Expires</th><th>Addl. Interest</th><th>Last verified</th><th>Next call</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows||emptyRow(8,'No active policies yet — add one.')}</tbody></table></div>
+    <div class="note" style="margin-top:14px">Status logic: <b>EXPIRED</b> past expiry · <b>EXPIRING</b> within ${data.settings.expiringWindow}d · <b>UNCONFIRMED</b> last call failed/no-answer · <b>STALE</b> not re-verified in ${data.settings.reVerifyDays}d · else <b>ACTIVE</b>. Call cadence: every ${data.settings.callCadenceDays} days.</div>
+  </div>
+  ${verifMethodPanel()}`;
+}
+
+function verifMethodPanel(){
+  return `<div class="panel">
+    <h2>How daily verification works (recommended design)</h2>
+    <p class="note">No insurer offers an open "is this policy active?" API, so reliability comes from layering cheap signals. This is the design the dashboard is built around:</p>
+    <div class="arch">
+      <div class="step"><div class="n">LAYER 1 · free, strongest</div><div class="t">Additional Interest</div><div class="small">List Sophic as Additional Interest / lienholder on each driver's policy. The insurer then auto-notifies you the moment a policy lapses or cancels. This is your real-time backstop.</div></div>
+      <div class="step"><div class="n">LAYER 2 · ~$10–40/mo</div><div class="t">AI confirmation call (every 2 days)</div><div class="t" style="font-weight:400"></div><div class="small">A voice agent (Bland / Vapi / Retell / ElevenLabs) calls each active driver, confirms coverage is active, and saves a recording + transcript — same evidence value as InsureVerify's recorded add-on, far cheaper.</div></div>
+      <div class="step"><div class="n">LAYER 3 · monthly</div><div class="t">Dec-page re-collection</div><div class="small">Driver re-submits a fresh declarations page monthly (or at renewal). Resets "last verified" and catches coverage changes.</div></div>
+      <div class="step"><div class="n">LAYER 4 · daily</div><div class="t">This dashboard + alert</div><div class="small">Computes status every day from the above and flags EXPIRED / EXPIRING / STALE / UNCONFIRMED. A scheduled job can email you the at-risk list each morning.</div></div>
+    </div>
+    <p class="note" style="margin-top:14px"><b>Cost vs InsureVerify:</b> their plans run $499–$1,299/mo. This stack: the AI call layer is usage-based (~$0.07–0.15/min) so ~$10–40/mo at your volume, Additional Interest is free, and the dashboard is yours. Trade-off: you wire it once vs. their turnkey product.</p>
+    <p class="note" style="margin-top:6px;color:var(--green)"><b>✓ Built:</b> Supabase tables (vehicles · insurance_policies · repairs) are live and seeded · a daily 7:30am job checks every policy and drafts an at-risk alert to your inbox · the Bland AI calling layer (launch + webhook + script) is in <code>/bland-ai</code>, ready once you add a Bland key + host the webhook.</p>
+  </div>`;
+}
+
+function repairsTab(){
+  const byCar={}; data.repairs.forEach(r=>{byCar[r.car]=(byCar[r.car]||0)+(+r.cost||0);});
+  let rows=data.repairs.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(r=>{
+    const i=data.repairs.indexOf(r);
+    return `<tr>
+      <td>${esc(r.date)}</td><td><b>${esc(r.car)}</b></td><td>${esc(r.desc)}</td>
+      <td>${esc(r.vendor)||'—'}</td><td>${fmt(r.cost)}</td>
+      <td><span class="pill ${r.status==='Open'?'amber':'gray'}">${r.status}</span></td>
+      <td class="rowact"><button class="ico" onclick="editRep(${i})">Edit</button><button class="ico" onclick="delRow('repairs',${i})">✕</button></td>
+    </tr>`;}).join('');
+  const summary=Object.entries(byCar).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<span class="pill gray" style="margin:2px">${esc(c)}: ${fmt(v)}</span>`).join(' ');
+  return `<div class="panel">
+    <div class="sectionhead"><h2>Repairs — ${fmt(data.repairs.reduce((s,r)=>s+(+r.cost||0),0))} total</h2><button class="btn primary" onclick="editRep(-1)">+ Log repair</button></div>
+    <div style="overflow:auto"><table>
+      <thead><tr><th>Date</th><th>Car</th><th>Description</th><th>Vendor</th><th>Cost</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows||emptyRow(7,'No repairs logged yet.')}</tbody></table></div>
+    <div class="note" style="margin-top:14px"><b>By vehicle:</b> ${summary||'—'}</div>
+  </div>`;
+}
+
+/* ============================ APPLICANTS ============================ */
+const APP_STATUSES=['draft','pending_payment','paid','under_review','approved','rejected'];
+function appPill(s){const m={approved:'green',rejected:'red',under_review:'amber',paid:'amber',pending_payment:'amber',draft:'gray'};return `<span class="pill ${m[s]||'gray'}">${(s||'').replace(/_/g,' ')}</span>`;}
+function applicantsTab(){
+  const apps=(data.applications||[]).slice().sort((a,b)=>(b.created||'').localeCompare(a.created||''));
+  const rows=apps.map(a=>{
+    const i=(data.applications||[]).indexOf(a);
+    return `<tr>
+      <td><b>${esc(a.name)||'—'}</b><div class="small">${esc(a.city)||''}${a.state?', '+esc(a.state):''}</div></td>
+      <td>${esc(a.email)||'—'}<div class="small">${esc(a.phone)||''}</div></td>
+      <td><span class="pill ${a.type==='driver'?'blue':'gray'}">${esc(a.type)||'rental'}</span></td>
+      <td>${esc(a.payment)||'—'}</td>
+      <td>${esc(a.license)||'—'}<div class="small">ins: ${esc(a.insurance)||'?'}</div></td>
+      <td>${(a.created||'').slice(0,10)}</td>
+      <td>${appPill(a.status)}</td>
+      <td class="rowact"><button class="ico" onclick="editApp(${i})">Review</button></td>
+    </tr>`;}).join('');
+  return `<div class="panel">
+    <div class="sectionhead"><h2>Applicants &amp; clients — ${apps.length}</h2>
+      <div class="small">Review applications → verify → add as an active client (creates an insurance record to track).</div>
+    </div>
+    <div style="overflow:auto"><table>
+      <thead><tr><th>Name</th><th>Contact</th><th>Type</th><th>Payment</th><th>License / Ins.</th><th>Applied</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows||emptyRow(8,'No applications yet. They appear here as people apply on your site.')}</tbody></table></div>
+  </div>`;
+}
+function editApp(i){
+  const a=data.applications[i];
+  openModal(`<h3>${esc(a.name)||'Applicant'} <span class="small">· ${esc(a.ref)||''}</span></h3>
+    <p class="note" style="margin-top:-6px">${esc(a.email)||''} · ${esc(a.phone)||''} · ${esc(a.city)||''} ${esc(a.state)||''}</p>
+    <div class="field row2">
+      <div><label>License #</label><div class="small" style="padding-top:6px">${esc(a.license)||'—'}</div></div>
+      <div><label>Self-reported insurance</label><div class="small" style="padding-top:6px">${esc(a.insurance)||'—'}</div></div>
+    </div>
+    ${a.type==='driver'?`<div class="field row2"><div><label>Rideshare exp.</label><div class="small" style="padding-top:6px">${esc(a.experience)||'—'}</div></div><div><label>Weekly hours</label><div class="small" style="padding-top:6px">${esc(a.hours)||'—'}</div></div></div>`:''}
+    <div class="field"><label>Status</label><select id="a_status">${APP_STATUSES.map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="field"><label>Reviewer notes</label><textarea id="a_notes" rows="2">${esc(a.notes)}</textarea></div>
+    <div class="field"><label>Assign car (optional, for "make active client")</label><input id="a_car" placeholder="e.g. NDD"></div>
+    <div class="modal-act">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn" onclick="makeClient(${i})">★ Make active client</button>
+      <button class="btn primary" onclick="saveApp(${i})">Save</button>
+    </div>`);
+}
+async function saveApp(i){
+  const a=data.applications[i];
+  const patch={status:$('#a_status').value,reviewer_notes:$('#a_notes').value};
+  closeModal();
+  if(online&&!String(a.id).startsWith('sample')){try{const res=await authFetchApp(a.id,patch);Object.assign(a,res);}catch(e){toast('Saved locally — sync failed');Object.assign(a,{status:patch.status,notes:patch.reviewer_notes});}}
+  else{Object.assign(a,{status:patch.status,notes:patch.reviewer_notes});}
+  save();render();
+}
+async function makeClient(i){
+  const a=data.applications[i];const car=$('#a_car').value.trim();
+  const policy={id:Date.now(),driver:a.name.replace(/\s*\(sample\)/,''),car,carrier:'',policy:'VERIFY',effective:'',expiry:'',addlInterest:false,lastVerified:TODAY.toISOString().slice(0,10),method:'Dec page',lastResult:'New client — verify insurance'};
+  closeModal();
+  const synced=await syncRow('insurance',policy);
+  data.insurance.push(synced);
+  // mark approved
+  const patch={status:'approved',reviewer_notes:(a.notes||'')+' [made active client]'};
+  if(online&&!String(a.id).startsWith('sample')){try{const res=await authFetchApp(a.id,patch);Object.assign(a,res);}catch(e){Object.assign(a,{status:'approved'});}}
+  else Object.assign(a,{status:'approved'});
+  save();activeTab='insurance';document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab==='insurance'));render();
+  toast(a.name+' added as active client — verify their policy');
+}
+// app_update helper works for both token and JWT connection layers
+async function authFetchApp(id,patch){
+  if(typeof authFetch==='function'){const r=await authFetch('POST',{op:'app_update',id,patch});return r.row;}
+  const r=await api('POST',{op:'app_update',id,patch});return r.row;
+}
+
+/* ============================ DAILY CHECK ============================ */
+function runDailyCheck(){
+  const flags=data.insurance.map(p=>({p,s:insStatus(p)})).filter(x=>x.s.label!=='ACTIVE');
+  if(!flags.length){alert('✅ Daily check complete — all '+data.insurance.length+' active policies verified, nothing at risk.');return;}
+  const msg=flags.map(x=>`• ${x.p.driver} (${x.p.car}) — ${x.s.label}: ${x.s.reason}`).join('\n');
+  alert('⚠️ Daily check — '+flags.length+' policy issue(s):\n\n'+msg+'\n\nIn production this list is emailed to you each morning and the AI agent re-calls UNCONFIRMED / STALE drivers.');
+}
+
+/* ============================ MODALS ============================ */
+function openModal(html){
+  const m=$('#modal');m.innerHTML=html;
+  m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');
+  $('#modalBg').classList.add('show');
+  const first=m.querySelector('input,select,textarea');if(first)setTimeout(()=>first.focus(),30);
+}
+function closeModal(){$('#modalBg').classList.remove('show');}
+$('#modalBg').onclick=e=>{if(e.target.id==='modalBg')closeModal();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function field(label,id,val,type='text'){return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(val)}"></div>`;}
+
+function editFleet(i){
+  const c=i<0?{id:'',model:'Model 3',year:'',vin:'',plate:'',owner:'',status:'Available',driver:'',rate:500,miles:''}:data.fleet[i];
+  openModal(`<h3>${i<0?'Add vehicle':'Edit '+esc(c.id)}</h3>
+    <div class="field row2">${field('Name / nickname','f_id',c.id)}<div class="field"><label>Model</label><select id="f_model">${['Model 3','Model Y','Model X'].map(m=>`<option ${m===c.model?'selected':''}>${m}</option>`).join('')}</select></div></div>
+    <div class="field row2">${field('Year','f_year',c.year,'number')}${field('Weekly rate','f_rate',c.rate,'number')}</div>
+    <div class="field row2">${field('VIN','f_vin',c.vin)}${field('Plate','f_plate',c.plate)}</div>
+    <div class="field row2">${field('Owner','f_owner',c.owner)}${field('Miles','f_miles',c.miles,'number')}</div>
+    <div class="field row2"><div class="field"><label>Status</label><select id="f_status">${['Available','Rented','Down'].map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}</select></div>${field('Current driver','f_driver',c.driver)}</div>
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveFleet(${i})">Save</button></div>`);
+}
+async function saveFleet(i){
+  const o={id:$('#f_id').value||'(unnamed)',model:$('#f_model').value,year:$('#f_year').value,vin:$('#f_vin').value,plate:$('#f_plate').value,owner:$('#f_owner').value,miles:$('#f_miles').value,status:$('#f_status').value,driver:$('#f_driver').value,rate:+$('#f_rate').value||0};
+  closeModal();
+  const synced=await syncRow('fleet',o);
+  if(i<0)data.fleet.push(synced);else data.fleet[i]=synced;
+  save();render();
+}
+
+function editIns(i){
+  const p=i<0?{driver:'',car:'',carrier:'',policy:'VERIFY',effective:'',expiry:'',addlInterest:false,lastVerified:'',method:'AI call',lastResult:'',recording:''}:data.insurance[i];
+  openModal(`<h3>${i<0?'Add policy':'Edit '+esc(p.driver)}</h3>
+    <div class="field row2">${field('Driver','i_driver',p.driver)}${field('Car','i_car',p.car)}</div>
+    <div class="field row2">${field('Carrier','i_carrier',p.carrier)}${field('Policy #','i_policy',p.policy)}</div>
+    <div class="field row2">${field('Effective','i_eff',p.effective,'date')}${field('Expiry','i_exp',p.expiry,'date')}</div>
+    <div class="field row2"><div class="field"><label>Additional Interest listed?</label><select id="i_addl"><option value="true" ${p.addlInterest?'selected':''}>Yes</option><option value="false" ${!p.addlInterest?'selected':''}>No</option></select></div>${field('Last verified','i_lv',p.lastVerified,'date')}</div>
+    <div class="field row2"><div class="field"><label>Method</label><select id="i_method">${['AI call','Dec page','Manual call','Insurer portal'].map(m=>`<option ${m===p.method?'selected':''}>${m}</option>`).join('')}</select></div>${field('Last result','i_res',p.lastResult)}</div>
+    ${field('Recording / transcript URL','i_rec',p.recording)}
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveIns(${i})">Save</button></div>`);
+}
+async function saveIns(i){
+  const o={id:i<0?Date.now():data.insurance[i].id,driver:$('#i_driver').value,car:$('#i_car').value,carrier:$('#i_carrier').value,policy:$('#i_policy').value,effective:$('#i_eff').value,expiry:$('#i_exp').value,addlInterest:$('#i_addl').value==='true',lastVerified:$('#i_lv').value,method:$('#i_method').value,lastResult:$('#i_res').value,recording:$('#i_rec').value};
+  closeModal();
+  const synced=await syncRow('insurance',o);
+  if(i<0)data.insurance.push(synced);else data.insurance[i]=synced;
+  save();render();
+}
+
+function editRep(i){
+  const r=i<0?{car:'',date:TODAY.toISOString().slice(0,10),desc:'',vendor:'',cost:'',status:'Open'}:data.repairs[i];
+  openModal(`<h3>${i<0?'Log repair':'Edit repair'}</h3>
+    <div class="field row2">${field('Car','r_car',r.car)}${field('Date','r_date',r.date,'date')}</div>
+    <div class="field"><label>Description</label><textarea id="r_desc" rows="2">${esc(r.desc)}</textarea></div>
+    <div class="field row2">${field('Vendor','r_vendor',r.vendor)}${field('Cost','r_cost',r.cost,'number')}</div>
+    <div class="field"><label>Status</label><select id="r_status"><option ${r.status==='Open'?'selected':''}>Open</option><option ${r.status==='Done'?'selected':''}>Done</option></select></div>
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveRep(${i})">Save</button></div>`);
+}
+async function saveRep(i){
+  const o={id:i<0?Date.now():data.repairs[i].id,car:$('#r_car').value,date:$('#r_date').value,desc:$('#r_desc').value,vendor:$('#r_vendor').value,cost:+$('#r_cost').value||0,status:$('#r_status').value};
+  closeModal();
+  const synced=await syncRow('repairs',o);
+  if(i<0)data.repairs.push(synced);else data.repairs[i]=synced;
+  save();render();
+}
+
+async function delRow(t,i){if(confirm('Delete this row?')){const row=data[t][i];await syncDelete(t,row.id);data[t].splice(i,1);save();render();}}
+
+/* ============================ IMPORT / EXPORT ============================ */
+function exportData(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sophic-ops-data.json';a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);save();render();alert('Imported.');}catch(err){alert('Invalid file.');}};r.readAsText(f);}
+function resetData(){if(confirm('Reset to sample data? This wipes your edits.')){data=seed();save();render();}}
+
+/* ============================ AUTH + LIVE API (hosted) ============================ */
+const SUPA_URL='https://tjnwxntvbyfjektubwso.supabase.co';
+const ANON_KEY='sb_publishable_sCKdDGUeUfKok_cJLcjriA_ViLmcAqK';
+const OPS_API=SUPA_URL+'/functions/v1/ops-api';
+const SESS_KEY='sophicOps_session';
+let session=(()=>{try{return JSON.parse(localStorage.getItem(SESS_KEY)||'null');}catch(e){return null;}})();
+let online=false;
+
+function setStatus(s){const p=document.getElementById('connPill');if(!p)return;if(s==='live'){p.textContent='● Live';p.className='pill green';}else if(s==='syncing'){p.textContent='Syncing…';p.className='pill amber';}else{p.textContent='Offline';p.className='pill gray';}}
+function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:8px;z-index:99;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.4)';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(t._h);t._h=setTimeout(()=>t.style.opacity='0',2600);}
+
+async function authFetch(method,body){
+  const r=await fetch(OPS_API,{method,headers:{'content-type':'application/json','authorization':'Bearer '+(session&&session.access_token)},body:body?JSON.stringify(body):undefined});
+  if(r.status===401){if(await refresh())return authFetch(method,body);showLogin('Session expired — please sign in again.');throw new Error('401');}
+  if(!r.ok) throw new Error('API '+r.status);
+  return r.json();
+}
+async function refresh(){
+  if(!session||!session.refresh_token) return false;
+  try{const r=await fetch(SUPA_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:ANON_KEY,'content-type':'application/json'},body:JSON.stringify({refresh_token:session.refresh_token})});if(!r.ok)return false;const d=await r.json();session={access_token:d.access_token,refresh_token:d.refresh_token,email:(d.user&&d.user.email)||session.email};localStorage.setItem(SESS_KEY,JSON.stringify(session));return true;}catch(e){return false;}
+}
+async function login(){
+  const email=$('#lg_email').value.trim(),password=$('#lg_pw').value;const btn=$('#lg_btn');btn.disabled=true;$('#lg_err').textContent='';
+  try{
+    const r=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:ANON_KEY,'content-type':'application/json'},body:JSON.stringify({email,password})});
+    const d=await r.json();
+    if(!r.ok){$('#lg_err').textContent=d.error_description||d.msg||'Login failed';btn.disabled=false;return;}
+    session={access_token:d.access_token,refresh_token:d.refresh_token,email:(d.user&&d.user.email)||email};
+    localStorage.setItem(SESS_KEY,JSON.stringify(session));boot();
+  }catch(e){$('#lg_err').textContent='Network error — try again';btn.disabled=false;}
+}
+function logout(){session=null;localStorage.removeItem(SESS_KEY);showLogin('Signed out.');}
+function showLogin(msg){document.getElementById('loginOverlay').style.display='flex';document.getElementById('appShell').style.display='none';const e=$('#lg_err');if(e&&msg)e.textContent=msg;const b=$('#lg_btn');if(b)b.disabled=false;}
+function hideLogin(){document.getElementById('loginOverlay').style.display='none';document.getElementById('appShell').style.display='';}
+
+async function pullLive(){
+  setStatus('syncing');
+  try{const d=await authFetch('GET');data={fleet:d.fleet||[],insurance:d.insurance||[],repairs:d.repairs||[],applications:d.applications||[],settings:data.settings};online=true;setStatus('live');const w=document.getElementById('whoami');if(w)w.textContent=d.user||session.email;save();render();}
+  catch(e){online=false;setStatus('offline');render();}
+}
+async function syncRow(table,row){if(!online)return row;try{const res=await authFetch('POST',{op:'upsert',table,row});return res.row||row;}catch(e){toast('Saved locally — sync failed');return row;}}
+async function syncDelete(table,id){if(!online)return;try{await authFetch('POST',{op:'delete',table,id});}catch(e){toast('Deleted locally — sync failed');}}
+
+async function boot(){hideLogin();save();await pullLive();}
+
+/* ============================ INIT ============================ */
+if(session&&session.access_token){boot();}else{showLogin();}
+
+</script>
+</body>
+</html>
