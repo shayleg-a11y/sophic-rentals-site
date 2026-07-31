@@ -34,6 +34,8 @@
   .s-paid,.s-approved{background:rgba(0,224,164,.12);color:var(--accent);border-color:rgba(0,224,164,.3)}
   .s-pending_payment,.s-under_review{background:rgba(255,200,80,.12);color:#FFC850;border-color:rgba(255,200,80,.3)}
   .s-rejected{background:rgba(255,107,107,.12);color:#FF6B6B;border-color:rgba(255,107,107,.3)}
+  .t-driver{background:rgba(25,182,255,.14);color:#19B6FF;border-color:rgba(25,182,255,.4)}
+  .t-rental{background:rgba(0,224,164,.12);color:var(--accent);border-color:rgba(0,224,164,.3)}
   .muted{color:var(--muted)}
   a.dl{color:var(--accent);font-size:13px;cursor:pointer;font-weight:600}
   .yes{color:var(--accent);font-weight:700}
@@ -62,8 +64,8 @@
     </div>
     <div class="tablewrap">
       <table id="tbl"><thead><tr>
-        <th>Received</th><th>Ref</th><th>Name</th><th>Phone</th><th>Email</th><th>DOB</th>
-        <th>Location</th><th>License #</th><th>ID Photos</th><th>Plan</th><th>Status</th><th>Payment</th>
+        <th>Received</th><th>Ref</th><th>Type</th><th>Name</th><th>Phone</th><th>Email</th><th>DOB</th>
+        <th>Location</th><th>License #</th><th>Details</th><th>ID Photos</th><th>Plan</th><th>Status</th><th>Payment</th>
       </tr></thead><tbody id="rows"></tbody></table>
     </div>
   </div>
@@ -115,26 +117,35 @@
     const paid=DATA.filter(a=>a.payment_status==='paid'||a.status==='paid').length;
     document.getElementById('stats').innerHTML=
       `<div class="stat"><b>${DATA.length}</b>Total</div>`+
+      `<div class="stat"><b>${DATA.filter(a=>a.application_type==='driver').length}</b>Drivers</div>`+
       `<div class="stat"><b>${paid}</b>Paid</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.status==='under_review').length}</b>Review</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.status==='approved').length}</b>Approved</div>`;
-    document.getElementById('rows').innerHTML=DATA.map(a=>`<tr>
+    document.getElementById('rows').innerHTML=DATA.map(a=>{
+      const t=(a.application_type==='driver')?'driver':'rental';
+      const tlabel=(t==='driver')?'Driver':'Rental';
+      const dinfo=(t==='driver')
+        ?([a.rideshare_experience,a.weekly_hours].filter(Boolean).map(esc).join(' · ')||'<span class="muted">—</span>')
+        :([a.platform,a.preferred_car].filter(Boolean).map(esc).join(' · ')||'<span class="muted">—</span>');
+      return `<tr>
       <td class="muted">${esc(fmt(a.created_at))}</td>
       <td><span class="pill">${esc(a.reference_number||'')}</span></td>
+      <td><span class="pill t-${t}">${tlabel}</span></td>
       <td><b>${esc(name(a))}</b></td>
       <td>${esc(a.phone)}</td>
       <td>${esc(a.email)}</td>
       <td>${esc(a.date_of_birth||'')}</td>
       <td>${esc(loc(a))}</td>
       <td>${esc(a.license_number||'')||'<span class=muted>—</span>'}</td>
+      <td>${dinfo}</td>
       <td>${idphotos(a)}</td>
       <td>${esc(a.plan||'')}</td>
       <td><span class="pill s-${esc(a.status)}">${esc(a.status||'')}</span></td>
       <td><span class="pill s-${esc(a.payment_status)}">${esc(a.payment_status||'')}</span></td>
-    </tr>`).join('') || '<tr><td colspan="12" class="muted" style="padding:24px">No applications yet.</td></tr>';
+    </tr>`;}).join('') || '<tr><td colspan="14" class="muted" style="padding:24px">No applications yet.</td></tr>';
   }
   function exportCsv(){
-    const cols=['created_at','reference_number','first_name','last_name','email','phone','date_of_birth','address_line1','address_line2','city','state','zip_code','license_number','plan','status','payment_status'];
+    const cols=['created_at','reference_number','application_type','first_name','last_name','email','phone','date_of_birth','address_line1','address_line2','city','state','zip_code','license_number','platform','preferred_car','insurance_status','rideshare_experience','weekly_hours','plan','status','payment_status'];
     const lines=[cols.join(',')].concat(DATA.map(a=>cols.map(c=>'"'+String(a[c]==null?'':a[c]).replace(/"/g,'""')+'"').join(',')));
     const blob=new Blob([lines.join('\n')],{type:'text/csv'});
     const url=URL.createObjectURL(blob);const el=document.createElement('a');
