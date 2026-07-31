@@ -56,7 +56,13 @@
   <div class="card" id="dataCard" style="display:none">
     <div class="bar">
       <div class="stats" id="stats"></div>
-      <div style="display:flex;gap:10px">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <select id="filterSel" onchange="render()" style="background:#0E1013;border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:13px">
+          <option value="all">All applications</option>
+          <option value="paid" selected>Paid only</option>
+          <option value="unpaid">Unpaid / abandoned</option>
+          <option value="nodocs">Paid, missing license photos</option>
+        </select>
         <button class="ghost" onclick="load()">Refresh</button>
         <a class="dl" onclick="exportCsv()">Export CSV</a>
         <button class="ghost" onclick="logout()">Sign out</button>
@@ -113,15 +119,25 @@
     }
     return links.length ? `<span style="display:inline-flex;gap:8px;flex-wrap:wrap">${links.join('')}</span>` : '<span class="muted">—</span>';
   }
+  function isPaid(a){ return a.payment_status==='paid'||a.status==='paid'; }
+  function hasDocs(a){ return !!(a.license_front_path&&a.license_back_path); }
   function render(){
-    const paid=DATA.filter(a=>a.payment_status==='paid'||a.status==='paid').length;
+    const paid=DATA.filter(isPaid).length;
     document.getElementById('stats').innerHTML=
       `<div class="stat"><b>${DATA.length}</b>Total</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.application_type==='driver').length}</b>Drivers</div>`+
       `<div class="stat"><b>${paid}</b>Paid</div>`+
+      `<div class="stat"><b>${DATA.filter(a=>isPaid(a)&&!hasDocs(a)).length}</b>Paid, no docs</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.status==='under_review').length}</b>Review</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.status==='approved').length}</b>Approved</div>`;
-    document.getElementById('rows').innerHTML=DATA.map(a=>{
+    const mode=(document.getElementById('filterSel')||{}).value||'all';
+    const VIEW=DATA.filter(a=>{
+      if(mode==='paid') return isPaid(a);
+      if(mode==='unpaid') return !isPaid(a);
+      if(mode==='nodocs') return isPaid(a)&&!hasDocs(a);
+      return true;
+    });
+    document.getElementById('rows').innerHTML=VIEW.map(a=>{
       const t=(a.application_type==='driver')?'driver':'rental';
       const tlabel=(t==='driver')?'Driver':'Rental';
       const dinfo=(t==='driver')
@@ -142,7 +158,7 @@
       <td>${esc(a.plan||'')}</td>
       <td><span class="pill s-${esc(a.status)}">${esc(a.status||'')}</span></td>
       <td><span class="pill s-${esc(a.payment_status)}">${esc(a.payment_status||'')}</span></td>
-    </tr>`;}).join('') || '<tr><td colspan="14" class="muted" style="padding:24px">No applications yet.</td></tr>';
+    </tr>`;}).join('') || '<tr><td colspan="14" class="muted" style="padding:24px">Nothing matches this filter.</td></tr>';
   }
   function exportCsv(){
     const cols=['created_at','reference_number','application_type','first_name','last_name','email','phone','date_of_birth','address_line1','address_line2','city','state','zip_code','license_number','platform','preferred_car','insurance_status','rideshare_experience','weekly_hours','plan','status','payment_status'];

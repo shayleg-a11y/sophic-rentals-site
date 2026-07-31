@@ -161,7 +161,7 @@
   .modal form{padding:22px 26px 26px;display:grid;gap:14px}
   .field{display:grid;gap:6px;min-width:0}
   .field label{font-size:13px;font-weight:600;color:var(--muted)}
-  .field input,.field select{width:100%;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:15px}
+  .field input,.field select{width:100%;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:16px}
   .field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .row3{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:14px}
@@ -382,11 +382,7 @@
             </select>
           </div>
         </div>
-        <div class="row2">
-          <div class="field"><label for="f-front">Driver's license — front</label><input id="f-front" type="file" accept="image/*" required /></div>
-          <div class="field"><label for="f-back">Driver's license — back</label><input id="f-back" type="file" accept="image/*" required /></div>
-        </div>
-        <p class="secnote">Your license photos are uploaded securely and visible only to Sophic Rentals. You must be 21+ with a valid license and a clean driving record. This is an independent contractor opportunity.</p>
+        <p class="secnote">You'll upload your license photos right after checkout — have them handy. You must be 21+ with a valid license and a clean driving record. This is an independent contractor opportunity.</p>
         <div class="fee-box"><span>One-time driver application fee</span><b class="accent">$10</b></div>
         <div class="upstatus" id="upStatus" role="status" aria-live="polite"></div>
         <button class="btn btn-primary" type="submit" id="applySubmit">Submit application &amp; pay $10</button>
@@ -472,29 +468,27 @@
     };
     try{
       stat.textContent='Saving your application…';
-      const r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      const d=await r.json();
-      if(!r.ok||!d.id) throw new Error(d.error||'save failed');
-      const appId=d.id;
-      const front=document.getElementById('f-front').files[0];
-      const back=document.getElementById('f-back').files[0];
-      const paths={};
-      if(front){ stat.textContent='Uploading license (front)…'; paths.license_front_path=await uploadFile(appId,'license_front',front); }
-      if(back){ stat.textContent='Uploading license (back)…'; paths.license_back_path=await uploadFile(appId,'license_back',back); }
-      if(paths.license_front_path||paths.license_back_path){
-        stat.textContent='Finishing up…';
-        await fetch('/api/finalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({application_id:appId},paths))});
+      let r, d;
+      for(let attempt=0; attempt<2; attempt++){
+        try{
+          r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+          d=await r.json();
+          break;
+        }catch(netErr){ if(attempt===1) throw netErr; await new Promise(res=>setTimeout(res,1200)); }
       }
+      if(!r.ok||!d.id) throw new Error((d&&d.error)||'save failed');
+      try{ sessionStorage.setItem('sophic_app', JSON.stringify({id:d.id, ref:d.reference_number||'', email:payload.email||'', t:Date.now()})); }catch(_){}
       if(STRIPE_APPLICATION_LINK){
-        btn.textContent='Redirecting to secure checkout…';
-        const url=STRIPE_APPLICATION_LINK+'?prefilled_email='+encodeURIComponent(payload.email||'')+'&client_reference_id='+encodeURIComponent(d.reference_number||appId);
+        btn.textContent='Opening secure checkout…';
+        stat.textContent='Almost there — complete the $10 payment to finish.';
+        const url=STRIPE_APPLICATION_LINK+'?prefilled_email='+encodeURIComponent(payload.email||'')+'&client_reference_id='+encodeURIComponent(d.reference_number||d.id);
         window.location.href=url; return false;
       }
       document.getElementById('formWrap').style.display='none';
       document.getElementById('success').classList.add('show');
     }catch(err){
-      stat.textContent=''; btn.disabled=false; btn.textContent='Submit application & pay $10';
-      alert('Sorry — something went wrong submitting your application. Please try again or text us. ('+((err&&err.message)||'error')+')');
+      btn.disabled=false; btn.textContent='Submit application & pay $10';
+      stat.textContent='Couldn’t submit — please check your connection and tap the button again. Your answers are still here.';
     }
     return false;
   }
