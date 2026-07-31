@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   try {
     const b = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const s = (v, n) => (v == null ? '' : String(v)).trim().slice(0, n);
+    const isDriver = b.application_type === 'driver';
     const rec = {
       first_name: s(b.first_name, 100),
       last_name: s(b.last_name, 100),
@@ -17,7 +18,12 @@ export default async function handler(req, res) {
       zip_code: s(b.zip_code, 20),
       license_number: s(b.license_number, 40),
       insurance_status: s(b.insurance_status, 60) || null,
+      application_type: isDriver ? 'driver' : 'rental',
+      rideshare_experience: s(b.rideshare_experience, 60) || null,
+      weekly_hours: s(b.weekly_hours, 60) || null,
       plan: b.plan === 'rent-to-own' ? 'rent-to-own' : 'rental',
+      platform: s(b.platform, 40) || null,
+      preferred_car: s(b.car, 80) || null,
       status: 'pending_payment',
       payment_status: 'unpaid'
     };
@@ -27,6 +33,34 @@ export default async function handler(req, res) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SECRET_KEY;
     if (!url || !key) { res.status(500).json({ error: 'Server not configured' }); return; }
+
+    // Soft dedupe: same email + type still unpaid within the last 15 minutes -> reuse that application
+    try {
+      const since = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+      const q = url + '/rest/v1/applications?select=id,reference_number'
+        + '&email=eq.' + encodeURIComponent(rec.email)
+        + '&application_type=eq.' + rec.application_type
+        + '&payment_status=eq.unpaid&status=eq.pending_payment'
+        + '&created_at=gte.' + encodeURIComponent(since)
+        + '&order=created_at.desc&limit=1';
+      const dr = await fetch(q, { headers: { apikey: key, Authorization: 'Bearer ' + key } });
+      if (dr.ok) {
+        const dup = await dr.json();
+        if (Array.isArray(dup) && dup[0]) {
+          // Refresh the existing row with the latest answers instead of creating a duplicate
+          const patch = Object.assign({}, rec, { updated_at: new Date().toISOString() });
+          delete patch.status; delete patch.payment_status;
+          await fetch(url + '/rest/v1/applications?id=eq.' + dup[0].id, {
+            method: 'PATCH',
+            headers: { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+            body: JSON.stringify(patch)
+          }).catch(() => {});
+          res.status(200).json({ ok: true, id: dup[0].id, reference_number: dup[0].reference_number, deduped: true });
+          return;
+        }
+      }
+    } catch (_) { /* dedupe is best-effort */ }
+
     const r = await fetch(url + '/rest/v1/applications', {
       method: 'POST',
       headers: { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json', Prefer: 'return=representation' },
