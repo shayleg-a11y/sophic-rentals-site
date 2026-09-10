@@ -1,0 +1,181 @@
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> 53 Teslas · 3 pickup locations · LA &amp; Orange County</span>
+        <h1>Drive a <span class="accent">Tesla</span> for Uber &amp; Lyft. No car payment. No gas.</h1>
+        <p class="sub">Long-term Tesla rentals for gig drivers. One flat weekly rate, charging that costs about $20 per 500 miles, and pickup near LAX, John Wayne Airport or Chapman University. Apply in two minutes — verified within 24–48 hours.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-apply>Apply now — $9.99 →</button>
+          <a class="btn btn-ghost" href="#fleet">See the cars</a>
+        </div>
+        <p class="hero-note">$9.99 one-time application fee · Verified in 24–48 hrs · No credit check</p>
+        <div class="trust">
+          <span class="pill">{{ico:bolt}} Charging ≈ $20 per 500 miles</span>
+          <span class="pill">{{ico:calendar}} Flat weekly rate, one-month minimum</span>
+          <span class="pill">{{ico:check}} Meets Uber &amp; Lyft vehicle rules</span>
+          <span class="pill">{{ico:wrench}} Maintenance on us</span>
+        </div>
+      </div>
+      <aside class="cost-card apply-card" aria-label="Apply now">
+        <h3>Apply in 2 minutes</h3>
+        <div class="lead">Pay the $9.99 application fee, upload your license, and we verify you within 24–48 hours.</div>
+        <form data-apply-form novalidate class="inline-form">{{APPLY_FIELDS}}</form>
+      </aside>
+    </div>
+  </section>
+
+  <section class="strip">
+    <div class="wrap"><div class="grid">
+      <div class="stat"><div class="num accent">53</div><div class="lab">Teslas in the Sophic fleet</div></div>
+      <div class="stat"><div class="num accent">3</div><div class="lab">Pickup locations — LAX, SNA, Chapman</div></div>
+      <div class="stat"><div class="num accent">48h</div><div class="lab">Typical approval to pickup</div></div>
+      <div class="stat"><div class="num accent">$0</div><div class="lab">Down payment or credit check</div></div>
+    </div></div>
+  </section>
+
+  <section id="fleet" class="pad">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">The fleet</span>
+        <h2>Pick your Tesla</h2>
+        <p id="availLine">Availability comes straight from our fleet system.</p>
+      </div>
+      <div class="fleet-grid" id="fleetGrid"></div>
+      <p class="small muted" style="text-align:center;margin-top:24px">Every car is rideshare-approved, serviced by us, and delivered charged. Apply now and we match you to the nearest available car.</p>
+    </div>
+  </section>
+
+  <section id="how" class="pad band">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">Simple process</span>
+        <h2>On the road in 3 steps</h2>
+        <p>No dealership, no credit check, no five-year loan.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><div class="n">1</div><h3>Apply &amp; pay $9.99</h3><p>Two-minute application, then snap photos of your license. The one-time fee covers verification and holds your spot.</p><span class="tag">$9.99, non-refundable</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Get verified</h3><p>We verify your license and your full-coverage insurance — usually within 24–48 hours — and text you to confirm your car.</p><span class="tag">24–48 hours</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up at our office near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, deposit + first week, 10-minute walkaround, drive off charged.</p><span class="tag">$500 deposit + first week</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cost" class="pad">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">Your numbers</span>
+        <h2>What you keep each week</h2>
+        <p>Move the sliders. Estimates from your own inputs — not a promise of earnings.</p>
+      </div>
+      <div class="calc reveal">
+        <div>
+          <h3>Your week</h3>
+          <div class="ctl"><label for="c-hours">Hours driving <output id="c-hours-out">40 hrs</output></label><input type="range" id="c-hours" min="10" max="70" step="5" value="40"></div>
+          <div class="ctl"><label for="c-rate">Gross per hour (fares + tips) <output id="c-rate-out">$25/hr</output></label><input type="range" id="c-rate" min="15" max="45" step="1" value="25"></div>
+          <div class="ctl"><label for="c-model">Car</label><select id="c-model" style="width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;color:var(--text);font-size:16px"><option>Model 3</option><option>Model Y</option><option>Model X</option></select></div>
+          <p class="note">Assumes about 18 miles per driving hour and our fleet's average charging cost of roughly $20 per 500 miles (4¢ a mile), billed to you automatically through Tesla's fleet system. Gas comparison: 28 mpg at $4.90/gal. Insurance is your own policy and varies by carrier.</p>
+        </div>
+        <div class="res">
+          <div class="row"><span>Gross fares + tips</span><b id="r-gross">$1,000</b></div>
+          <div class="row"><span>Weekly rent</span><b id="r-rent">−$500</b></div>
+          <div class="row"><span>Charging (<span id="r-miles">720 mi</span>)</span><b id="r-charge">−$29</b></div>
+          <div class="row big"><span>Left over, before insurance &amp; taxes</span><b id="r-net">$471</b></div>
+          <div class="row" style="border-bottom:0"><span>Gas you didn't buy</span><b id="r-gas">$97 saved</b></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:14px" data-apply>Apply now — $9.99</button>
+        </div>
+      </div>
+      <div class="pricing-row reveal">
+        <div><b>Model 3</b><span>$500 / week</span></div>
+        <div><b>Model Y</b><span>$600 / week</span></div>
+        <div><b>Model X</b><span>$700 / week</span></div>
+        <div><b>Deposit</b><span>One week's rent, refundable</span></div>
+        <div><b>Charging</b><span>≈ $20 per 500 mi, auto-billed</span></div>
+        <div><b>Miles</b><span>5,000 / week included</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="locations" class="pad band">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Pickup</span><h2>Three locations, one close to you</h2><p>We assign your pickup based on where your car is. Cars stay with you for the whole rental — you come in once.</p></div>
+      <div class="steps">
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Near LAX</h3><p>Westside, South Bay and airport drivers. Minutes from the 405 and 105.</p></div>
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Near John Wayne Airport</h3><p>Irvine, Newport, Costa Mesa and Santa Ana. Right off the 405 and 55.</p></div>
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Next to Chapman University</h3><p>Orange, Anaheim, Fullerton and north OC. Minutes from the 55, 22 and 57.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Why drivers choose Sophic</span><h2>Built for gig drivers, not tourists</h2></div>
+      <div class="why-grid">
+        <div class="why reveal"><div class="ic">{{icon:bolt}}</div><h3>Charging, not gas</h3><p>Our fleet averages about $20 per 500 miles. It's billed to you automatically through Tesla's fleet system — no receipts, no reimbursements, no surprises.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:cash}}</div><h3>One flat weekly rate</h3><p>Rent is the same every week and billed on the same day. Charging is added based on exactly what you used.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:shield}}</div><h3>Your insurance, verified</h3><p>You carry a full-coverage policy (comprehensive + collision). We verify it with your carrier before pickup so you're never driving uncovered.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:wrench}}</div><h3>Maintenance on us</h3><p>Service, software, and mechanical repairs from normal use are ours. Wear items you use up — tires, brakes, wipers — are yours.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:check}}</div><h3>Uber &amp; Lyft ready</h3><p>Model 3, Y and X all meet Uber and Lyft vehicle-age and door rules, and qualify for Comfort-tier rides.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:rocket}}</div><h3>48 hours, not 4 weeks</h3><p>Most drivers are verified within two days. With 53 cars across three locations, there's usually one ready near you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad band">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">The cars</span>
+        <h2>Riders notice. Ratings follow.</h2>
+        <p>Quiet, clean, modern. From the Model 3 cockpit to the Model X with falcon-wing doors and a white interior — every one of these is a real Sophic car.</p>
+      </div>
+      <div class="gallery reveal">
+        <div class="g"><picture><source srcset="/images/int-cockpit.webp" type="image/webp"><img src="/images/int-cockpit.jpg" width="1000" height="667" alt="Tesla Model 3 cockpit and touchscreen" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-screen.webp" type="image/webp"><img src="/images/int-screen.jpg" width="1000" height="667" alt="Tesla Model 3 center touchscreen" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-seats.webp" type="image/webp"><img src="/images/int-seats.jpg" width="1000" height="667" alt="Tesla Model 3 front seats" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-rear.webp" type="image/webp"><img src="/images/int-rear.jpg" width="1000" height="667" alt="Tesla Model 3 rear seats" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-doors.webp" type="image/webp"><img src="/images/gal-x-doors.jpg" width="1000" height="750" alt="Tesla Model X with falcon-wing doors open" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-int.webp" type="image/webp"><img src="/images/gal-x-int.jpg" width="1000" height="750" alt="Tesla Model X white interior" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-cockpit.webp" type="image/webp"><img src="/images/gal-x-cockpit.jpg" width="1000" height="750" alt="Tesla Model X cockpit" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-rear.webp" type="image/webp"><img src="/images/gal-x-rear.jpg" width="1000" height="750" alt="Tesla Model X rear three-quarter view" loading="lazy" decoding="async"></picture></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Questions</span><h2>Good to know</h2></div>
+      <div class="faq">
+        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does it cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. Add a refundable deposit equal to one week's rent, the one-time $9.99 application fee, and charging — about $20 per 500 miles, billed automatically through Tesla's fleet system. Insurance is your own policy. Minimum term is one month.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq2">Is the $9.99 refundable?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>No. It's a one-time application fee that covers verifying your license and insurance, and it isn't refunded if you're declined or change your mind.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq3">What insurance do I need?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Your own auto policy with full coverage — liability plus comprehensive and collision — that extends to a rental vehicle, with Sophic Rentals listed as an additional interest so we're notified if it lapses. If you drive rideshare, tell your carrier; most add rideshare coverage for a few dollars a month. We verify with your carrier before pickup and re-check monthly. Don't have it yet? Apply anyway — we'll tell you exactly what to ask for.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq4">What do I need to qualify?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 or older, a valid U.S. driver's license that isn't suspended, and full-coverage insurance as above. No credit check. Cars stay in California.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq5">How fast can I start?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq5"><p>Most drivers are verified within 24–48 hours of uploading their license. Then you pick up at whichever of our three locations has your car — often the same or next day.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq6">Where do I pick up?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq6"><p>One of three offices: near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange. We assign the location based on where your car is and text you the address once you're approved. You only come in once — the car stays with you.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq7">How does charging work?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq7"><p>Charge anywhere — Superchargers, home, work. Our cars run on Tesla's fleet management, so charging is tracked per car and billed to you automatically with your weekly rent. Across the fleet it averages about $20 per 500 miles.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq8">Is there a mileage limit?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq8"><p>5,000 miles per week is included, which covers even full-time driving. Over that is $1 per mile.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq9">What if the car needs service?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq9"><p>Scheduled service, software and mechanical repairs from normal use are on us, and if a car has to come off the road we work to get you into another one. Wear-and-tear items you consume — tires, brake pads, wipers — are the driver's responsibility.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad band" style="padding-bottom:0;border-bottom:0">
+    <div class="wrap">
+      <div class="callout reveal">
+        <div style="max-width:60ch">
+          <span class="eyebrow">No car, no rent</span>
+          <h2>Don't want to rent? Drive on our Uber fleet.</h2>
+          <p>We put you in a Tesla with insurance and maintenance included. Half of what you earn goes toward the car until the weekly target is met — then you keep 100% for the rest of the week.</p>
+        </div>
+        <a href="/drive" class="btn btn-primary">See the fleet driver program →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad band" style="border-top:0">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Ready to stop paying for gas?</h2>
+        <p>Apply in two minutes for $9.99. Verified in 24–48 hours. Pick up near LAX, SNA or Chapman.</p>
+        <button class="btn" data-apply>Apply now →</button>
+      </div>
+    </div>
+  </section>

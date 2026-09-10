@@ -1,0 +1,123 @@
+  <style>
+    .tcard{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px 20px;max-width:540px;margin:24px auto 0;text-align:center}
+    .tcard .check{width:56px;height:56px;border-radius:50%;background:rgba(34,227,169,.14);color:var(--accent);display:grid;place-items:center;font-size:26px;margin:0 auto 16px;border:1px solid rgba(34,227,169,.35)}
+    .tcard h1{font-size:24px}
+    .tcard p{color:var(--muted);margin-top:10px;font-size:16px}
+    .ref{margin-top:12px;font-size:14px;color:var(--muted)}
+    .ref b{color:var(--accent);font-size:16px;letter-spacing:.06em}
+    .upsec{margin-top:26px;text-align:left}
+    .upsec h2{font-size:17px}
+    .upsec .hint{font-size:14px;margin-top:4px}
+    .tile{margin-top:14px;background:var(--surface-2);border:1.5px dashed var(--line-2);border-radius:16px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s}
+    .tile:active{border-color:var(--accent)}
+    .tile .ic{width:44px;height:44px;border-radius:12px;background:var(--bg-2);display:grid;place-items:center;font-size:22px;flex:none}
+    .tile .tl{flex:1;min-width:0}
+    .tile .tl b{display:block;font-size:16px}
+    .tile .tl span{display:block;font-size:13px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .tile.done{border:1.5px solid rgba(34,227,169,.5);background:rgba(34,227,169,.06)}
+    .tile.err{border-color:rgba(255,122,107,.6)}
+    .tile input{display:none}
+    .tstatus{min-height:20px;font-size:14px;color:var(--accent);margin-top:14px;text-align:center}
+    .tstatus.bad{color:var(--err)}
+    .later{display:block;margin-top:14px;font-size:14px;color:var(--muted);text-align:center}
+    .next{margin-top:22px;text-align:left;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+    .next h3{font-size:15px;margin-bottom:8px}
+    .next ol{padding-left:20px;color:var(--muted);font-size:14px}
+    .next li{margin-bottom:4px}
+    @media(min-width:600px){.tcard{padding:40px 36px}}
+  </style>
+  <div class="wrap">
+  <div class="tcard">
+    <div class="check" aria-hidden="true">✓</div>
+    <h1>Payment received — one last step</h1>
+    <p>To finish, snap or upload photos of your driver's license below. Takes about 30 seconds and lets us verify you today.</p>
+    <div class="ref" id="refRow" style="display:none">Reference: <b id="refNum"></b></div>
+    <div class="upsec" id="uploader">
+      <h2>Upload your license</h2>
+      <p class="hint">Use your phone camera or camera roll — front and back.</p>
+      <label class="tile" id="tileFront"><span class="ic" id="icFront" aria-hidden="true">📷</span><span class="tl"><b>License — front</b><span id="subFront">Tap to add photo</span></span><input type="file" accept="image/*" id="fileFront" /></label>
+      <label class="tile" id="tileBack"><span class="ic" id="icBack" aria-hidden="true">📷</span><span class="tl"><b>License — back</b><span id="subBack">Tap to add photo</span></span><input type="file" accept="image/*" id="fileBack" /></label>
+      <div class="tstatus" id="upStatus" role="status" aria-live="polite"></div>
+    </div>
+    <div class="upsec" id="details">
+      <h2 style="margin-top:8px">Confirm a few details</h2>
+      <p class="hint">Needed for your rental agreement. Takes 20 seconds.</p>
+      <form id="detailsForm" style="display:grid;gap:12px;margin-top:12px" novalidate>
+        <div class="field"><label for="d-dob">Date of birth</label><input id="d-dob" required name="date_of_birth" type="date" autocomplete="bday" /></div>
+        <div class="field"><label for="d-addr1">Home address</label><input id="d-addr1" required name="address_line1" placeholder="Street address" autocomplete="address-line1" /></div>
+        <div class="row3">
+          <div class="field"><label for="d-city">City</label><input id="d-city" required name="city" autocomplete="address-level2" /></div>
+          <div class="field"><label for="d-state">State</label><select id="d-state" name="state"><option>CA</option><option>AZ</option><option>NV</option><option>OR</option><option>WA</option><option>Other</option></select></div>
+          <div class="field"><label for="d-zip">ZIP</label><input id="d-zip" required name="zip_code" inputmode="numeric" maxlength="10" autocomplete="postal-code" /></div>
+        </div>
+        <div class="fstatus" id="d-status" role="status" aria-live="polite"></div>
+        <button class="btn btn-ghost" type="submit" id="d-submit" style="width:100%">Save details</button>
+      </form>
+    </div>
+    <div class="upsec" id="noRef" style="display:none;text-align:center">
+      <p>We couldn't link this page to your application automatically. No problem — reply to our confirmation text or email with photos of your license (front and back), or open the link in that message on your phone.</p>
+    </div>
+    <div class="next">
+      <h3>What happens next</h3>
+      <ol>
+        <li>We verify your license and insurance — usually within 24–48 hours.</li>
+        <li>We text you to confirm your car and your pickup location — near LAX, John Wayne Airport or Chapman University.</li>
+        <li>At pickup: sign, deposit + first week, 10-minute walkaround, drive off charged.</li>
+      </ol>
+    </div>
+    <a class="btn btn-primary" style="margin-top:22px;width:100%" href="/" id="doneBtn" hidden>Done — back to the site</a>
+    <span class="later">Questions? <a data-contact="sms" data-label-email="Email us" style="color:var(--accent)">Text us</a> any time.</span>
+  </div>
+  </div>
+  <script>
+  (function(){
+    var APP = null;
+    try{ APP = JSON.parse(sessionStorage.getItem('sophic_app')||'null'); }catch(_){}
+    var q = new URLSearchParams(location.search), qref = q.get('ref');
+    if(qref && /^[A-Za-z0-9-]{4,40}$/.test(qref)) APP = Object.assign(APP||{}, {ref:qref});
+    if(APP && APP.ref){ document.getElementById('refNum').textContent = APP.ref; document.getElementById('refRow').style.display='block'; }
+    if(!APP || (!APP.id && !APP.ref)){
+      document.getElementById('uploader').style.display='none';
+      document.getElementById('noRef').style.display='block';
+      document.getElementById('doneBtn').hidden=false;
+    }
+    window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
+    function idPayload(){ var p={}; if(APP&&APP.ref) p.reference=APP.ref; else if(APP&&APP.id) p.application_id=APP.id; return p; }
+    function shrink(file){
+      return new Promise(function(resolve){
+        if(!/^image\//.test(file.type) || file.size < 900*1024) return resolve(file);
+        var img=new Image(), url=URL.createObjectURL(file);
+        img.onload=function(){ try{ var max=1600,w=img.naturalWidth,h=img.naturalHeight,s=Math.min(1,max/Math.max(w,h)); var c=document.createElement('canvas'); c.width=Math.round(w*s); c.height=Math.round(h*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); c.toBlob(function(b){ URL.revokeObjectURL(url); resolve(b&&b.size<file.size? new File([b],(file.name.replace(/\.[^.]+$/,'')||'license')+'.jpg',{type:'image/jpeg'}) : file); },'image/jpeg',0.82); }catch(e){ URL.revokeObjectURL(url); resolve(file); } };
+        img.onerror=function(){ URL.revokeObjectURL(url); resolve(file); };
+        img.src=url;
+      });
+    }
+    var done={};
+    async function uploadSlot(slot,file,sub,tile,ic){
+      var stat=document.getElementById('upStatus'); tile.classList.remove('err'); stat.classList.remove('bad'); sub.textContent='Preparing photo…';
+      try{
+        var small=await shrink(file); sub.textContent='Uploading…';
+        var r=await fetch('/api/sign-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({slot:slot,filename:small.name||'photo.jpg'},idPayload()))});
+        var d=await r.json(); if(!r.ok||!d.uploadUrl) throw new Error('sign');
+        var up=await fetch(d.uploadUrl,{method:'PUT',headers:{'Content-Type':small.type||'application/octet-stream','x-upsert':'true'},body:small}); if(!up.ok) throw new Error('upload');
+        var fin={}; fin[slot+'_path']=d.path;
+        await fetch('/api/finalize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign(fin,idPayload()))});
+        tile.classList.add('done'); ic.textContent='✓'; sub.textContent='Uploaded ✓'; done[slot]=true;
+        if(done.license_front&&done.license_back){ stat.textContent='All set! We\'ll take it from here.'; document.getElementById('doneBtn').hidden=false; if(window.track) window.track('docs_uploaded',{ref:APP&&APP.ref||''}); }
+        else stat.textContent='Great — now the other side.';
+      }catch(e){ tile.classList.add('err'); sub.textContent='Didn\'t go through — tap to try again'; stat.classList.add('bad'); stat.textContent='Upload failed. Check your connection and tap the box to retry.'; }
+    }
+    document.getElementById('fileFront').addEventListener('change',function(){ if(this.files[0]) uploadSlot('license_front',this.files[0],document.getElementById('subFront'),document.getElementById('tileFront'),document.getElementById('icFront')); });
+    var df = document.getElementById('detailsForm');
+    var dob = document.getElementById('d-dob'); if (dob) { var t = new Date(); t.setFullYear(t.getFullYear() - 21); dob.max = t.toISOString().slice(0, 10); }
+    if (df) df.addEventListener('submit', async function(e){
+      e.preventDefault(); if (!df.checkValidity()) { df.reportValidity(); return; }
+      var st = document.getElementById('d-status'), b = document.getElementById('d-submit'); st.className='fstatus'; st.textContent='Saving…'; b.disabled = true;
+      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value }, {});
+      try { var r = await fetch('/api/apply', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); if (!r.ok) throw new Error('x'); st.textContent = 'Saved ✓'; b.textContent = 'Saved'; if (window.track) window.track('details_saved', {}); }
+      catch (err) { st.className='fstatus bad'; st.textContent = 'Couldn\'t save — check your connection and try again.'; b.disabled = false; }
+    });
+    if (!(APP && APP.ref)) { var d = document.getElementById('details'); if (d) d.style.display = 'none'; }
+    document.getElementById('fileBack').addEventListener('change',function(){ if(this.files[0]) uploadSlot('license_back',this.files[0],document.getElementById('subBack'),document.getElementById('tileBack'),document.getElementById('icBack')); });
+  })();
+  </script>
