@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+Disallow: /api/
 
-Sitemap: https://sophic-rentals.vercel.app/sitemap.xml
+Sitemap: https://sophicrentals.com/sitemap.xml

@@ -2,313 +2,147 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Drive for Sophic — Uber Fleet Driver Program in LA & Orange County</title>
-<meta name="description" content="Be your own boss. Drive a Tesla on Sophic's Uber fleet in LA & Orange County — no car payment, no gas, no debt. Keep what you earn. Apply to drive for $10." />
-<link rel="canonical" href="https://sophic-rentals.vercel.app/drive" />
-<meta property="og:title" content="Drive for Sophic — Be Your Own Boss" />
-<meta property="og:description" content="Drive a Tesla on our Uber fleet in LA & OC. No car payment, no gas. Keep what you earn. Apply to drive for $10." />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Drive a Tesla on our Uber fleet — no car, no insurance to buy | Sophic Rentals</title>
+<meta name="description" content="Sophic's fleet driver program: we provide the Tesla, insurance and maintenance. Half your earnings go toward the car until the weekly target, then you keep 100%. Apply in two minutes." />
+<link rel="canonical" href="https://sophicrentals.com/drive" />
+
+<meta property="og:title" content="No car? Drive ours. Keep what you earn after the weekly target." />
+<meta property="og:description" content="Sophic's fleet driver program: we provide the Tesla, insurance and maintenance. Half your earnings go toward the car until the weekly target, then you keep 100%. Apply in two minutes." />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="Sophic Rentals" />
-<meta property="og:url" content="https://sophic-rentals.vercel.app/drive" />
-<meta property="og:image" content="https://sophic-rentals.vercel.app/images/og-card.jpg" />
+<meta property="og:url" content="https://sophicrentals.com/drive" />
+<meta property="og:image" content="https://sophicrentals.com/images/og-card.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Drive for Sophic — Be Your Own Boss" />
-<meta name="twitter:description" content="Drive a Tesla on our Uber fleet in LA & OC. No car payment, no gas. Keep what you earn." />
-<meta name="theme-color" content="#08090B" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2300E0A4'/%3E%3Ctext x='50%25' y='52' font-family='Arial,sans-serif' font-size='44' font-weight='900' text-anchor='middle' fill='%2304140F'%3ES%3C/text%3E%3C/svg%3E" />
-<link rel="preload" as="image" href="images/hero.jpg" />
+<meta name="twitter:title" content="No car? Drive ours. Keep what you earn after the weekly target." />
+<meta name="twitter:description" content="Sophic's fleet driver program: we provide the Tesla, insurance and maintenance. Half your earnings go toward the car until the weekly target, then you keep 100%. Apply in two minutes." />
+<meta name="twitter:image" content="https://sophicrentals.com/images/og-card.jpg" />
+<meta name="theme-color" content="#0A0C0F" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2322E3A9'/%3E%3Ctext x='50%25' y='52' font-family='Arial,sans-serif' font-size='44' font-weight='900' text-anchor='middle' fill='%23062018'%3ES%3C/text%3E%3C/svg%3E" />
+<link rel="preload" as="image" href="/images/hero.webp" type="image/webp" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"JobPosting","title":"Rideshare Driver — Uber Fleet (Drive a Tesla)","description":"Be your own boss. Drive a Sophic Tesla on our Uber fleet in Los Angeles and Orange County. No car payment, no gas, no debt. Commission pay: 50% of weekly earnings go toward your vehicle until your weekly target is met, then keep 100%.","datePosted":"2026-06-18","employmentType":["FULL_TIME","PART_TIME","CONTRACTOR"],"hiringOrganization":{"@type":"Organization","name":"Sophic Rentals","sameAs":"https://sophic-rentals.vercel.app/","email":"Sophicrentals@gmail.com"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"}},"applicantLocationRequirements":{"@type":"AdministrativeArea","name":"Greater Los Angeles"},"jobLocationType":"On-site"}
-</script>
-<style>
-  :root{
-    --bg:#08090B; --bg-2:#0E1013; --surface:#15181D; --surface-2:#1C2026;
-    --line:#262B33; --text:#F4F6F8; --muted:#9AA1AC; --muted-2:#9098A3;
-    --accent:#00E0A4; --accent-2:#19B6FF; --accent-ink:#04140F;
-    --radius:18px; --radius-sm:12px; --max:1180px;
-    --shadow:0 20px 60px -20px rgba(0,0,0,.6);
-    --grad:linear-gradient(120deg,#00E0A4,#19B6FF);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-  section{position:relative}
-  section[id]{scroll-margin-top:84px}
-  h1,h2,h3{line-height:1.1;letter-spacing:-.02em;font-weight:800}
-  .accent{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:8px;z-index:200;font-weight:700}
-  .skip:focus{left:12px;top:12px}
-  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;padding:14px 24px;border-radius:999px;border:0;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;font-family:inherit}
-  .btn-primary{background:var(--grad);color:var(--accent-ink);box-shadow:0 8px 30px -8px rgba(0,224,164,.6)}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -8px rgba(0,224,164,.7)}
-  .btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
-  .btn-ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:7px 14px;border-radius:999px}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-
-  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(8,9,11,.72);border-bottom:1px solid transparent;transition:border-color .3s}
-  header.scrolled{border-color:var(--line)}
-  nav{display:flex;align-items:center;justify-content:space-between;height:70px}
-  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;letter-spacing:-.03em}
-  .logo .mark{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;color:var(--accent-ink);font-weight:900;font-size:17px}
-  .nav-links{display:flex;align-items:center;gap:32px}
-  .nav-links a{font-size:15px;color:var(--muted);font-weight:500;transition:color .2s}
-  .nav-links a:hover{color:var(--text)}
-  .nav-cta{display:flex;align-items:center;gap:14px}
-  .menu-btn{display:none;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);cursor:pointer;width:42px;height:42px;border-radius:10px;font-size:20px;align-items:center;justify-content:center}
-  .mobile-menu{display:none;border-top:1px solid var(--line);background:rgba(8,9,11,.96);backdrop-filter:blur(14px)}
-  .mobile-menu.open{display:block}
-  .mobile-menu a{display:block;padding:15px 24px;color:var(--text);font-weight:600;border-bottom:1px solid var(--line)}
-  .mobile-menu a:last-child{border-bottom:0}
-  @media(max-width:860px){
-    .nav-links{display:none}
-    .nav-cta .btn-ghost{display:none}
-    .menu-btn{display:inline-flex}
-  }
-
-  .hero{padding:100px 0 84px;text-align:center;overflow:hidden;background-image:linear-gradient(rgba(8,9,11,.82),rgba(8,9,11,.92) 60%,var(--bg)),url('images/hero.jpg');background-size:cover;background-position:center;background-repeat:no-repeat}
-  .hero::before{content:"";position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse at center,rgba(0,224,164,.16),transparent 60%);pointer-events:none}
-  .hero h1{font-size:clamp(38px,6.5vw,76px);font-weight:900;max-width:15ch;margin:22px auto 0}
-  .hero p.sub{font-size:clamp(17px,2.2vw,21px);color:var(--muted);max-width:58ch;margin:22px auto 0}
-  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
-  .hero-note{margin-top:16px;font-size:13px;color:var(--muted-2)}
-  .trust{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:46px}
-  .trust .pill .ico{color:var(--accent)}
-
-  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
-  .stats .grid{display:grid;grid-template-columns:repeat(4,1fr)}
-  .stat{padding:34px 20px;text-align:center;border-right:1px solid var(--line)}
-  .stat:last-child{border-right:0}
-  .stat .num{font-size:34px;font-weight:900}
-  .stat .lab{font-size:13px;color:var(--muted);margin-top:4px;letter-spacing:.02em}
-  @media(max-width:760px){.stats .grid{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}}
-
-  .shead{text-align:center;max-width:680px;margin:0 auto 50px}
-  .shead .eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-  .shead h2{font-size:clamp(30px,4.5vw,46px);margin-top:14px}
-  .shead p{color:var(--muted);font-size:17px;margin-top:14px}
-  .pad{padding:96px 0}
-
-  /* PAY MODEL */
-  .pay{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
-  @media(max-width:820px){.pay{grid-template-columns:1fr}}
-  .paycard{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--radius);padding:32px}
-  .paycard .tag{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
-  .paycard h3{font-size:24px;margin:12px 0 10px}
-  .paycard p{color:var(--muted);font-size:15px}
-  .paycard .big{font-size:40px;font-weight:900;margin:6px 0}
-  .bar{height:14px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin:18px 0 8px;display:flex}
-  .bar .fill{background:var(--grad);width:50%}
-  .bar .keep{background:rgba(0,224,164,.18);width:50%;border-left:2px solid var(--accent)}
-  .barlabels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
-
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  @media(max-width:820px){.steps{grid-template-columns:1fr}}
-  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px}
-  .step .n{width:42px;height:42px;border-radius:12px;background:var(--grad);color:var(--accent-ink);display:grid;place-items:center;font-weight:900;font-size:18px}
-  .step h3{font-size:21px;margin:18px 0 8px}
-  .step p{color:var(--muted);font-size:15px}
-  .step .price-tag{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--accent);background:rgba(0,224,164,.1);border:1px solid rgba(0,224,164,.3);padding:4px 12px;border-radius:999px}
-
-  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  @media(max-width:820px){.why-grid{grid-template-columns:1fr}}
-  .why{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--radius);padding:28px}
-  .why .ico{width:46px;height:46px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;color:var(--accent)}
-  .why h3{font-size:19px;margin:16px 0 8px}
-  .why p{color:var(--muted);font-size:15px}
-
-  .faq{max-width:780px;margin:0 auto}
-  .qa{border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:12px;background:var(--surface);overflow:hidden}
-  .qa button{width:100%;text-align:left;background:none;border:0;color:var(--text);font-family:inherit;font-size:17px;font-weight:600;padding:20px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
-  .qa .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted);font-size:15px}
-  .qa .a p{padding:0 22px 20px}
-  .qa.open .a{max-height:520px}
-  .qa .chev{transition:transform .3s;color:var(--accent);flex-shrink:0}
-  .qa.open .chev{transform:rotate(180deg)}
-
-  .cta-band{background:var(--grad);border-radius:28px;padding:56px 40px;text-align:center;color:var(--accent-ink);position:relative;overflow:hidden}
-  .cta-band h2{font-size:clamp(28px,4vw,42px);color:var(--accent-ink)}
-  .cta-band p{margin:14px auto 28px;max-width:48ch;font-weight:500;opacity:.85}
-  .cta-band .btn{background:var(--accent-ink);color:#fff}
-  .cta-band .btn:hover{transform:translateY(-2px)}
-
-  footer{border-top:1px solid var(--line);padding:50px 0 36px;margin-top:90px}
-  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
-  .foot p{color:var(--muted);font-size:14px;max-width:34ch;margin-top:12px}
-  .foot .col h4{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:14px}
-  .foot .col a{display:block;color:var(--muted);font-size:15px;margin-bottom:6px;padding:4px 0}
-  .foot .col a:hover{color:var(--text)}
-  .copy{text-align:center;color:var(--muted-2);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:24px}
-
-  .overlay{position:fixed;inset:0;background:rgba(4,5,7,.78);backdrop-filter:blur(6px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
-  .overlay.show{display:flex}
-  .modal{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);max-width:520px;width:100%;box-shadow:var(--shadow);animation:pop .25s ease;max-height:calc(100dvh - 48px);overflow-y:auto;-webkit-overflow-scrolling:touch}
-  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
-  .modal .mhead{padding:22px 26px 14px;display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--bg-2);z-index:2}
-  .modal h3{font-size:23px}
-  .modal .mhead p{color:var(--muted);font-size:14px;margin-top:6px}
-  .modal .close{background:var(--surface);border:1px solid var(--line);color:var(--muted);width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:20px;flex-shrink:0}
-  .modal form{padding:22px 26px 26px;display:grid;gap:14px}
-  .field{display:grid;gap:6px;min-width:0}
-  .field label{font-size:13px;font-weight:600;color:var(--muted)}
-  .field input,.field select{width:100%;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:16px}
-  .field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .row3{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:14px}
-  @media(max-width:520px){.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr}}
-  .field input[type=file]{padding:9px;font-size:13px;color:var(--muted)}
-  .field input[type=file]::file-selector-button{background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;margin-right:10px;cursor:pointer;font-family:inherit;font-size:13px}
-  .secnote{font-size:13px;color:var(--muted);margin-top:-4px}
-  .upstatus{font-size:13px;color:var(--accent);min-height:18px}
-  .fee-box{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
-  .fee-box b{font-size:20px}
-  .modal .btn{width:100%;justify-content:center}
-  .fineprint{font-size:12px;color:var(--muted);text-align:center}
-  .success{padding:40px 30px;text-align:center;display:none}
-  .success.show{display:block}
-  .success .check{width:64px;height:64px;border-radius:50%;background:rgba(0,224,164,.15);border:1px solid var(--accent);display:grid;place-items:center;margin:0 auto 18px;color:var(--accent);font-size:30px}
-  .success h3{font-size:24px;margin-bottom:10px}
-  .success p{color:var(--muted);font-size:15px}
-
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto}
-    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css?v=202609100845">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals \u2014 Fleet Driver Program","description":"Long-term Tesla rentals for Uber, Lyft and DoorDash drivers in Los Angeles and Orange County.","url":"https://sophicrentals.com/","email":"Sophicrentals@gmail.com","image":"https://sophicrentals.com/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals \u2014 Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals \u2014 near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals \u2014 near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}]}</script>
 </head>
-<body>
-<a href="#top" class="skip">Skip to content</a>
-
-<header id="hdr">
+<body data-app-type="driver">
+<a href="#main" class="skip">Skip to content</a>
+<header class="site" id="hdr">
   <div class="wrap">
-    <nav>
-      <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic<span style="color:var(--muted);font-weight:600">Rentals</span></a>
+    <nav class="main" aria-label="Main">
+      <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic&nbsp;<span class="lt">Rentals</span></a>
       <div class="nav-links">
-        <a href="#pay">How pay works</a>
-        <a href="#how">How it works</a>
-        <a href="#why">Why drive</a>
-        <a href="#faq">FAQ</a>
-        <a href="/">Rent a car</a>
+        <a href="/#fleet">Fleet</a>
+        <a href="/#cost">Pricing</a>
+        <a href="/#locations">Locations</a>
+        <a href="/#how">How it works</a>
+        <a href="/#faq">FAQ</a>
+        <a href="/drive" aria-current="page">Drive for us</a>
       </div>
       <div class="nav-cta">
-        <a href="/" class="btn btn-ghost">Rent instead</a>
-        <button class="btn btn-primary" onclick="openApply()">Apply to drive — $10</button>
-        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMenu()">☰</button>
+        <a class="btn btn-ghost btn-sm" data-contact="sms" data-label-email="Email us"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Apply now — $9.99</span><span class="short">Apply</span></button>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#pay" onclick="closeMenu()">How pay works</a>
-    <a href="#how" onclick="closeMenu()">How it works</a>
-    <a href="#why" onclick="closeMenu()">Why drive</a>
-    <a href="#faq" onclick="closeMenu()">FAQ</a>
-    <a href="/" onclick="closeMenu()">Rent a car</a>
-    <a href="#" onclick="closeMenu();openApply();return false;">Apply to drive — $10</a>
+    <a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/drive">Drive for us</a><a data-contact="sms" data-label-email="Email us" href="#">Text us</a>
   </div>
 </header>
-
-<main id="top">
+<main id="main">
   <section class="hero">
-    <div class="wrap">
-      <span class="pill"><span class="dot"></span> Now hiring drivers in LA &amp; Orange County</span>
-      <h1>Be your own boss. <span class="accent">Drive a Tesla.</span> Keep what you earn.</h1>
-      <p class="sub">Join the Sophic Uber Fleet. We give you the Tesla — you set your own hours and keep what you make. No car payment, no gas, no debt. Get on the road this week.</p>
-      <div class="hero-cta">
-        <button class="btn btn-primary" onclick="openApply()">Apply to drive — $10 &rarr;</button>
-        <a href="#pay" class="btn btn-ghost">See how you get paid</a>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> Sophic fleet driver program · Orange County &amp; LA</span>
+        <h1>No car? Drive ours. <span class="accent">Keep what you earn</span> after the target.</h1>
+        <p class="sub">We put you in a Tesla with insurance and maintenance included. Half of your earnings go toward the car until the weekly target is met — everything after that is 100% yours.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-apply>Apply to drive — $9.99 →</button>
+          <a class="btn btn-ghost" data-contact="sms" data-label-email="Email us a question"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us a question</a>
+        </div>
+        <p class="hero-note">$9.99 one-time application fee · Verified in 24–48 hrs · Pickup near LAX, SNA or Chapman</p>
+        <div class="trust">
+          <span class="pill"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M3 11l1.5-5A2 2 0 0 1 6.4 4.5h11.2a2 2 0 0 1 1.9 1.5L21 11v6a1 1 0 0 1-1 1h-1a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="17" r="1"/><circle cx="17" cy="17" r="1"/><path d="M3 11h18"/></svg></span> Tesla provided</span>
+          <span class="pill"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Insurance included</span>
+          <span class="pill"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Maintenance included</span>
+          <span class="pill"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span> Your schedule</span>
+        </div>
       </div>
-      <p class="hero-note">$10 driver application • Verified in 24–48 hrs • Drive on your own schedule</p>
-      <div class="trust">
-        <span class="pill"><span class="ico" aria-hidden="true">🚗</span> We provide the car</span>
-        <span class="pill"><span class="ico" aria-hidden="true">⚡</span> No gas — charge cheap</span>
-        <span class="pill"><span class="ico" aria-hidden="true">🕒</span> Your hours, your call</span>
-        <span class="pill"><span class="ico" aria-hidden="true">💵</span> Keep 100% after your target</span>
-      </div>
+      <aside class="cost-card" aria-label="How the pay model works">
+        <h3>How a week works</h3>
+        <div class="lead">Example — exact target confirmed at onboarding</div>
+        <div class="cost-rows">
+          <div class="cost-row"><span class="k">Your gross for the week<small>Fares + tips on the platforms you drive</small></span><span class="v">$1,400</span></div>
+          <div class="cost-row"><span class="k">Goes toward the car<small>50% of earnings, until the weekly target</small></span><span class="v">−$600</span></div>
+          <div class="cost-row"><span class="k">Car, insurance &amp; maintenance<small>Included in the target — nothing extra</small></span><span class="v">$0</span></div>
+          <div class="cost-row"><span class="k">Charging<small>Paid by you — about $20 per 500 miles, auto-billed</small></span><span class="v">≈ $30</span></div>
+          <div class="cost-row total"><span class="k">You keep</span><span class="v">$770</span></div>
+        </div>
+        <p class="cc-foot"><b>Illustration only.</b> Your target depends on the car and your hours; we set it with you in writing before you start. Earnings vary.</p>
+      </aside>
     </div>
   </section>
 
-  <section class="stats">
+  <section class="strip">
     <div class="wrap"><div class="grid">
-      <div class="stat"><div class="num accent">$0</div><div class="lab">Down to start</div></div>
-      <div class="stat"><div class="num accent">$0</div><div class="lab">Spent on gas</div></div>
-      <div class="stat"><div class="num accent">100%</div><div class="lab">Yours after target</div></div>
-      <div class="stat"><div class="num accent">You</div><div class="lab">Set the schedule</div></div>
+      <div class="stat"><div class="num accent">$0</div><div class="lab">Down, no deposit, no credit check</div></div>
+      <div class="stat"><div class="num accent">100%</div><div class="lab">Yours after the weekly target</div></div>
+      <div class="stat"><div class="num accent">$9.99</div><div class="lab">One-time application fee</div></div>
+      <div class="stat"><div class="num accent">48h</div><div class="lab">Typical approval</div></div>
     </div></div>
   </section>
 
-  <section id="pay" class="pad">
+  <section id="how" class="pad">
     <div class="wrap">
-      <div class="shead reveal">
-        <span class="eyebrow">How You Get Paid</span>
-        <h2>You keep what you earn</h2>
-        <p>Simple commission — no flat rental bill, no surprises. The more you drive, the more you keep.</p>
-      </div>
-      <div class="pay">
-        <div class="paycard reveal">
-          <span class="tag">Each week</span>
-          <h3>50% covers your vehicle</h3>
-          <p>Half of your weekly earnings go toward your vehicle — the Tesla, insurance, and maintenance — until your weekly target is covered. That's it for what you owe.</p>
-          <div class="bar" aria-hidden="true"><div class="fill"></div><div class="keep"></div></div>
-          <div class="barlabels"><span>50% → your vehicle</span><span>then 100% → you</span></div>
-        </div>
-        <div class="paycard reveal">
-          <span class="tag">After your target</span>
-          <h3 class="accent">Keep 100%</h3>
-          <p>Once your weekly target is met, you keep <b>everything</b> you earn for the rest of the week. Drive more, keep more — every extra fare is yours.</p>
-          <div class="big accent">100%</div>
-          <p style="margin-top:-6px">No car payment. No gas. No boss telling you when to clock in.</p>
-        </div>
-      </div>
-      <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:26px">Your exact weekly target depends on the vehicle and is confirmed during onboarding. Insurance &amp; maintenance are included in your weekly target — nothing extra to buy.</p>
-    </div>
-  </section>
-
-  <section id="how" class="pad" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-    <div class="wrap">
-      <div class="shead reveal">
-        <span class="eyebrow">Simple Process</span>
-        <h2>Driving in 3 steps</h2>
-        <p>No dealerships, no credit checks, no long-term debt. Apply, get set up on our Uber fleet, and start earning.</p>
-      </div>
+      <div class="shead reveal"><span class="eyebrow">How it works</span><h2>Driving in 3 steps</h2><p>You bring the license and the hours. We bring the Tesla, the insurance and the upkeep.</p></div>
       <div class="steps">
-        <div class="step reveal"><div class="n">1</div><h3>Apply online</h3><p>Fill out a quick driver application and pay the one-time fee. Tell us your experience and how much you want to drive.</p><span class="price-tag">$10 application fee</span></div>
-        <div class="step reveal"><div class="n">2</div><h3>Get verified &amp; onboarded</h3><p>We verify your license and driving record and set you up as a driver on our Uber fleet account. Most drivers are cleared in 24–48 hours.</p></div>
-        <div class="step reveal"><div class="n">3</div><h3>Drive &amp; keep what you earn</h3><p>Pick up your Tesla at our Orange location, drive on your own schedule, and keep 100% once your weekly target is met.</p></div>
+        <div class="step reveal"><div class="n">1</div><h3>Apply &amp; pay $9.99</h3><p>Two-minute application, then snap photos of your license. The one-time fee covers verification and holds your spot.</p><span class="tag">$9.99, non-refundable</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Get verified</h3><p>We verify your license, driving record and platform eligibility — usually within 24–48 hours — and text you to confirm.</p><span class="tag">24–48 hours</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>Onboard &amp; drive</h3><p>We agree your weekly target in writing, hand you the keys at our office near LAX, John Wayne Airport or Chapman University, and you start earning that day.</p><span class="tag">Independent contractor</span></div>
       </div>
     </div>
   </section>
 
-  <section id="why" class="pad">
+  <section id="why" class="pad band">
     <div class="wrap">
-      <div class="shead reveal">
-        <span class="eyebrow">Why Drive With Sophic</span>
-        <h2>Be your own boss</h2>
-      </div>
+      <div class="shead reveal"><span class="eyebrow">Straight answers</span><h2>What's included, what's not</h2></div>
       <div class="why-grid">
-        <div class="why reveal"><div class="ico" aria-hidden="true">🕒</div><h3>Your own hours</h3><p>Full-time, part-time, nights, weekends — you decide when and how much you drive. No shifts, no manager.</p></div>
-        <div class="why reveal"><div class="ico" aria-hidden="true">🚗</div><h3>We give you the car</h3><p>A clean, rideshare-ready Tesla on our Uber fleet. No down payment, no loan, no credit check.</p></div>
-        <div class="why reveal"><div class="ico" aria-hidden="true">⚡</div><h3>No gas costs</h3><p>Charge for a fraction of what gas costs. More of every fare stays in your pocket.</p></div>
-        <div class="why reveal"><div class="ico" aria-hidden="true">🛡️</div><h3>Insurance &amp; maintenance included</h3><p>Both are built into your weekly target — we handle the coverage and keep the car road-ready.</p></div>
-        <div class="why reveal"><div class="ico" aria-hidden="true">💵</div><h3>Keep what you earn</h3><p>After your weekly target, every dollar is yours. No flat rental bill eating your income.</p></div>
-        <div class="why reveal"><div class="ico" aria-hidden="true">🚀</div><h3>Start this week</h3><p>Fast onboarding and same-day pickup once you're verified. No waiting around to start earning.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M3 11l1.5-5A2 2 0 0 1 6.4 4.5h11.2a2 2 0 0 1 1.9 1.5L21 11v6a1 1 0 0 1-1 1h-1a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="17" r="1"/><circle cx="17" cy="17" r="1"/><path d="M3 11h18"/></svg></div><h3>The car — included</h3><p>A Tesla Model 3 or Model Y from our fleet, charged and cleaned when you get it. It stays a Sophic car; you don't take on a loan or a lease.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Insurance — included</h3><p>You're covered under Sophic's commercial policy while driving our car. No need to buy a rideshare endorsement yourself.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><h3>Maintenance — included</h3><p>Service, software and mechanical repairs from normal use are on us. If the car goes down we work to get you into another one.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>Charging — on you</h3><p>About $20 per 500 miles across our fleet, tracked per car through Tesla's fleet system and billed automatically. A fraction of gas.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg></div><h3>The split — 50% until target</h3><p>Each week, half of your earnings go toward the car until the weekly target is met. Past that, every dollar is yours. Big weeks pay you, not us.</p></div>
+        <div class="why reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div><h3>Your status — contractor</h3><p>You're an independent contractor driving on your own platform accounts, on your own schedule. We don't set your hours.</p></div>
       </div>
     </div>
   </section>
 
-  <section id="faq" class="pad" style="background:var(--bg-2);border-top:1px solid var(--line)">
+  <section id="faq" class="pad">
     <div class="wrap">
       <div class="shead reveal"><span class="eyebrow">Questions</span><h2>Good to know</h2></div>
-      <div class="faq" id="faqList"></div>
+      <div class="faq">
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq1">What is the weekly target?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq1"><p>It's the amount that covers the car, insurance and maintenance for the week. It depends on which car you're in and how many hours you commit to, and we agree it with you in writing at onboarding before you drive a single mile. The illustration above uses $600.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq2">What if I don't hit the target one week?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq2"><p>You still only pay 50% of what you actually earned that week — never more. If it keeps happening we'll sit down and look at whether a different car or schedule works better for you.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq3">Do I need my own insurance?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq3"><p>No. Fleet drivers are covered under Sophic's commercial policy while driving our car. That's the main difference from renting, where you carry your own policy.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq4">What do I need to qualify?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq4"><p>21 or older, a valid California driver's license, a clean enough record to be approved by Uber and Lyft, and an active or eligible driver account on at least one platform. Prior rideshare experience helps but isn't required.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq5">Is the application fee refundable?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq5"><p>No. The $9.99 covers license and record verification and is not refunded if you're declined.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq6">Can I take the car home?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq6"><p>Yes — you keep the car at home and charge it like it's yours for the length of the program, within California. Personal-use and mileage terms are in your driver agreement.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="dfaq7">How do I get paid?<span class="ico"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="a" id="dfaq7"><p>You're paid by Uber, Lyft or DoorDash directly, as usual. Once a week you pay Sophic your share through a Stripe link — the same day every week.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad" style="padding-top:0">
+    <div class="wrap">
+      <div class="callout reveal">
+        <div style="max-width:60ch"><span class="eyebrow">Prefer to rent?</span><h2>Have your own insurance and want a flat rate?</h2><p>Rent a Tesla for $500/week and keep 100% of what you earn from the first dollar.</p></div>
+        <a href="/" class="btn btn-ghost">See rental pricing →</a>
+      </div>
     </div>
   </section>
 
@@ -316,208 +150,61 @@
     <div class="wrap">
       <div class="cta-band reveal">
         <h2>Ready to be your own boss?</h2>
-        <p>Apply to drive for $10. Get verified, pick up your Tesla, and keep what you earn.</p>
-        <button class="btn" onclick="openApply()">Apply to drive &rarr;</button>
+        <p>Apply in two minutes for $9.99. Verified in 24–48 hours.</p>
+        <button class="btn" data-apply>Apply to drive →</button>
       </div>
     </div>
   </section>
 </main>
-
-<footer>
+<footer class="site">
   <div class="wrap">
     <div class="foot">
-      <div class="col" style="max-width:320px">
-        <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic<span style="color:var(--muted);font-weight:600">Rentals</span></a>
-        <p>The one-stop shop for gig-driver vehicle access across Los Angeles &amp; Orange County.</p>
+      <div>
+        <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic&nbsp;<span class="lt">Rentals</span></a>
+        <p>Long-term Tesla rentals for Uber, Lyft and DoorDash drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC.</p>
+        <p class="small" style="margin-top:8px">Pickup near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange.</p>
       </div>
-      <div class="col"><h4>Drive</h4><a href="#pay">How pay works</a><a href="#how">How it works</a><a href="#why">Why drive</a><a href="#faq">FAQ</a></div>
-      <div class="col"><h4>Contact</h4><a href="mailto:Sophicrentals@gmail.com">Sophicrentals@gmail.com</a><a href="https://maps.google.com/?q=393+N+Cypress+St,+Orange,+CA" target="_blank" rel="noopener">393 N Cypress St, Orange, CA</a></div>
-      <div class="col"><h4>Get started</h4><a href="#" onclick="openApply();return false;">Apply to drive — $10</a><a href="/">Rent a car instead</a></div>
+      <div><h4>Rent</h4><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
+      <div><h4>Locations</h4><a href="/tesla-rental-anaheim">Anaheim</a><a href="/tesla-rental-santa-ana">Santa Ana</a><a href="/tesla-rental-irvine">Irvine</a><a href="/tesla-rental-long-beach">Long Beach</a><a href="/tesla-rental-los-angeles">Los Angeles</a></div>
+      <div><h4>Contact</h4><a data-contact="phone-text" href="#"></a><a data-contact="sms" data-label-email="Email us" href="#">Text us</a><a href="mailto:Sophicrentals@gmail.com">Sophicrentals@gmail.com</a><a href="/#locations">Pickup locations</a><a href="/drive">Drive on our Uber fleet</a></div>
     </div>
-    <div class="copy">© <span id="yr"></span> Sophic Rentals. Independent contractor opportunity. California-based.</div>
+    <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/terms#fee" style="display:inline;padding:0">Application fee policy</a></span></div>
   </div>
 </footer>
-
-<div class="overlay" id="overlay" onclick="if(event.target===this)closeApply()">
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" data-label-email="Email us"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a><button class="btn btn-primary" data-apply>Apply now — $9.99</button></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div class="overlay" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
     <div id="formWrap">
       <div class="mhead">
-        <div><h3 id="applyHeading">Apply to drive</h3><p id="subHead">Join the Sophic Uber Fleet — be your own boss.</p></div>
-        <button class="close" aria-label="Close" onclick="closeApply()">×</button>
+        <div><h3 id="applyHeading">Apply to drive</h3><p id="carPick">Two minutes. Verified within 24–48 hours.</p></div>
+        <button class="mclose" aria-label="Close" data-close>×</button>
       </div>
-      <form id="applyForm" onsubmit="return submitApply(event)">
+      <form id="applyForm" data-apply-form novalidate>
         <div class="row2">
-          <div class="field"><label for="f-first">First name</label><input id="f-first" required name="first_name" placeholder="First" autocomplete="given-name" /></div>
-          <div class="field"><label for="f-last">Last name</label><input id="f-last" required name="last_name" placeholder="Last" autocomplete="family-name" /></div>
+          <div class="field"><label for="f-first">First name</label><input id="f-first" required name="first_name" autocomplete="given-name" /></div>
+          <div class="field"><label for="f-last">Last name</label><input id="f-last" required name="last_name" autocomplete="family-name" /></div>
         </div>
         <div class="row2">
-          <div class="field"><label for="f-phone">Phone</label><input id="f-phone" required name="phone" type="tel" placeholder="(555) 555-5555" autocomplete="tel" /></div>
+          <div class="field"><label for="f-phone">Mobile number</label><input id="f-phone" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
           <div class="field"><label for="f-email">Email</label><input id="f-email" required name="email" type="email" placeholder="you@email.com" autocomplete="email" /></div>
         </div>
-        <div class="row2">
-          <div class="field"><label for="f-dob">Date of birth</label><input id="f-dob" required name="date_of_birth" type="date" /></div>
-          <div class="field"><label for="f-licensenum">Driver's license number</label><input id="f-licensenum" required name="license_number" placeholder="e.g. Y1234567" autocomplete="off" /></div>
-        </div>
-        <div class="field"><label for="f-addr1">Address</label><input id="f-addr1" required name="address_line1" placeholder="Street address" autocomplete="address-line1" /></div>
-        <div class="field"><label for="f-addr2">Apt / unit (optional)</label><input id="f-addr2" name="address_line2" placeholder="Apt, suite, unit" autocomplete="address-line2" /></div>
-        <div class="row3">
-          <div class="field"><label for="f-city">City</label><input id="f-city" required name="city" placeholder="City" autocomplete="address-level2" /></div>
-          <div class="field"><label for="f-state">State</label><input id="f-state" required name="state" value="CA" maxlength="2" autocomplete="address-level1" /></div>
-          <div class="field"><label for="f-zip">ZIP</label><input id="f-zip" required name="zip_code" placeholder="ZIP" inputmode="numeric" maxlength="10" pattern="\d{5}(-\d{4})?" autocomplete="postal-code" /></div>
-        </div>
-        <div class="row2">
-          <div class="field"><label for="f-exp">Rideshare experience</label>
-            <select id="f-exp" name="rideshare_experience">
-              <option>New to rideshare</option>
-              <option>Less than 1 year</option>
-              <option>1–3 years</option>
-              <option>3+ years</option>
-            </select>
-          </div>
-          <div class="field"><label for="f-hours">Hours/week you want to drive</label>
-            <select id="f-hours" name="weekly_hours">
-              <option>Full-time (40+ hrs)</option>
-              <option>Part-time (20–40 hrs)</option>
-              <option>Side hustle (under 20 hrs)</option>
-            </select>
-          </div>
-        </div>
-        <p class="secnote">You'll upload your license photos right after checkout — have them handy. You must be 21+ with a valid license and a clean driving record. This is an independent contractor opportunity.</p>
-        <div class="fee-box"><span>One-time driver application fee</span><b class="accent">$10</b></div>
-        <div class="upstatus" id="upStatus" role="status" aria-live="polite"></div>
-        <button class="btn btn-primary" type="submit" id="applySubmit">Submit application &amp; pay $10</button>
-        <p class="fineprint">Secure payment via Stripe. The fee covers license and driving-record verification. You're set up on our Uber fleet after you're approved.</p>
-      </form>
+        <div class="row2"><div class="field"><label for="f-platform">Which platform?</label><select id="f-platform" name="platform"><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>DoorDash</option><option>Multiple</option><option>Other / not yet</option></select></div><div class="field"><label for="f-hours">Hours you want to drive</label><select id="f-hours" name="weekly_hours"><option>Under 20 / week</option><option>20–35 / week</option><option>35–50 / week</option><option>50+ / week</option></select></div></div>
+        <div class="row2"><div class="field"><label for="f-exp">Rideshare experience</label><select id="f-exp" name="rideshare_experience"><option>None yet</option><option>Under 1 year</option><option>1–3 years</option><option>3+ years</option></select></div><div class="field"><label for="f-license">Valid California license?</label><select id="f-license" name="has_license"><option>Yes</option><option>Out-of-state license</option><option>No</option></select></div></div>
+        <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
+        <div class="fee-box"><span>Application fee<small>One time · non-refundable · covers verification</small></span><b class="accent">$9.99</b></div>
+        <div class="fstatus" id="f-status" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary" type="submit" id="f-submit">Apply to drive — pay $9.99 →</button>
+        <p class="fineprint">Secure payment by Stripe. Next you'll upload photos of your license — have it handy. You must be 21+. By applying you agree to be contacted by text and email. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p></form>
     </div>
     <div class="success" id="success">
       <div class="check" aria-hidden="true">✓</div>
-      <h3>Application received!</h3>
-      <p>Thanks — we'll verify your license and driving record and reach out within 24–48 hours to onboard you onto our Uber fleet and schedule your car pickup. Check your phone and email.</p>
-      <button class="btn btn-ghost" style="margin-top:22px" onclick="closeApply()">Done</button>
+      <h3>Got it — we'll be in touch</h3>
+      <p id="successText"></p>
+      <button class="btn btn-ghost" style="margin-top:22px" data-close>Done</button>
     </div>
   </div>
 </div>
-
-<script>
-  // LIVE $10 driver application checkout
-  const STRIPE_APPLICATION_LINK = "https://buy.stripe.com/eVqdR8fAtce11PQ6Mobo42E";
-
-  const FAQS=[
-    ["How does the pay actually work?","Each week, 50% of your earnings go toward your vehicle — the Tesla, insurance, and maintenance — until your weekly target is met. After that, you keep 100% of everything you earn for the rest of the week. The more you drive, the more you keep."],
-    ["What's my weekly target?","It depends on the vehicle you drive and is confirmed during onboarding. Insurance and maintenance are already included in that number — there's nothing extra to buy."],
-    ["Do I need my own car or insurance?","No. We provide the Tesla, the insurance, and the maintenance — all covered by your weekly target. You just drive."],
-    ["What do I need to qualify?","You must be 21+, have a valid U.S. driver's license, and a clean driving record. Rideshare experience helps but isn't required — we help you get set up on our Uber fleet."],
-    ["Am I an employee?","No — this is an independent contractor opportunity. You're your own boss: you set your own hours and decide how much you drive."],
-    ["How fast can I start?","Most drivers are verified within 24–48 hours. Once you're approved and onboarded onto our fleet, you can pick up your Tesla and start driving — often the same week."],
-    ["Where do I pick up the car?","Pickup is at our Orange, CA location (393 N Cypress St). We'll walk you through the car and complete a quick condition check together."]
-  ];
-  function renderFaq(){
-    document.getElementById('faqList').innerHTML=FAQS.map(([q,a],i)=>`
-      <div class="qa">
-        <button aria-expanded="false" aria-controls="faqp-${i}" onclick="toggleFaq(this)">${q}<span class="chev" aria-hidden="true">⌄</span></button>
-        <div class="a" id="faqp-${i}"><p>${a}</p></div>
-      </div>`).join('');
-  }
-  function toggleFaq(btn){
-    const qa=btn.parentElement, open=qa.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open?'true':'false');
-  }
-
-  function toggleMenu(){
-    const m=document.getElementById('mobileMenu'), b=document.getElementById('menuBtn');
-    const open=m.classList.toggle('open'); b.setAttribute('aria-expanded', open?'true':'false');
-  }
-  function closeMenu(){
-    document.getElementById('mobileMenu').classList.remove('open');
-    document.getElementById('menuBtn').setAttribute('aria-expanded','false');
-  }
-
-  let lastFocus=null;
-  function openApply(){
-    lastFocus=document.activeElement;
-    document.getElementById('overlay').classList.add('show');
-    document.body.style.overflow='hidden';
-    document.getElementById('formWrap').style.display='block';
-    document.getElementById('success').classList.remove('show');
-    setTimeout(()=>{const n=document.getElementById('f-first'); if(n) n.focus();},60);
-  }
-  function closeApply(){
-    document.getElementById('overlay').classList.remove('show');
-    document.body.style.overflow='';
-    if(lastFocus&&lastFocus.focus) lastFocus.focus();
-  }
-  function val(id){var el=document.getElementById(id);return el?el.value:'';}
-  async function uploadFile(appId, slot, file){
-    const r=await fetch('/api/sign-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({application_id:appId,slot:slot,filename:file.name})});
-    const d=await r.json();
-    if(!r.ok||!d.uploadUrl) throw new Error('Could not prepare upload');
-    const up=await fetch(d.uploadUrl,{method:'PUT',headers:{'Content-Type':file.type||'application/octet-stream','x-upsert':'true'},body:file});
-    if(!up.ok) throw new Error('Upload failed');
-    return d.path;
-  }
-  async function submitApply(e){
-    e.preventDefault();
-    const btn=document.getElementById('applySubmit'); const stat=document.getElementById('upStatus');
-    btn.disabled=true; btn.textContent='Submitting…';
-    const payload={
-      application_type:'driver',
-      first_name:val('f-first'), last_name:val('f-last'), phone:val('f-phone'), email:val('f-email'),
-      date_of_birth:val('f-dob'), license_number:val('f-licensenum'),
-      address_line1:val('f-addr1'), address_line2:val('f-addr2'), city:val('f-city'), state:val('f-state'), zip_code:val('f-zip'),
-      rideshare_experience:val('f-exp'), weekly_hours:val('f-hours')
-    };
-    try{
-      stat.textContent='Saving your application…';
-      let r, d;
-      for(let attempt=0; attempt<2; attempt++){
-        try{
-          r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-          d=await r.json();
-          break;
-        }catch(netErr){ if(attempt===1) throw netErr; await new Promise(res=>setTimeout(res,1200)); }
-      }
-      if(!r.ok||!d.id) throw new Error((d&&d.error)||'save failed');
-      try{ sessionStorage.setItem('sophic_app', JSON.stringify({id:d.id, ref:d.reference_number||'', email:payload.email||'', t:Date.now()})); }catch(_){}
-      if(STRIPE_APPLICATION_LINK){
-        btn.textContent='Opening secure checkout…';
-        stat.textContent='Almost there — complete the $10 payment to finish.';
-        const url=STRIPE_APPLICATION_LINK+'?prefilled_email='+encodeURIComponent(payload.email||'')+'&client_reference_id='+encodeURIComponent(d.reference_number||d.id);
-        window.location.href=url; return false;
-      }
-      document.getElementById('formWrap').style.display='none';
-      document.getElementById('success').classList.add('show');
-    }catch(err){
-      btn.disabled=false; btn.textContent='Submit application & pay $10';
-      stat.textContent='Couldn’t submit — please check your connection and tap the button again. Your answers are still here.';
-    }
-    return false;
-  }
-
-  document.addEventListener('keydown',(e)=>{
-    const open=document.getElementById('overlay').classList.contains('show');
-    if(e.key==='Escape'){ if(open) closeApply(); closeMenu(); return; }
-    if(e.key==='Tab' && open){
-      const modal=document.querySelector('.overlay .modal');
-      const f=modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea,[tabindex]:not([tabindex="-1"])');
-      const vis=[...f].filter(el=>el.offsetParent!==null);
-      if(!vis.length) return;
-      const first=vis[0], last=vis[vis.length-1];
-      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-    }
-  });
-
-  function initReveal(){
-    const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const els=document.querySelectorAll('.reveal:not(.seen)');
-    if(reduce){els.forEach(el=>el.classList.add('seen'));return;}
-    const io=new IntersectionObserver((ents)=>{ents.forEach(en=>{if(en.isIntersecting){en.target.style.opacity=1;en.target.style.transform='none';en.target.classList.add('seen');io.unobserve(en.target);}})},{threshold:.12});
-    els.forEach(el=>{el.style.opacity=0;el.style.transform='translateY(20px)';el.style.transition='opacity .6s ease, transform .6s ease';io.observe(el);});
-  }
-  addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('scrolled',scrollY>10)});
-  document.getElementById('yr').textContent=new Date().getFullYear();
-  (function(){var d=document.getElementById('f-dob'); if(d){var t=new Date(); t.setFullYear(t.getFullYear()-21); d.max=t.toISOString().slice(0,10);}})();
-  renderFaq();initReveal();
-</script>
+<script src="/assets/site.js?v=202609100845" defer></script>
 </body>
 </html>

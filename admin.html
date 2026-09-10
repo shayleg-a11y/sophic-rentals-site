@@ -58,10 +58,12 @@
       <div class="stats" id="stats"></div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <select id="filterSel" onchange="render()" style="background:#0E1013;border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:13px">
-          <option value="all">All applications</option>
-          <option value="paid" selected>Paid only</option>
-          <option value="unpaid">Unpaid / abandoned</option>
+          <option value="todo" selected>Needs action (new leads + paid)</option>
+          <option value="leads">Leads — free step only, not paid</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">All unpaid / abandoned</option>
           <option value="nodocs">Paid, missing license photos</option>
+          <option value="all">All applications</option>
         </select>
         <button class="ghost" onclick="load()">Refresh</button>
         <a class="dl" onclick="exportCsv()">Export CSV</a>
@@ -125,6 +127,7 @@
     const paid=DATA.filter(isPaid).length;
     document.getElementById('stats').innerHTML=
       `<div class="stat"><b>${DATA.length}</b>Total</div>`+
+      `<div class="stat"><b>${DATA.filter(a=>!isPaid(a)&&Date.now()-Date.parse(a.created_at)<7*864e5).length}</b>Leads (7d)</div>`+
       `<div class="stat"><b>${DATA.filter(a=>a.application_type==='driver').length}</b>Drivers</div>`+
       `<div class="stat"><b>${paid}</b>Paid</div>`+
       `<div class="stat"><b>${DATA.filter(a=>isPaid(a)&&!hasDocs(a)).length}</b>Paid, no docs</div>`+
@@ -132,6 +135,8 @@
       `<div class="stat"><b>${DATA.filter(a=>a.status==='approved').length}</b>Approved</div>`;
     const mode=(document.getElementById('filterSel')||{}).value||'all';
     const VIEW=DATA.filter(a=>{
+      if(mode==='todo') return isPaid(a)&&a.status!=='approved'&&a.status!=='rejected' || (!isPaid(a)&&Date.now()-Date.parse(a.created_at)<7*864e5);
+      if(mode==='leads') return !isPaid(a)&&(a.stage==='lead'||a.status==='lead');
       if(mode==='paid') return isPaid(a);
       if(mode==='unpaid') return !isPaid(a);
       if(mode==='nodocs') return isPaid(a)&&!hasDocs(a);
@@ -156,12 +161,12 @@
       <td>${dinfo}</td>
       <td>${idphotos(a)}</td>
       <td>${esc(a.plan||'')}</td>
-      <td><span class="pill s-${esc(a.status)}">${esc(a.status||'')}</span></td>
+      <td><span class="pill s-${esc(a.status)}">${esc(a.status||'')}</span>${a.stage==='lead'?'<div class="muted" style="font-size:11px">free step only</div>':''}</td>
       <td><span class="pill s-${esc(a.payment_status)}">${esc(a.payment_status||'')}</span></td>
     </tr>`;}).join('') || '<tr><td colspan="14" class="muted" style="padding:24px">Nothing matches this filter.</td></tr>';
   }
   function exportCsv(){
-    const cols=['created_at','reference_number','application_type','first_name','last_name','email','phone','date_of_birth','address_line1','address_line2','city','state','zip_code','license_number','platform','preferred_car','insurance_status','rideshare_experience','weekly_hours','plan','status','payment_status'];
+    const cols=['created_at','reference_number','application_type','first_name','last_name','email','phone','date_of_birth','address_line1','address_line2','city','state','zip_code','license_number','platform','preferred_car','insurance_status','rideshare_experience','weekly_hours','plan','status','payment_status','stage','source','followup_count'];
     const lines=[cols.join(',')].concat(DATA.map(a=>cols.map(c=>'"'+String(a[c]==null?'':a[c]).replace(/"/g,'""')+'"').join(',')));
     const blob=new Blob([lines.join('\n')],{type:'text/csv'});
     const url=URL.createObjectURL(blob);const el=document.createElement('a');
