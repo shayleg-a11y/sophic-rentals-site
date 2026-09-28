@@ -110,6 +110,7 @@
 
 <nav id="nav">
   <button data-tab="overview" class="active">Overview</button>
+  <button data-tab="rentals">Rentals &amp; Billing</button>
   <button data-tab="fleet">Fleet</button>
   <button data-tab="insurance">Insurance</button>
   <button data-tab="repairs">Repairs</button>
@@ -190,6 +191,7 @@ function render(){
   </div>`;
 
   if(activeTab==='overview') h+=overview(k);
+  if(activeTab==='rentals') h+=rentalsTab();
   if(activeTab==='fleet') h+=fleetTab();
   if(activeTab==='insurance') h+=insuranceTab();
   if(activeTab==='repairs') h+=repairsTab();
@@ -202,6 +204,7 @@ function overview(k){
   const items=[];
   data.insurance.forEach(p=>{const s=insStatus(p); if(['EXPIRED','UNCONFIRMED'].includes(s.label))items.push({dot:'red',t:`${p.driver} (${p.car}) — ${s.label}`,d:s.reason});});
   data.insurance.forEach(p=>{const s=insStatus(p); if(['EXPIRING','STALE'].includes(s.label))items.push({dot:'amber',t:`${p.driver} (${p.car}) — ${s.label}`,d:s.reason});});
+  (rent.payments||[]).filter(p=>['open','past_due'].includes(p.status)).forEach(p=>{const r=rent.rentals.find(x=>x.id===p.rental_id);items.unshift({dot:p.escalated_at?'red':'amber',t:`${fullName(r&&r.contact)||'Renter'} (${(r&&r.vehicle_id)||''}) — ${cents(p.amount_cents)} unpaid`,d:p.link_sent_at?'Payment link sent '+ago(p.link_sent_at)+(p.reminder_count?' · '+p.reminder_count+' reminders':''):'Awaiting charge / link'});});
   data.fleet.filter(c=>c.status==='Down').forEach(c=>items.push({dot:'amber',t:`${c.id} is DOWN`,d:'No revenue while out of service'}));
   data.insurance.filter(p=>!p.addlInterest).forEach(p=>items.push({dot:'amber',t:`${p.driver} — not listed as Additional Interest`,d:'You won’t get an auto lapse notice from the insurer'}));
   const list=items.length?items.map(i=>`<div class="alertitem"><span class="dot ${i.dot}"></span><div><div style="font-weight:600">${esc(i.t)}</div><div class="small">${esc(i.d)}</div></div></div>`).join(''):'<div class="note">All clear — nothing needs attention.</div>';
@@ -513,7 +516,161 @@ async function pullLive(){
 }
 async function syncRow(table,row){if(!online)return row;try{const res=await authFetch('POST',{op:'upsert',table,row});return res.row||row;}catch(e){toast('Saved locally — sync failed');return row;}}
 async function syncDelete(table,id){if(!online)return;try{await authFetch('POST',{op:'delete',table,id});}catch(e){toast('Deleted locally — sync failed');}}
-async function boot(){hideLogin();save();await pullLive();}
+async function boot(){hideLogin();save();await pullLive();loadRentals();setInterval(()=>{if(!document.hidden)loadRentals();},120000);}
+/* ============================ RENTALS + BILLING ============================ */
+const RENTALS_API=SUPA_URL+'/functions/v1/rentals';
+let rent={rentals:[],payments:[],vehicles:[],messages:[],stripe_ready:false,today:''};
+let rentShowAll=false, payers=null;
+const cents=c=>'$'+((Number(c)||0)/100).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});
+const fullName=c=>c?[c.first_name,c.last_name].filter(Boolean).join(' '):'';
+const ago=ts=>{if(!ts)return '';const h=(Date.now()-new Date(ts).getTime())/36e5;return h<1?Math.round(h*60)+'m ago':h<48?Math.round(h)+'h ago':Math.round(h/24)+'d ago';};
+async function rFetch(method,body,qs=''){
+  const r=await fetch(RENTALS_API+qs,{method,headers:{'content-type':'application/json','authorization':'Bearer '+(session&&session.access_token)},body:body?JSON.stringify(body):undefined});
+  if(r.status===401){if(await refresh())return rFetch(method,body,qs);throw new Error('Not authorized for billing — ask Sean to add your email');}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error||('API '+r.status));
+  return d;
+}
+async function loadRentals(){try{rent=await rFetch('GET');}catch(e){toast(e.message);}if(activeTab==='rentals')render();}
+async function rOp(op,body,msg){try{const d=await rFetch('POST',{op,...body});if(msg)toast(msg);await loadRentals();return d;}catch(e){toast('⚠️ '+e.message);throw e;}}
+
+function paysFor(r){return rent.payments.filter(p=>p.rental_id===r.id||(!p.rental_id&&p.contact_id===r.contact_id));}
+function rentState(r){
+  const ps=paysFor(r);
+  const open=ps.filter(p=>p.kind==='weekly_rent'&&['open','past_due'].includes(p.status)).sort((a,b)=>(a.due_date||'').localeCompare(b.due_date||''))[0];
+  const paid=ps.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount_cents,0);
+  const lastPaid=ps.filter(p=>p.status==='paid').sort((a,b)=>(b.paid_at||'').localeCompare(a.paid_at||''))[0];
+  let st;
+  if(open){
+    const bits=[open.link_sent_at?'link sent '+ago(open.link_sent_at):(open.payment_link_url?'link queued':'charging…'),open.reminder_count?open.reminder_count+' reminders':'' ].filter(Boolean).join(' · ');
+    st={cls:open.escalated_at?'red':'amber',label:open.escalated_at?'ESCALATED':(open.status==='past_due'?'UNPAID':'DUE'),sub:cents(open.amount_cents)+' · '+bits+(open.failure_reason?' · '+open.failure_reason:''),p:open};
+  } else if(r.status!=='active') st={cls:'gray',label:r.status.toUpperCase(),sub:''};
+  else if(!r.billing_enabled) st={cls:'gray',label:'MANUAL',sub:'auto-billing off'};
+  else st={cls:'green',label:'CURRENT',sub:lastPaid?'last paid '+(lastPaid.paid_at||'').slice(0,10):'no payments yet'};
+  return {st,paid,open,lastPaid};
+}
+
+function rentalsTab(){
+  const today=rent.today||new Date().toISOString().slice(0,10);
+  const list=rent.rentals.filter(r=>rentShowAll||r.status==='active');
+  const act=rent.rentals.filter(r=>r.status==='active');
+  const roll=act.reduce((s,r)=>s+(r.weekly_rate_cents||0),0);
+  const wk=Date.now()-7*864e5;
+  const coll7=rent.payments.filter(p=>p.status==='paid'&&p.paid_at&&new Date(p.paid_at).getTime()>=wk).reduce((s,p)=>s+p.amount_cents,0);
+  const over=rent.payments.filter(p=>['open','past_due'].includes(p.status));
+  const collAll=rent.payments.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount_cents,0);
+  const rows=list.map(r=>{
+    const c=r.contact||{}, s=rentState(r);
+    const phone=c.phone?`<a href="tel:${esc(c.phone)}" style="color:var(--txt)">${esc(c.phone)}</a>`:'<span class="badge no">add phone</span>';
+    return `<tr>
+      <td><b>${esc(r.vehicle_id||'—')}</b><div class="small">${esc(r.plan==='rent_to_own'?'Rent-to-own':r.plan||'')}</div></td>
+      <td>${esc(fullName(c))||'—'}<div class="small">${esc(c.email||'')}</div></td>
+      <td>${phone}${c.sms_opted_out?' <span class="badge no">STOP</span>':''}</td>
+      <td>${cents(r.weekly_rate_cents)}</td>
+      <td>${esc(r.start_date||'—')}</td>
+      <td>${esc(r.next_charge_date||'—')}${r.next_charge_date&&r.next_charge_date<=today&&r.billing_enabled?' <span class="pill amber">today</span>':''}</td>
+      <td><span class="pill ${s.st.cls}">${s.st.label}</span><div class="small">${esc(s.st.sub)}</div></td>
+      <td><b>${cents(s.paid)}</b></td>
+      <td>${r.billing_enabled?'<span class="pill green">Auto</span>':'<span class="pill gray">Off</span>'}${r.stripe_customer_id?'':'<div class="small">no Stripe link</div>'}</td>
+      <td style="white-space:nowrap"><button class="ico" onclick="editRental('${r.id}')">Edit</button> <button class="ico" onclick="rentalHistory('${r.id}')">History</button> ${r.status==='active'?`<button class="ico" onclick="billNow('${r.id}')">Bill now</button>`:''}</td>
+    </tr>`;}).join('');
+  return `<div class="grid kpis">
+    <div class="kpi good"><div class="label">Cars out</div><div class="val">${act.length}</div><div class="sub">active rentals</div></div>
+    <div class="kpi"><div class="label">Weekly rent roll</div><div class="val">${cents(roll)}</div><div class="sub">sum of weekly rates</div></div>
+    <div class="kpi good"><div class="label">Collected · 7d</div><div class="val">${cents(coll7)}</div><div class="sub">paid in last 7 days</div></div>
+    <div class="kpi ${over.length?'bad':'good'}"><div class="label">Unpaid</div><div class="val">${cents(over.reduce((s,p)=>s+p.amount_cents,0))}</div><div class="sub">${over.length} open charge(s)</div></div>
+    <div class="kpi"><div class="label">Collected · all time</div><div class="val">${cents(collAll)}</div><div class="sub">matched to renters</div></div>
+  </div>
+  <div class="panel">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <h2 style="margin:0;flex:1">Rentals</h2>
+      <label class="small" style="display:flex;gap:6px;align-items:center;width:auto"><input type="checkbox" style="width:auto" ${rentShowAll?'checked':''} onchange="rentShowAll=this.checked;render()"> show ended</label>
+      <button class="btn ghost" onclick="showPayers()">Stripe payers</button>
+      <button class="btn ghost" onclick="syncStripe()">Sync Stripe history</button>
+      <button class="btn ghost" onclick="textsLog()">Texts</button>
+      <button class="btn ghost" onclick="runBilling()">Run billing now</button>
+      <button class="btn primary" onclick="editRental('')">+ Add rental</button>
+    </div>
+    ${rent.stripe_ready?'':'<div class="note" style="color:var(--amber)">Stripe key not configured — billing is paused.</div>'}
+    <div style="overflow-x:auto"><table><thead><tr><th>Car</th><th>Renter</th><th>Phone</th><th>Weekly</th><th>Pickup</th><th>Next charge</th><th>Status</th><th>Paid total</th><th>Billing</th><th></th></tr></thead>
+    <tbody>${rows||emptyRow(10,'No rentals yet — click “+ Add rental”.')}</tbody></table></div>
+    <div class="note" style="margin-top:10px">Auto-billing charges the card on file every 7 days from the pickup date. If there’s no card or it declines, a Stripe payment link is texted from your Mac; reminder at 12h, then hourly after 24h (8am–9pm only); at 72h reminders stop and you get a text.</div>
+  </div>`;
+}
+
+function editRental(id){
+  const r=id?rent.rentals.find(x=>x.id===id):{status:'active',plan:'rental',weekly_rate_cents:50000,start_date:rent.today,billing_enabled:false,contact:{}};
+  const c=r.contact||{};
+  const vOpts=['<option value="">—</option>'].concat(rent.vehicles.map(v=>`<option value="${esc(v.id)}" ${v.id===r.vehicle_id?'selected':''}>${esc(v.id)} · ${esc(v.model)} · ${esc(v.status)}</option>`)).join('');
+  openModal(`<h3>${id?'Edit rental':'New rental'}</h3>
+    <div class="field row2">${field('First name','x_fn',c.first_name)}${field('Last name','x_ln',c.last_name)}</div>
+    <div class="field row2">${field('Phone (texts go here)','x_ph',c.phone,'tel')}${field('Email','x_em',c.email,'email')}</div>
+    <div class="field row2"><div class="field"><label>Car</label><select id="x_car">${vOpts}</select></div>${field('Weekly rate ($)','x_rate',(r.weekly_rate_cents||0)/100,'number')}</div>
+    <div class="field row2">${field('Pickup date','x_start',r.start_date,'date')}${field('Next charge date','x_next',r.next_charge_date||r.start_date,'date')}</div>
+    <div class="field row2"><div class="field"><label>Plan</label><select id="x_plan">${[['rental','Rental'],['rent_to_own','Rent-to-own'],['fleet_driver','Fleet driver']].map(([v,l])=>`<option value="${v}" ${v===r.plan?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>Status</label><select id="x_status">${['active','pending','ended','defaulted'].map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select></div></div>
+    <div class="field row2">${field('Return date','x_end',r.end_date,'date')}${field('Stripe customer ID','x_cus',r.stripe_customer_id)}</div>
+    <div class="field"><label>Auto-billing</label><select id="x_bill"><option value="false" ${!r.billing_enabled?'selected':''}>Off — I bill manually</option><option value="true" ${r.billing_enabled?'selected':''}>On — charge card / text link every 7 days</option></select>
+      <div class="small" style="color:var(--amber);margin-top:4px">Before turning on: cancel any existing Stripe subscription for this renter, or they’ll be charged twice.</div></div>
+    <div class="field"><label>Notes</label><textarea id="x_notes" rows="2">${esc(r.notes||'')}</textarea></div>
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveRental('${id||''}','${r.contact_id||''}')">Save</button></div>`);
+}
+async function saveRental(id,contactId){
+  const rental={id:id||undefined,contact_id:contactId||undefined,first_name:$('#x_fn').value.trim(),last_name:$('#x_ln').value.trim(),phone:$('#x_ph').value.trim(),email:$('#x_em').value.trim(),
+    vehicle_id:$('#x_car').value,weekly_rate:$('#x_rate').value,start_date:$('#x_start').value||null,next_charge_date:$('#x_next').value||null,end_date:$('#x_end').value||null,
+    plan:$('#x_plan').value,status:$('#x_status').value,stripe_customer_id:$('#x_cus').value.trim()||null,billing_enabled:$('#x_bill').value==='true',notes:$('#x_notes').value};
+  if(rental.billing_enabled&&!rental.phone&&!rental.stripe_customer_id){toast('Add a phone or Stripe customer before enabling auto-billing');return;}
+  closeModal();await rOp('rental_save',{rental},'Saved');
+}
+
+function rentalHistory(id){
+  const r=rent.rentals.find(x=>x.id===id), c=r.contact||{};
+  const ps=paysFor(r).sort((a,b)=>((b.paid_at||b.due_date||'')).localeCompare(a.paid_at||a.due_date||''));
+  const total=ps.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount_cents,0);
+  const rows=ps.map(p=>{
+    const cls=p.status==='paid'?'green':['open','past_due'].includes(p.status)?'amber':'gray';
+    const acts=['open','past_due'].includes(p.status)?`${p.payment_link_url?`<button class="ico" onclick="navigator.clipboard.writeText('${esc(p.payment_link_url)}');toast('Link copied')">Copy link</button> <button class="ico" onclick="rOp('check_paid',{payment_id:'${p.id}'},'Checked Stripe').then(()=>rentalHistory('${id}'))">Check paid</button>`:`<button class="ico" onclick="rOp('send_link',{payment_id:'${p.id}'},'Link created + text queued').then(()=>rentalHistory('${id}'))">Send link</button>`} <button class="ico" onclick="setPay('${p.id}','paid','${id}')">Mark paid</button> <button class="ico" onclick="setPay('${p.id}','void','${id}')">Void</button>`:'';
+    return `<tr><td>${esc((p.paid_at||'').slice(0,10)||p.due_date||'')}</td><td>${esc(p.kind.replace('_',' '))}</td><td>${cents(p.amount_cents)}</td><td><span class="pill ${cls}">${esc(p.status)}</span></td><td class="small">${esc(p.source||'')}${p.receipt_url?` · <a href="${esc(p.receipt_url)}" target="_blank" rel="noopener" style="color:var(--accent2)">receipt</a>`:''}</td><td style="white-space:nowrap">${acts}</td></tr>`;}).join('');
+  openModal(`<h3>${esc(fullName(c)||'Renter')} · ${esc(r.vehicle_id||'')}</h3>
+    <div class="small" style="margin-bottom:10px">Total paid: <b style="color:var(--green)">${cents(total)}</b> · ${ps.filter(p=>p.status==='paid').length} payments · weekly ${cents(r.weekly_rate_cents)}</div>
+    <div style="overflow-x:auto;max-height:50vh"><table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Source</th><th></th></tr></thead><tbody>${rows||emptyRow(6,'No payments on record. Link a Stripe customer, then “Sync Stripe history”.')}</tbody></table></div>
+    <h3 style="margin-top:16px;font-size:14px">Record a manual payment (cash / Zelle)</h3>
+    <div class="field row2">${field('Amount ($)','mp_amt',(r.weekly_rate_cents||0)/100,'number')}${field('Date','mp_date',rent.today,'date')}</div>
+    ${field('Note','mp_note','')}
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Close</button><button class="btn primary" onclick="addManual('${id}')">Add payment</button></div>`);
+  document.querySelector('#modal').style.width='760px';
+}
+async function setPay(pid,status,rid){await rOp('payment_update',{id:pid,status},'Updated');rentalHistory(rid);}
+async function addManual(rid){const r=rent.rentals.find(x=>x.id===rid);await rOp('payment_add',{rental_id:rid,contact_id:r.contact_id,amount:$('#mp_amt').value,paid_at:$('#mp_date').value?new Date($('#mp_date').value+'T12:00:00').toISOString():undefined,note:$('#mp_note').value},'Payment recorded');rentalHistory(rid);}
+async function billNow(id){const r=rent.rentals.find(x=>x.id===id);if(!confirm(`Charge ${fullName(r.contact)} ${cents(r.weekly_rate_cents)} now? (card on file, or text a payment link)`))return;const d=await rOp('bill_now',{rental_id:id});toast(d.result==='paid'?'✅ Charged card on file':'Card not charged ('+(d.reason||'')+') — payment link texted');}
+async function runBilling(){const d=await rOp('run',{});toast(d.log&&d.log.length?d.log.join(' | '):'Billing run: nothing due');}
+async function syncStripe(){toast('Syncing Stripe history…');const d=await rOp('backfill',{});toast(`Imported ${d.inserted} payment(s); ${d.unmatched.length} unmatched — see “Stripe payers”`);}
+async function showPayers(){
+  openModal('<h3>Stripe payers (last 120 days)</h3><div class="note">Loading from Stripe…</div>');document.querySelector('#modal').style.width='860px';
+  try{payers=(await rFetch('POST',{op:'stripe_payers'})).payers;}catch(e){$('#modal').innerHTML='<h3>Error</h3><div class="note">'+esc(e.message)+'</div>';return;}
+  const act=rent.rentals.filter(r=>r.status==='active');
+  const linked=new Set(rent.rentals.map(r=>r.stripe_customer_id).filter(Boolean));
+  const linkedEmails=new Set(rent.rentals.map(r=>((r.contact&&r.contact.email)||'').toLowerCase()).filter(Boolean));
+  const opts=`<option value="">Link to rental…</option>`+act.map(r=>`<option value="${r.id}">${esc(r.vehicle_id)} · ${esc(fullName(r.contact))}</option>`).join('');
+  const rows=payers.map((p,i)=>`<tr><td>${esc(p.name)}<div class="small">${esc(p.email)}${p.phone?' · '+esc(p.phone):''}</div></td><td>${cents(p.total_cents)}<div class="small">${p.count} charges</div></td><td>${esc(p.last)}</td><td>${p.recurring?'<span class="pill amber">Subscription</span>':''}</td>
+    <td>${linkedEmails.has((p.email||'').toLowerCase())||linked.has(p.customer_id)?'<span class="pill green">linked</span>':`<select style="width:190px" onchange="linkPayer(${i},this.value)">${opts}</select>`}</td></tr>`).join('');
+  $('#modal').innerHTML=`<h3>Stripe payers (last 120 days)</h3><div class="note" style="margin-bottom:8px">Link each payer to their rental so their history shows up and auto-billing can use their saved card. <b>“Subscription”</b> = they’re already on a recurring Stripe charge — cancel it in Stripe before turning on auto-billing.</div>
+    <div style="overflow-x:auto;max-height:60vh"><table><thead><tr><th>Payer</th><th>Paid</th><th>Last</th><th></th><th></th></tr></thead><tbody>${rows||emptyRow(5,'No charges found')}</tbody></table></div>
+    <div class="modal-act"><button class="btn ghost" onclick="closeModal()">Close</button></div>`;
+}
+async function linkPayer(i,rid){
+  if(!rid)return;const p=payers[i], r=rent.rentals.find(x=>x.id===rid), c=r.contact||{};
+  const [fn,...ln]=(p.name||'').trim().split(/\s+/);
+  const rental={id:r.id,contact_id:r.contact_id,first_name:c.first_name||fn,last_name:c.last_name||ln.join(' '),phone:c.phone||p.phone,email:p.email||c.email,vehicle_id:r.vehicle_id,weekly_rate:r.weekly_rate_cents/100,start_date:r.start_date,next_charge_date:r.next_charge_date,end_date:r.end_date,plan:r.plan,status:r.status,stripe_customer_id:p.customer_id||r.stripe_customer_id,billing_enabled:r.billing_enabled,notes:r.notes};
+  await rOp('rental_save',{rental});await rOp('backfill',{},'Linked + history synced');showPayers();
+}
+function textsLog(){
+  const rows=rent.messages.map(m=>`<tr><td class="small">${esc((m.created_at||'').replace('T',' ').slice(0,16))}</td><td>${esc(m.to_phone||'')}</td><td>${esc(m.kind||'')}</td><td><span class="pill ${m.status==='sent'?'green':m.status==='queued'?'amber':'red'}">${esc(m.status)}</span>${m.error?`<div class="small">${esc(m.error)}</div>`:''}</td><td class="small" style="max-width:320px">${esc(m.body)}</td></tr>`).join('');
+  openModal(`<h3>Text messages (last 100)</h3><div class="note">Sent from your Mac via Messages. “queued” = waiting for the Mac relay (Mac must be awake).</div>
+    <div style="overflow-x:auto;max-height:60vh"><table><thead><tr><th>Created</th><th>To</th><th>Type</th><th>Status</th><th>Message</th></tr></thead><tbody>${rows||emptyRow(5,'No texts yet')}</tbody></table></div>
+    <div class="modal-act"><button class="btn ghost" onclick="rOp('test_sms',{},'Test text queued to owner phone').then(closeModal)">Send test text to me</button><button class="btn ghost" onclick="closeModal()">Close</button></div>`);
+  document.querySelector('#modal').style.width='860px';
+}
+
 /* ============================ INIT ============================ */
 if(session&&session.access_token){boot();}else{showLogin();}
 
