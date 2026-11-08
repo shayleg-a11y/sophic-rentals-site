@@ -185,11 +185,11 @@
     st.className = 'fstatus'; btn.disabled = true; btn.textContent = 'Saving…';
     try {
       if (step === 1) {
-        var payload = { stage: 'lead', application_type: TYPE, first_name: fval(form,'first_name'), last_name: fval(form,'last_name'), phone: fval(form,'phone'), platform: fval(form,'platform'), car: fval(form,'car'), weekly_hours: fval(form,'weekly_hours'), website: fval(form,'website'), source: location.pathname + location.search };
+        var payload = { stage: 'lead', application_type: TYPE, first_name: fval(form,'first_name'), last_name: fval(form,'last_name'), phone: fval(form,'phone'), platform: fval(form,'platform'), plan: fval(form,'plan') || 'rental', car: fval(form,'car'), weekly_hours: fval(form,'weekly_hours'), website: fval(form,'website'), source: location.pathname + location.search };
         var d = await postJSON('/api/apply', payload);
         remember({ id: d.id, ref: d.reference_number, t: Date.now() });
         form.setAttribute('data-ref', d.reference_number);
-        track('lead_submit', { type: TYPE, platform: payload.platform, car: payload.car });
+        track('lead_submit', { type: TYPE, plan: payload.plan, platform: payload.platform, car: payload.car });
         btn.disabled = false; btn.textContent = label; st.textContent = '';
         setStep(form, 2); return;
       }
@@ -211,7 +211,7 @@
   function wireFormStart(){
     $$('[data-apply-form]').forEach(function(f){ f.addEventListener('focusin', function(){ if (f._started) return; f._started = true; track('form_start', { type: TYPE, where: f.id === 'applyForm' ? 'modal' : 'inline' }); }); });
   }
-  function wireApplyButtons(){ $$('[data-apply]').forEach(function(b){ if (b._wired) return; b._wired = true; b.addEventListener('click', function(ev){ ev.preventDefault(); var card = $('.apply-card'); if (card && innerWidth < 940) { var car = b.getAttribute('data-car') || ''; var sel = $('#h-car'); if (car && sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === car) sel.value = sel.options[i].value; } card.scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(function(){ var f = $('#h-first'); if (f) f.focus({ preventScroll: true }); }, 500); track('apply_open', { type: TYPE, car: car, inline: true }); return; } openApply(b.getAttribute('data-car') || ''); }); }); }
+  function wireApplyButtons(){ $$('[data-apply]').forEach(function(b){ if (b._wired) return; b._wired = true; b.addEventListener('click', function(ev){ ev.preventDefault(); var pl = b.getAttribute('data-plan'); if (pl) $$('[data-plan-select]').forEach(function(s){ s.value = pl; }); var card = $('.apply-card'); if (card && innerWidth < 940) { var car = b.getAttribute('data-car') || ''; var sel = $('#h-car'); if (car && sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === car) sel.value = sel.options[i].value; } card.scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(function(){ var f = $('#h-first'); if (f) f.focus({ preventScroll: true }); }, 500); track('apply_open', { type: TYPE, car: car, inline: true }); return; } openApply(b.getAttribute('data-car') || ''); }); }); }
   function wireForms(){
     $$('[data-apply-form]').forEach(function(f){ setStep(f, 1); f.addEventListener('submit', submitApply); });
     wireFormStart();

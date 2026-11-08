@@ -91,14 +91,14 @@ def header(active=''):
     <nav class="main" aria-label="Main">
       <a class="logo" href="/" aria-label="Sophic Rentals home">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
       <div class="nav-links">
+        {a('/rent-to-own','Rent to own','rto')}
         {a('/#fleet','Fleet','fleet')}
         {a('/#cost','Pricing','cost')}
         {a('/#locations','Locations','locations')}
         {a('/#how','How it works','how')}
         {a('/insurance','Insurance','insurance')}
         {a('/#faq','FAQ','faq')}
-        {a('/drive','Drive for us','drive')}
-      </div>
+              </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a>
         <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability — free</span><span class="short">Apply free</span></button>
@@ -107,7 +107,7 @@ def header(active=''):
     </nav>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/drive">Drive for us</a><a href="/insurance">Insurance help</a><a data-contact="sms" href="{sms_href()}">{text_label()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
+    <a href="/rent-to-own">Rent to own</a><a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/insurance">Insurance help</a><a data-contact="sms" href="{sms_href()}">{text_label()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
   </div>
 </header>
 <main id="main">
@@ -123,9 +123,9 @@ def footer():
         <p>Long-term Tesla rentals for Uber, Lyft and delivery drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC, based in Orange County.</p>
         <p class="small" style="margin-top:8px">Main office: {ORANGE_ADDR} (next to Chapman University). Also near LAX and near John Wayne Airport (SNA) — exact address texted with your pickup time. {HOURS}.</p>
       </div>
-      <div><h4>Rent</h4><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/insurance">Get insured in 24 hours</a><a href="/policies">Deposit &amp; policies</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
+      <div><h4>Drive</h4><a href="/rent-to-own">Rent to own — keep the car</a><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/insurance">Get insured in 24 hours</a><a href="/policies">Deposit &amp; policies</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
       <div><h4>Areas we serve</h4><a href="/tesla-rental-anaheim">Anaheim</a><a href="/tesla-rental-santa-ana">Santa Ana</a><a href="/tesla-rental-irvine">Irvine</a><a href="/tesla-rental-long-beach">Long Beach</a><a href="/tesla-rental-los-angeles">Los Angeles</a></div>
-      <div><h4>Contact</h4>{f'<a data-contact="tel" href="tel:{PHONE}">{PHONE_DISPLAY or PHONE}</a>' if PHONE else ''}<a data-contact="sms" href="{sms_href()}">{text_label()}</a><a href="mailto:{EMAIL}">{EMAIL}</a><span class="small muted" style="display:block;padding:6px 0">{HOURS}</span><a href="/#locations">Pickup locations</a><a href="/drive">Drive on our Uber fleet</a></div>
+      <div><h4>Contact</h4>{f'<a data-contact="tel" href="tel:{PHONE}">{PHONE_DISPLAY or PHONE}</a>' if PHONE else ''}<a data-contact="sms" href="{sms_href()}">{text_label()}</a><a href="mailto:{EMAIL}">{EMAIL}</a><span class="small muted" style="display:block;padding:6px 0">{HOURS}</span><a href="/#locations">Pickup locations</a></div>
     </div>
     <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/policies" style="display:inline;padding:0">Deposit &amp; fee policy</a></span></div>
   </div>
@@ -143,17 +143,20 @@ def apply_fields(prefix, driver):
         s2 = f'<div class="row2"><div class="field"><label for="{f("exp")}">Rideshare experience</label><select id="{f("exp")}" name="rideshare_experience"><option>None yet</option><option>Under 1 year</option><option>1–3 years</option><option>3+ years</option></select></div><div class="field"><label for="{f("license")}">Valid California license?</label><select id="{f("license")}" name="has_license"><option>Yes</option><option>Out-of-state license</option><option>No</option></select></div></div>'
         fee_line = f'<span>Verification fee<small>One time · covers license &amp; driving-record check</small></span><b class="accent">${FEE}</b>'
         upfront = ''
+        planf = ''
     else:
+        planf = f'<div class="field"><label for="{f("plan")}">How do you want to drive?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Rent to own — the car is yours in 12 months</option><option value="rental">Weekly rental — no down payment</option></select></div>'
         pick = f'<div class="field"><label for="{f("car")}">Car you want</label><select id="{f("car")}" name="car" data-car-select><option value="">First available</option></select></div>'
         s2 = f'<div class="row2"><div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status"><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div><div class="field"><label for="{f("license")}">Valid license?</label><select id="{f("license")}" name="has_license"><option>Yes — California</option><option>Yes — another state</option><option>No</option></select></div></div><p class="fineprint" style="margin-top:-4px">Not fully covered yet? Apply anyway — <a href="/insurance">here&rsquo;s how drivers get insured in 24 hours</a>.</p>'
         fee_line = f'<span>Verification fee<small>Credited to your first week\'s rent</small></span><b class="accent">${FEE}</b>'
-        upfront = '<p class="fineprint upfront"><b>Due at pickup:</b> first week ($500 for a Model 3) + a refundable deposit equal to your insurance deductible, minus your $9.99 credit. No credit check.</p>'
+        upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> rent to own = $2,000 down + first week ($500). Weekly rental = first week ($500) + a refundable deposit equal to your insurance deductible. Your $9.99 is credited either way. No credit check.</p>'
     return f'''
         <div class="fstep" data-step="1">
           <div class="row2">
             <div class="field"><label for="{f("first")}">First name</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
             <div class="field"><label for="{f("last")}">Last name</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
           </div>
+          {planf}
           <div class="field"><label for="{f("phone")}">Mobile number</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
           <div class="row2">{plat}{pick}</div>
           <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>

@@ -299,3 +299,14 @@ footer.site{border-top:1px solid var(--line);padding:50px 0 100px;margin-top:80p
 .founder p{color:var(--muted);margin:0 0 10px}
 @media (max-width:640px){.founder{flex-direction:column;gap:16px}.founder-mark{flex-basis:64px;width:64px;height:64px;font-size:22px}}
 .policy-list li{margin-bottom:10px}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:900px;margin:0 auto}
+.plan{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:26px;display:flex;flex-direction:column}
+.plan.featured{border-color:var(--accent);box-shadow:var(--shadow)}
+.plan h3{margin:0 0 6px;font-family:var(--display);font-size:24px}
+.plan .price b{font-family:var(--display);font-size:34px}
+.plan .price small{color:var(--muted);margin-left:6px}
+.plan ul{list-style:none;padding:0;margin:16px 0 22px;display:grid;gap:9px;color:var(--muted);font-size:15px;flex:1}
+.plan li{padding-left:22px;position:relative}
+.plan li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+.plan li b{color:var(--text)}
+@media (max-width:760px){.plans{grid-template-columns:1fr}}

@@ -10,6 +10,8 @@
     { "source": "/:path*", "has": [{ "type": "host", "value": "sophic-rentals.vercel.app" }], "destination": "https://sophicrentals.com/:path*", "permanent": true },
     { "source": "/:path*", "has": [{ "type": "host", "value": "www.sophicrentals.com" }], "destination": "https://sophicrentals.com/:path*", "permanent": true },
     { "source": "/apply", "destination": "/?apply=1", "permanent": false },
+    { "source": "/drive", "destination": "/rent-to-own", "permanent": true },
+    { "source": "/drive.html", "destination": "/rent-to-own", "permanent": true },
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "headers": [

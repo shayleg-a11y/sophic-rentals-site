@@ -2,22 +2,22 @@
     <div class="wrap hero-grid">
       <div>
         <span class="pill"><span class="dot"></span> 53 Teslas · 3 pickup locations · LA &amp; Orange County</span>
-        <h1>Drive a <span class="accent">Tesla</span> for Uber, Lyft &amp; delivery. No car payment. No gas.</h1>
-        <p class="sub">Long-term Tesla rentals for gig drivers. One flat weekly rate, charging that costs about $20 per 500 miles, and pickup near LAX, John Wayne Airport or Chapman University. Check availability free in 30 seconds — we text you back.</p>
+        <h1>Drive a <span class="accent">Tesla</span> for Uber &amp; Lyft. Own it in 12 months.</h1>
+        <p class="sub">Rent to own: about $2,000 down and $500 a week on a Model 3 — after 52 payments the title is yours. No credit check, no bank loan, no gas. Or rent week to week. Pickup near LAX, John Wayne Airport or Chapman University.</p>
         <div class="hero-cta">
-          <button class="btn btn-primary" data-apply>Check availability — free →</button>
+          <button class="btn btn-primary" data-apply data-plan="rent-to-own">Start rent to own — free →</button>
           <a class="btn btn-ghost" data-contact="sms" href="{{SMS_HREF}}">{{ico:chat}} {{TEXT_LABEL}}</a>
         </div>
-        <p class="hero-note">Free to apply · No credit check · <b>Upfront at pickup: first week + a deposit equal to your insurance deductible</b></p>
+        <p class="hero-note">Free to apply · No credit check · <a href="/rent-to-own" style="color:inherit;text-decoration:underline">How rent to own works</a> · Prefer to rent? <a href="#plans" style="color:inherit;text-decoration:underline">Weekly rental</a></p>
         <div class="trust">
           <span class="pill">{{ico:bolt}} Charging ≈ $20 per 500 miles</span>
-          <span class="pill">{{ico:calendar}} Flat weekly rate, one-month minimum</span>
+          <span class="pill">{{ico:calendar}} 52 weekly payments, then it's yours</span>
           <span class="pill">{{ico:check}} Uber, Lyft, DoorDash &amp; Uber Eats ready</span>
-          <span class="pill">{{ico:wrench}} Maintenance on us</span>
+          <span class="pill">{{ico:shield}} No credit check</span>
         </div>
       </div>
       <aside class="cost-card apply-card" aria-label="Apply now">
-        <h3>Check availability — free</h3>
+        <h3>Start free — own or rent</h3>
         <div class="lead">Name and number is all it takes. We text you what's available near you, usually within minutes.</div>
         <form data-apply-form novalidate class="inline-form">{{APPLY_FIELDS}}</form>
       </aside>
@@ -28,12 +28,46 @@
     <div class="wrap"><div class="grid">
       <div class="stat"><div class="num accent">53</div><div class="lab">Teslas in the Sophic fleet</div></div>
       <div class="stat"><div class="num accent">3</div><div class="lab">Pickup locations — LAX, SNA, Chapman</div></div>
-      <div class="stat"><div class="num accent">48h</div><div class="lab">Typical approval to pickup</div></div>
+      <div class="stat"><div class="num accent">12 mo</div><div class="lab">Rent to own — then the title is yours</div></div>
       <div class="stat"><div class="num accent">No</div><div class="lab">Credit check — ever</div></div>
     </div></div>
   </section>
 
-  <section id="fleet" class="pad">
+  <section id="plans" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Two ways to drive</span><h2>Own it, or rent it</h2><p>Same application, same $9.99 verification fee (credited to your first week). Model 3 prices shown; other cars vary.</p></div>
+      <div class="plans reveal">
+        <div class="plan featured">
+          <span class="badge avail" style="position:static;display:inline-flex;margin-bottom:10px"><span class="dot"></span>Most popular</span>
+          <h3>Rent to own</h3>
+          <div class="price"><b>$500</b><small>/ week · 52 weeks</small></div>
+          <ul>
+            <li>About <b>$2,000 down</b> + first week at pickup</li>
+            <li><b>The title is yours</b> after the 52nd payment</li>
+            <li>No credit check, no bank loan</li>
+            <li>You handle maintenance, like any car you own</li>
+            <li>Your full-coverage + rideshare insurance</li>
+          </ul>
+          <button class="btn btn-primary" data-apply data-plan="rent-to-own">Start rent to own — free</button>
+          <a href="/rent-to-own" class="small" style="display:block;text-align:center;margin-top:10px;color:var(--accent)">How rent to own works →</a>
+        </div>
+        <div class="plan">
+          <h3>Weekly rental</h3>
+          <div class="price"><b>$500</b><small>/ week · 1-month minimum</small></div>
+          <ul>
+            <li>First week + refundable deposit equal to your insurance deductible</li>
+            <li>Maintenance on us (tires, brakes, wipers are yours)</li>
+            <li>Return the car when you're done</li>
+            <li>No credit check</li>
+            <li>Your full-coverage + rideshare insurance</li>
+          </ul>
+          <button class="btn btn-ghost" data-apply data-plan="rental">Rent weekly — free to apply</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fleet" class="pad band">
     <div class="wrap">
       <div class="shead reveal">
         <span class="eyebrow">The fleet</span>
@@ -53,9 +87,9 @@
         <p>No dealership, no credit check, no five-year loan. Here's every dollar, up front.</p>
       </div>
       <div class="steps">
-        <div class="step reveal"><div class="n">1</div><h3>Check availability</h3><p>Name, number and which apps you drive. We text you what's open near you — usually within minutes during the day.</p><span class="tag">Free</span></div>
+        <div class="step reveal"><div class="n">1</div><h3>Apply free</h3><p>Pick rent to own or weekly rental, then name, number and which apps you drive. We text you what's open near you — usually within minutes during the day.</p><span class="tag">Free</span></div>
         <div class="step reveal"><div class="n">2</div><h3>Get verified</h3><p>Add your email, license photos and insurance, plus a $9.99 verification fee that's credited to your first week. We verify within 24–48 hours. <a href="/insurance" style="color:var(--accent)">Need insurance?</a></p><span class="tag">$9.99, credited to week 1</span></div>
-        <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, 10-minute walkaround, drive off charged.</p><span class="tag">Week 1 + deposit = your deductible</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, 10-minute walkaround, drive off charged.</p><span class="tag">Own: ~$2,000 down + week 1 · Rent: week 1 + deposit</span></div>
       </div>
     </div>
   </section>
@@ -91,7 +125,8 @@
         <div><b>Model 3</b><span>$500 / week</span></div>
         <div><b>Model Y</b><span>$600 / week</span></div>
         <div><b>Model X</b><span>$700 / week</span></div>
-        <div><b>Deposit</b><span>Equal to your insurance deductible, refundable — <a href="/policies" style="color:var(--accent)">how you get it back</a></span></div>
+        <div><b>Rent to own</b><span>~$2,000 down, 52 weeks, then it's yours</span></div>
+        <div><b>Rental deposit</b><span>Equal to your insurance deductible, refundable — <a href="/policies" style="color:var(--accent)">how you get it back</a></span></div>
         <div><b>Charging</b><span>≈ $20 per 500 mi, auto-billed</span></div>
         <div><b>Miles</b><span>5,000 / week included</span></div>
       </div>
@@ -116,7 +151,7 @@
         <div class="why reveal"><div class="ic">{{icon:bolt}}</div><h3>Charging, not gas</h3><p>Our fleet averages about $20 per 500 miles. It's billed to you automatically through Tesla's fleet system — no receipts, no reimbursements, no surprises.</p></div>
         <div class="why reveal"><div class="ic">{{icon:cash}}</div><h3>One flat weekly rate</h3><p>Rent is the same every week and billed on the same day. Charging is added based on exactly what you used.</p></div>
         <div class="why reveal"><div class="ic">{{icon:shield}}</div><h3>Insurance, made simple</h3><p>You carry a full-coverage policy with a rideshare add-on. No policy yet? Our <a href="/insurance" style="color:var(--accent)">24-hour insurance guide</a> tells you exactly what to ask for and who sells it.</p></div>
-        <div class="why reveal"><div class="ic">{{icon:wrench}}</div><h3>Maintenance on us</h3><p>Service, software, and mechanical repairs from normal use are ours. Wear items you use up — tires, brakes, wipers — are yours.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:wrench}}</div><h3>Built to last</h3><p>Teslas have no oil changes and few moving parts, so they hold up to rideshare miles. Renting? Service and repairs from normal use are on us. Owning? Routine upkeep stays low.</p></div>
         <div class="why reveal"><div class="ic">{{icon:check}}</div><h3>Uber &amp; Lyft ready</h3><p>Model 3, Y and X all meet Uber and Lyft vehicle-age and door rules, and qualify for Comfort-tier rides.</p></div>
         <div class="why reveal"><div class="ic">{{icon:rocket}}</div><h3>48 hours, not 4 weeks</h3><p>Most drivers are verified within two days. With 53 cars across three locations, there's usually one ready near you.</p></div>
       </div>
@@ -161,7 +196,8 @@
     <div class="wrap">
       <div class="shead reveal"><span class="eyebrow">Questions</span><h2>Good to know</h2></div>
       <div class="faq">
-        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does it cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay your first week plus a refundable deposit equal to your insurance policy's deductible — with a $500 deductible that's <b>$1,000 total for a Model 3</b>, minus the $9.99 verification fee you already paid. A lower deductible means a lower deposit. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq0">How does rent to own work?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq0"><p>Pay about $2,000 down plus your first week at pickup, then about $500 a week (Model 3; prices vary by car) for 12 months. After the 52nd payment we transfer the title to you. No credit check. You cover maintenance and carry your own full-coverage insurance. Payments more than 24 hours late end the right to own — see <a href="/policies#rto" style="color:var(--accent)">policies</a>. <a href="/rent-to-own" style="color:var(--accent)">Full details</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does a weekly rental cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay your first week plus a refundable deposit equal to your insurance policy's deductible — with a $500 deductible that's <b>$1,000 total for a Model 3</b>, minus the $9.99 verification fee you already paid. A lower deductible means a lower deposit. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq2">What's the $9.99 for?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>Checking availability is free. The $9.99 is paid only when you finish your application, covers verifying your license and insurance, and is <b>credited toward your first week's rent</b> at pickup. If you're not approved it isn't refunded. <a href="/policies" style="color:var(--accent)">Full policy</a>.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq3">What insurance do I need?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Your own auto policy with full coverage — liability plus comprehensive and collision — that extends to a rental vehicle, with Sophic Rentals listed as an additional interest so we're notified if it lapses. If you drive rideshare, tell your carrier; most add rideshare coverage for a few dollars a month. We verify with your carrier before pickup and re-check monthly. Don't have it yet? Read our <a href="/insurance" style="color:var(--accent)">get-insured-in-24-hours guide</a> and apply anyway.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq4">What do I need to qualify?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 or older, a valid U.S. driver's license that isn't suspended, and full-coverage insurance as above. No credit check. Cars stay in California.</p></div></div>
@@ -174,25 +210,12 @@
     </div>
   </section>
 
-  <section class="pad band" style="padding-bottom:0;border-bottom:0">
-    <div class="wrap">
-      <div class="callout reveal">
-        <div style="max-width:60ch">
-          <span class="eyebrow">No car, no rent</span>
-          <h2>No insurance yet? Drive on our Uber fleet.</h2>
-          <p>We put you in a Tesla with insurance and maintenance included. Half of what you earn goes toward the car until the weekly target is met — then you keep 100% for the rest of the week.</p>
-        </div>
-        <a href="/drive" class="btn btn-primary">See the fleet driver program →</a>
-      </div>
-    </div>
-  </section>
-
   <section class="pad band" style="border-top:0">
     <div class="wrap">
       <div class="cta-band reveal">
-        <h2>Ready to stop paying for gas?</h2>
-        <p>Check availability free in 30 seconds. We text you back, verify in 24–48 hours, and you pick up near LAX, SNA or Chapman.</p>
-        <button class="btn" data-apply>Check availability — free →</button>
+        <h2>Stop renting a car you'll never own.</h2>
+        <p>Start free in 30 seconds. We text you back, verify in 24–48 hours, and you pick up near LAX, SNA or Chapman — then 12 months later, the car is yours.</p>
+        <button class="btn" data-apply data-plan="rent-to-own">Start rent to own — free →</button>
       </div>
     </div>
   </section>

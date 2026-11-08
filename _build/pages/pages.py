@@ -2,9 +2,10 @@
 FEE = '9.99'
 DOMAIN = 'https://sophicrentals.com'
 
-BIZ = {"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals","description":"Long-term Tesla rentals for Uber, Lyft and delivery drivers in Los Angeles and Orange County.","url":DOMAIN+"/","email":"Sophicrentals@gmail.com","image":DOMAIN+"/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals — Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals — near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals — near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}]}
+BIZ = {"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals","description":"Long-term Tesla rentals for Uber, Lyft and delivery drivers in Los Angeles and Orange County.","url":DOMAIN+"/","email":"Sophicrentals@gmail.com","image":DOMAIN+"/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals — Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals — near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals — near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 rent to own — about $2,000 down, $500/week for 12 months, then the title is yours","priceCurrency":"USD","price":"500"},{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}]}
 
 HOME_FAQ = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"How does rent to own work?","acceptedAnswer":{"@type":"Answer","text":"Pay about $2,000 down plus the first week at pickup, then about $500 a week (Model 3; prices vary by car) for 12 months. After the 52nd payment Sophic transfers the title to you. No credit check. You cover maintenance and carry full-coverage insurance with a rideshare endorsement."}},
  {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay the first week plus a refundable deposit equal to your insurance deductible: $1,000 for a Model 3 with a $500 deductible. Applying is free; a $9.99 verification fee is charged when you finish your application and is credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},
  {"@type":"Question","name":"Does it cost anything to apply?","acceptedAnswer":{"@type":"Answer","text":"Checking availability is free. A $9.99 verification fee is charged when you finish your application and is credited toward your first week's rent. It is not refunded if you are declined."}},
  {"@type":"Question","name":"What insurance do I need?","acceptedAnswer":{"@type":"Answer","text":"Your own full-coverage auto policy (liability, comprehensive and collision) that extends to a rental vehicle, with Sophic Rentals listed as an additional interest. We verify it with your carrier before pickup."}},
@@ -25,9 +26,9 @@ def city_body(c):
     return f'''  <section class="page-hero"><div class="wrap">
     <span class="eyebrow">Serving {c['name']} · pickup near {c['short']}</span>
     <h1 style="font-size:clamp(34px,5.4vw,58px);margin-top:12px;max-width:20ch">Tesla rentals for {c['name']} drivers — <span class="accent">pickup near {c['short']}</span>, {c['drive']} away</h1>
-    <p class="muted" style="font-size:18px;max-width:60ch;margin-top:16px">We don't have an office in {c['name']}; {c['name']} drivers pick up at {c['office']}, {c['drive']} away, once — then the car lives with you. Flat $500/week for a Model 3, charging around $20 per 500 miles, no credit check. {c['why']}</p>
-    <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply>Check availability — free →</button><a class="btn btn-ghost" href="/#cost">See what you keep</a></div>
-    <p class="hero-note">Free to apply · No credit check · Upfront at pickup: first week + a deposit equal to your insurance deductible</p>
+    <p class="muted" style="font-size:18px;max-width:60ch;margin-top:16px">We don't have an office in {c['name']}; {c['name']} drivers pick up at {c['office']}, {c['drive']} away, once — then the car lives with you. Rent to own a Model 3 with about $2,000 down and $500/week — the title is yours after 12 months — or rent it week to week. No credit check. {c['why']}</p>
+    <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply data-plan="rent-to-own">Start rent to own — free →</button><a class="btn btn-ghost" href="/#cost">See what you keep</a></div>
+    <p class="hero-note">Free to apply · No credit check · Own: ~$2,000 down + first week · Rent: first week + deposit equal to your insurance deductible</p>
   </div></section>
 
   <section class="pad-sm"><div class="wrap">
@@ -42,9 +43,10 @@ def city_body(c):
     <div class="shead left reveal" style="margin-bottom:24px"><span class="eyebrow">Pricing</span><h2>What it costs — nothing hidden</h2></div>
     <div class="prose" style="margin:0"><div class="tbl"><table>
       <tr><th>Item</th><th>Model 3</th><th>Model Y</th><th>Model X</th></tr>
-      <tr><td>Weekly rent</td><td>$500</td><td>$600</td><td>$700</td></tr>
-      <tr><td>Refundable deposit</td><td colspan="3">Equal to your insurance deductible</td></tr>
-      <tr><td>Due at pickup with a $500 deductible</td><td>$1,000</td><td>$1,100</td><td>$1,200</td></tr>
+      <tr><td>Rent to own</td><td colspan="3">About $2,000 down + weekly payments for 12 months, then the title is yours (Model 3 ≈ $500/week; varies by car)</td></tr>
+      <tr><td>Weekly rental</td><td>$500</td><td>$600</td><td>$700</td></tr>
+      <tr><td>Rental deposit (refundable)</td><td colspan="3">Equal to your insurance deductible</td></tr>
+      <tr><td>Rental due at pickup with a $500 deductible</td><td>$1,000</td><td>$1,100</td><td>$1,200</td></tr>
       <tr><td>Verification fee (when you finish applying)</td><td colspan="3">$9.99 — credited to your first week</td></tr>
       <tr><td>Charging</td><td colspan="3">Pay for what you use — about $20 per 500 miles, billed automatically</td></tr>
       <tr><td>Insurance</td><td colspan="3">Your own full-coverage policy (comprehensive + collision)</td></tr>
@@ -59,14 +61,14 @@ def city_body(c):
   </div></section>
 
   <section class="pad-sm"><div class="wrap">
-    <div class="cta-band reveal"><h2>Driving in {c['name']} this week?</h2><p>Check availability free in 30 seconds. We text you back.</p><button class="btn" data-apply>Check availability — free →</button></div>
+    <div class="cta-band reveal"><h2>Driving in {c['name']} this week?</h2><p>Check availability free in 30 seconds. We text you back.</p><button class="btn" data-apply data-plan="rent-to-own">Start rent to own — free →</button></div>
   </div></section>
 '''
 
 def city_page(c):
     return dict(path=f"/tesla-rental-{c['slug']}", src=None, body=city_body(c), active='fleet',
-        title=f"Tesla rental for Uber & Lyft serving {c['name']} — pickup near {c['short']} | Sophic Rentals",
-        desc=f"Tesla rentals for {c['name']} rideshare and delivery drivers with pickup near {c['short']}, {c['drive']} away. Model 3 from $500/week, no credit check, free to apply.",
+        title=f"Tesla rent to own & rental for Uber & Lyft serving {c['name']} — pickup near {c['short']} | Sophic Rentals",
+        desc=f"Rent to own or rent a Tesla for {c['name']} rideshare and delivery drivers, pickup near {c['short']}, {c['drive']} away. About $2,000 down and $500/week, own it in 12 months. No credit check.",
         og_title=f"Serving {c['name']}: Tesla rental for rideshare, pickup near {c['short']}",
         ld=[dict(BIZ, areaServed=[{"@type":"City","name":c['name']}])], priority='0.8')
 
@@ -74,19 +76,19 @@ ARTICLE_LD = {"@context":"https://schema.org","@type":"Article","headline":"Tesl
 
 PAGES = [
  dict(path='/', src='index.body.html', active='', hero=True, priority='1.0', changefreq='weekly',
-      title='Rent a Tesla for Uber & Lyft in LA & Orange County — $500/week | Sophic Rentals',
-      og_title='Sophic Rentals — Rent a Tesla for rideshare. No car payment. No gas.',
-      desc='Long-term Tesla rentals for Uber, Lyft & delivery drivers in Los Angeles and Orange County. Free to apply, no credit check, Model 3 from $500/week, pickup near LAX, SNA or Chapman, on the road in 48 hours.',
+      title='Rent to own a Tesla for Uber & Lyft in LA & Orange County | Sophic Rentals',
+      og_title='Sophic Rentals — Drive a Tesla for Uber & Lyft. Own it in 12 months.',
+      desc='Rent to own or rent a Tesla for Uber, Lyft & delivery in Los Angeles and Orange County: about $2,000 down and $500/week, own it in 12 months. Free to apply, no credit check, Model 3 from $500/week, pickup near LAX, SNA or Chapman, on the road in 48 hours.',
       ld=[BIZ, HOME_FAQ]),
- dict(path='/drive', src='drive.body.html', active='drive', app_type='driver', hero=True, priority='0.9', changefreq='weekly',
-      title='Drive a Tesla on our Uber fleet — no car, no insurance to buy | Sophic Rentals',
-      og_title='No car? Drive ours. Keep what you earn after the weekly target.',
-      desc="Sophic's fleet driver program: we provide the Tesla, insurance and maintenance. Half your earnings go toward the car until the weekly target, then you keep 100%. Apply in two minutes.",
-      ld=[dict(BIZ, name='Sophic Rentals — Fleet Driver Program')]),
+ dict(path='/rent-to-own', src='rent-to-own.body.html', active='rto', priority='0.95', changefreq='weekly',
+      title='Rent to own a Tesla for Uber & Lyft — own it in 12 months | Sophic Rentals',
+      og_title='Own a Tesla in 12 months. Drive Uber & Lyft while you pay.',
+      desc='Rent to own a Tesla in LA & Orange County: about $2,000 down and $500/week on a Model 3 for 12 months, then the title is yours. No credit check. Free to apply.',
+      ld=[dict(BIZ, name='Sophic Rentals — Rent to Own')]),
  dict(path='/thanks', src='thanks.body.html', active='', noindex=True, modal=False,
       title='Last step — upload your license | Sophic Rentals', desc='Finish your Sophic Rentals application by uploading photos of your license.'),
  dict(path='/privacy', src='privacy.body.html', active='', priority='0.3', title='Privacy Policy | Sophic Rentals', desc='What Sophic Rentals collects when you apply, why, who we share it with, and your California privacy rights.'),
- dict(path='/terms', src='terms.body.html', active='', priority='0.3', title='Terms of Service & Application Fee Policy | Sophic Rentals', desc='Verification fee policy, eligibility, and a plain-English summary of Sophic Rentals rental and fleet-driver terms.'),
+ dict(path='/terms', src='terms.body.html', active='', priority='0.3', title='Terms of Service & Application Fee Policy | Sophic Rentals', desc='Verification fee policy, eligibility, and a plain-English summary of Sophic Rentals rental and rent-to-own terms.'),
  dict(path='/tesla-vs-gas-for-uber', src='article.body.html', active='', priority='0.7', title='Tesla vs. gas car for Uber in Orange County: the weekly math | Sophic Rentals', og_title='Tesla vs. gas for Uber: the weekly math', desc='A full-time rideshare driver in Orange County spends about $173/week on gas in a 25-mpg sedan at $6/gallon. The same miles in a Sophic Tesla cost about $29 — here is the arithmetic, with the assumptions shown.', ld=[ARTICLE_LD]),
  dict(path='/insurance', src='insurance.body.html', active='insurance', priority='0.8', title='How to get rideshare insurance for a rental Tesla in 24 hours | Sophic Rentals', og_title='Get rideshare-ready insurance in 24 hours', desc='Exactly what insurance you need to rent a Tesla for Uber or Lyft in California, what to ask your carrier, which insurers sell rideshare endorsements, and a 24-hour checklist.'),
  dict(path='/policies', src='policies.body.html', active='', priority='0.5', title='Deposit, maintenance & approval policies | Sophic Rentals', desc='How you get your deposit back, what maintenance Sophic covers, how the $9.99 verification fee works, and what happens if you are not approved.'),
