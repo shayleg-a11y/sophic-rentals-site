@@ -4,6 +4,7 @@
 //   NOTIFY_ADMIN_EMAIL — internal alert on every new lead (optional)
 const SITE = process.env.SITE_URL || 'https://sophicrentals.com';
 const FEE = '9.99';
+const resumeUrl = (app) => `${SITE}/${app.application_type === 'driver' ? 'drive' : ''}?resume=${app.reference_number}`;
 
 export function emailConfigured() { return !!process.env.RESEND_API_KEY; }
 export function smsConfigured() { return !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && (process.env.TWILIO_FROM || process.env.TWILIO_MESSAGING_SERVICE_SID)); }
@@ -43,21 +44,21 @@ function btn(href, label) { return `<p style="margin:20px 0"><a href="${href}" s
 export const T = {
   leadSaved(app) {
     const driver = app.application_type === 'driver';
-    const pay = `${SITE}/api/checkout?ref=${app.reference_number}`;
+    const pay = resumeUrl(app);
     const subject = driver ? 'Your Sophic fleet-driver application (ref ' + app.reference_number + ')' : 'Your Sophic Tesla application (ref ' + app.reference_number + ')';
     const html = wrap(`Thanks, ${app.first_name} — we've got your info`, `
       <p>We'll text you within one business day about ${driver ? 'the fleet driver program' : 'what\'s available this week'}. Your reference is <b>${app.reference_number}</b>.</p>
-      <p>Want to lock it in now? Reserve ${driver ? 'your spot' : 'a car'} with the one-time $${FEE} application fee (non-refundable — it covers verification), then upload your license and we'll verify you within 24–48 hours.</p>
-      ${btn(pay, 'Reserve now — $' + FEE)}
+      <p>Want to lock it in now? Finish step 2 (email, license, insurance) and the $${FEE} verification fee${driver ? '' : ' — it\'s credited to your first week'}. We verify within 24–48 hours.</p>
+      ${btn(pay, 'Finish my application')}
       <p style="color:#555;font-size:14px">${driver ? 'Insurance and maintenance are included in the driver program.' : 'Reminder: you\'ll need your own auto policy with a rideshare (TNC) endorsement before pickup. Not there yet? Reply and we\'ll tell you what to ask your carrier for.'}</p>`);
-    const sms = `Sophic Rentals: thanks ${app.first_name}! We got your info (ref ${app.reference_number}) and will text you within 1 business day. Reserve now for $${FEE}: ${pay}  Reply STOP to opt out.`;
+    const sms = `Sophic Rentals: thanks ${app.first_name}! We got your info (ref ${app.reference_number}) and will text you within 1 business day. Finish in 1 minute: ${pay}  Reply STOP to opt out.`;
     return { subject, html, sms };
   },
   finishPayment(app) {
-    const pay = `${SITE}/api/checkout?ref=${app.reference_number}`;
+    const pay = resumeUrl(app);
     const subject = 'Finish your Sophic application — one step left';
-    const html = wrap('One step left', `<p>Hi ${app.first_name}, your application (ref <b>${app.reference_number}</b>) is saved but not reserved yet. The $${FEE} application fee starts verification and holds a car for you.</p>${btn(pay, 'Finish — $' + FEE)}<p style="color:#555;font-size:14px">Not ready? Just reply to this email with any questions — a real person answers.</p>`);
-    const sms = `Sophic Rentals: hi ${app.first_name}, your application (${app.reference_number}) is saved but not reserved. Finish here ($${FEE}): ${pay}  Questions? Just reply. STOP to opt out.`;
+    const html = wrap('One step left', `<p>Hi ${app.first_name}, your application (ref <b>${app.reference_number}</b>) is saved but not reserved yet. Finish step 2 to start verification and hold a car. The $${FEE} fee is credited to your first week.</p>${btn(pay, 'Finish my application')}<p style="color:#555;font-size:14px">Not ready? Just reply to this email with any questions — a real person answers.</p>`);
+    const sms = `Sophic Rentals: hi ${app.first_name}, your application (${app.reference_number}) is saved but not reserved. Finish here: ${pay}  Questions? Just reply. STOP to opt out.`;
     return { subject, html, sms };
   },
   uploadDocs(app) {

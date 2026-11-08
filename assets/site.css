@@ -286,3 +286,16 @@ footer.site{border-top:1px solid var(--line);padding:50px 0 100px;margin-top:80p
 .pricing-row b{display:block;font-family:var(--display);font-size:15px}
 .pricing-row span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
 .step .n svg{width:20px;height:20px}
+
+/* ---- v3 (Nov 2026): two-step form, founder block, policy pages ---- */
+.fstep{display:flex;flex-direction:column;gap:12px}
+.step2-head{font-size:14px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:10px 14px;margin:0}
+.step2-head b{color:var(--accent)}
+.fineprint.upfront{text-align:left;color:var(--muted);font-size:12.5px;margin:0}
+.fineprint.upfront b{color:var(--text)}
+.founder{display:flex;gap:28px;align-items:flex-start;max-width:860px;margin:0 auto}
+.founder-mark{flex:0 0 88px;height:88px;border-radius:50%;background:var(--grad);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:30px}
+.founder h2{margin:8px 0 12px}
+.founder p{color:var(--muted);margin:0 0 10px}
+@media (max-width:640px){.founder{flex-direction:column;gap:16px}.founder-mark{flex-basis:64px;width:64px;height:64px;font-size:22px}}
+.policy-list li{margin-bottom:10px}

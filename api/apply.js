@@ -1,6 +1,8 @@
-// POST /api/apply — two-step application.
-//   stage "lead"    : free pre-qualify. Creates (or refreshes) a row; returns {id, reference_number}.
-//   stage "reserve" : adds DOB + address to the row identified by ref; sets status pending_payment.
+// POST /api/apply — application stages.
+//   stage "lead"    : FREE step 1 (name, phone, platform, car). Creates (or refreshes) a row; returns {id, reference_number}.
+//                     A DB trigger on applications texts the lead + alerts the owner (see migration lead_texting_funnel).
+//   stage "details" : step 2 (email, license, insurance) on the row identified by ref; then the client opens /api/checkout.
+//   stage "reserve" : after payment, adds DOB + address (thanks page).
 // Spam protection: honeypot field "website", per-IP rate limit (hashed IP), 24h dedupe by email+type.
 import crypto from 'crypto';
 import { configured, select, insert, update, findByRef, cleanRef } from './_lib/db.js';
@@ -26,7 +28,7 @@ export default async function handler(req, res) {
     // Honeypot: bots fill every field. Pretend success, store nothing.
     if (s(b.website, 200)) { res.status(200).json({ ok: true, id: crypto.randomUUID(), reference_number: 'OK' + Date.now().toString(36).toUpperCase().slice(-6) }); return; }
 
-    const stage = b.stage === 'reserve' ? 'reserve' : 'lead';
+    const stage = ['reserve', 'details'].includes(b.stage) ? b.stage : 'lead';
     const type = b.application_type === 'driver' ? 'driver' : 'rental';
     const hash = ipHash(ipOf(req));
 
@@ -36,6 +38,24 @@ export default async function handler(req, res) {
       const hits = await select('applications', 'select=id&ip_hash=eq.' + hash + '&created_at=gte.' + encodeURIComponent(since) + '&limit=' + (RATE_LIMIT + 1));
       if (hits.length >= RATE_LIMIT && stage === 'lead') { res.status(429).json({ error: 'rate_limited' }); return; }
     } catch (_) { /* best effort */ }
+
+    if (stage === 'details') {
+      const ref = cleanRef(b.ref);
+      const app = ref ? await findByRef(ref) : null;
+      if (!app) { res.status(404).json({ error: 'not_found' }); return; }
+      const email = s(b.email, 200).toLowerCase();
+      if (!validEmail(email)) { res.status(400).json({ error: 'Please enter a valid email address' }); return; }
+      const lic = s(b.has_license, 40);
+      const patch = { email, stage: 'details', updated_at: new Date().toISOString() };
+      if (app.application_type !== 'driver' && s(b.insurance_status, 60)) patch.insurance_status = s(b.insurance_status, 60);
+      if (s(b.rideshare_experience, 60)) patch.rideshare_experience = s(b.rideshare_experience, 60);
+      if (lic) patch.reviewer_notes = ((app.reviewer_notes || '').replace(/License: [^\n]*/,'').trim() + '\nLicense: ' + lic).trim();
+      if (app.payment_status !== 'paid') patch.status = 'pending_payment';
+      await update('applications', 'id=eq.' + app.id, patch);
+      try { await notifyAdmin('Step 2 done (going to pay): ' + app.first_name + ' ' + app.last_name, ['Ref: ' + app.reference_number, 'Email: ' + email, 'Insurance: ' + (patch.insurance_status || ''), 'License: ' + lic]); } catch (_) {}
+      res.status(200).json({ ok: true, id: app.id, reference_number: app.reference_number });
+      return;
+    }
 
     if (stage === 'reserve') {
       const ref = cleanRef(b.ref);
@@ -77,15 +97,19 @@ export default async function handler(req, res) {
     };
     const lic = s(b.has_license, 40);
     if (lic) rec.reviewer_notes = 'License: ' + lic;
-    for (const k of ['first_name', 'last_name', 'email', 'phone']) if (!rec[k]) { res.status(400).json({ error: 'Missing required field: ' + k }); return; }
-    if (!validEmail(rec.email)) { res.status(400).json({ error: 'Please enter a valid email address' }); return; }
+    for (const k of ['first_name', 'last_name', 'phone']) if (!rec[k]) { res.status(400).json({ error: 'Missing required field: ' + k }); return; }
+    if (!rec.email) delete rec.email;                       // email is collected in step 2
+    else if (!validEmail(rec.email)) { res.status(400).json({ error: 'Please enter a valid email address' }); return; }
     if (!validPhone(rec.phone)) { res.status(400).json({ error: 'Please enter a valid 10-digit mobile number' }); return; }
 
-    // ---- Dedupe: same email + type, unpaid, within 24h -> refresh that row instead of creating another
+    // ---- Dedupe: same phone (or email) + type, unpaid, within 24h -> refresh that row instead of creating another
     let row = null, deduped = false;
     try {
       const since = new Date(Date.now() - DEDUPE_HOURS * 3600e3).toISOString();
-      const dup = await select('applications', 'select=id,reference_number,first_name,email,phone,application_type&email=eq.' + encodeURIComponent(rec.email) + '&application_type=eq.' + type + '&payment_status=eq.unpaid&created_at=gte.' + encodeURIComponent(since) + '&order=created_at.desc&limit=1');
+      const digits = rec.phone.replace(/\D/g, '').slice(-10);
+      const who = rec.email ? 'or=(email.eq.' + encodeURIComponent(rec.email) + ',phone.ilike.*' + digits.slice(-4) + '*)' : 'phone=ilike.*' + digits.slice(-4) + '*';
+      const cand = await select('applications', 'select=id,reference_number,first_name,email,phone,application_type&' + who + '&application_type=eq.' + type + '&payment_status=eq.unpaid&created_at=gte.' + encodeURIComponent(since) + '&order=created_at.desc&limit=10');
+      const dup = cand.filter((c) => (c.phone || '').replace(/\D/g, '').slice(-10) === digits || (rec.email && c.email === rec.email));
       if (dup[0]) {
         const patch = Object.assign({}, rec, { updated_at: new Date().toISOString() });
         delete patch.status; delete patch.payment_status; delete patch.stage;

@@ -10,6 +10,18 @@ PAGES = pathlib.Path(__file__).resolve().parent / 'pages'
 DOMAIN = 'https://sophicrentals.com'
 TODAY = datetime.date.today().isoformat()
 FEE = '9.99'
+# ---- Business contact (single source of truth; site.js reads data-* set from these) ----
+PHONE = ''            # E.164 business texting number, e.g. '+17145550123'. Blank = Text links fall back to email.
+PHONE_DISPLAY = ''    # e.g. '(714) 555-0123'
+EMAIL = 'Sophicrentals@gmail.com'
+HOURS = 'Texts answered 8am–9pm, 7 days'
+ORANGE_ADDR = '393 N Cypress St, Orange, CA 92866'
+SMS_BODY = "Hi Sophic, I'm interested in renting a Tesla for rideshare. Is a car available this week?"
+def sms_href():
+    from urllib.parse import quote
+    return f'sms:{PHONE}?&body={quote(SMS_BODY)}' if PHONE else f'mailto:{EMAIL}?subject={quote("Tesla rental availability")}'
+def text_label():
+    return 'Text us' if PHONE else 'Email us'
 
 ICONS = {
  'bolt': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
@@ -24,6 +36,7 @@ ICONS = {
  'cash': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>',
  'chev': '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
 }
+LOGO_MARK = '<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>'
 def ico(name, cls='ico'):
     return f'<span class="{cls}" aria-hidden="true">{ICONS[name]}</span>'
 
@@ -76,24 +89,25 @@ def header(active=''):
     return f'''<header class="site" id="hdr">
   <div class="wrap">
     <nav class="main" aria-label="Main">
-      <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic&nbsp;<span class="lt">Rentals</span></a>
+      <a class="logo" href="/" aria-label="Sophic Rentals home">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
       <div class="nav-links">
         {a('/#fleet','Fleet','fleet')}
         {a('/#cost','Pricing','cost')}
         {a('/#locations','Locations','locations')}
         {a('/#how','How it works','how')}
+        {a('/insurance','Insurance','insurance')}
         {a('/#faq','FAQ','faq')}
         {a('/drive','Drive for us','drive')}
       </div>
       <div class="nav-cta">
-        <a class="btn btn-ghost btn-sm" data-contact="sms" data-label-email="Email us">{ico('chat')} Text us</a>
-        <button class="btn btn-primary btn-sm" data-apply><span class="long">Apply now — $9.99</span><span class="short">Apply</span></button>
+        <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability — free</span><span class="short">Apply free</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/drive">Drive for us</a><a data-contact="sms" data-label-email="Email us" href="#">Text us</a>
+    <a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/drive">Drive for us</a><a href="/insurance">Insurance help</a><a data-contact="sms" href="{sms_href()}">{text_label()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
   </div>
 </header>
 <main id="main">
@@ -105,47 +119,58 @@ def footer():
   <div class="wrap">
     <div class="foot">
       <div>
-        <a class="logo" href="/"><span class="mark" aria-hidden="true">S</span>Sophic&nbsp;<span class="lt">Rentals</span></a>
-        <p>Long-term Tesla rentals for Uber, Lyft and DoorDash drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC.</p>
-        <p class="small" style="margin-top:8px">Pickup near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange.</p>
+        <a class="logo" href="/" aria-label="Sophic Rentals home">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
+        <p>Long-term Tesla rentals for Uber, Lyft and delivery drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC, founded by Shayle Gupta in Irvine.</p>
+        <p class="small" style="margin-top:8px">Main office: {ORANGE_ADDR} (next to Chapman University). Also near LAX and near John Wayne Airport (SNA) — exact address texted with your pickup time. {HOURS}.</p>
       </div>
-      <div><h4>Rent</h4><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
-      <div><h4>Locations</h4><a href="/tesla-rental-anaheim">Anaheim</a><a href="/tesla-rental-santa-ana">Santa Ana</a><a href="/tesla-rental-irvine">Irvine</a><a href="/tesla-rental-long-beach">Long Beach</a><a href="/tesla-rental-los-angeles">Los Angeles</a></div>
-      <div><h4>Contact</h4><a data-contact="phone-text" href="#"></a><a data-contact="sms" data-label-email="Email us" href="#">Text us</a><a href="mailto:Sophicrentals@gmail.com">Sophicrentals@gmail.com</a><a href="/#locations">Pickup locations</a><a href="/drive">Drive on our Uber fleet</a></div>
+      <div><h4>Rent</h4><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/insurance">Get insured in 24 hours</a><a href="/policies">Deposit &amp; policies</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
+      <div><h4>Areas we serve</h4><a href="/tesla-rental-anaheim">Anaheim</a><a href="/tesla-rental-santa-ana">Santa Ana</a><a href="/tesla-rental-irvine">Irvine</a><a href="/tesla-rental-long-beach">Long Beach</a><a href="/tesla-rental-los-angeles">Los Angeles</a></div>
+      <div><h4>Contact</h4>{f'<a data-contact="tel" href="tel:{PHONE}">{PHONE_DISPLAY or PHONE}</a>' if PHONE else ''}<a data-contact="sms" href="{sms_href()}">{text_label()}</a><a href="mailto:{EMAIL}">{EMAIL}</a><span class="small muted" style="display:block;padding:6px 0">{HOURS}</span><a href="/#locations">Pickup locations</a><a href="/drive">Drive on our Uber fleet</a></div>
     </div>
-    <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/terms#fee" style="display:inline;padding:0">Application fee policy</a></span></div>
+    <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/policies" style="display:inline;padding:0">Deposit &amp; fee policy</a></span></div>
   </div>
 </footer>
-<div class="mbar"><a class="btn btn-ghost" data-contact="sms" data-label-email="Email us">{ico('chat')} Text us</a><button class="btn btn-primary" data-apply>Apply now — $9.99</button></div>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a><button class="btn btn-primary" data-apply>Apply free</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 '''
 
 def apply_fields(prefix, driver):
-    """Shared application fields (used by the modal and the inline hero form)."""
+    """Two-step application. Step 1 = free lead (name, phone, platform, car/hours). Step 2 = details + $9.99."""
     f = lambda k: f'{prefix}{k}'
-    plat = f'<div class="field"><label for="{f("platform")}">Which platform?</label><select id="{f("platform")}" name="platform"><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>DoorDash</option><option>Multiple</option><option>Other / not yet</option></select></div>'
+    plat = f'<div class="field"><label for="{f("platform")}">Which apps?</label><select id="{f("platform")}" name="platform"><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>Delivery (DoorDash, Uber Eats, Instacart)</option><option>Rideshare + delivery</option><option>Not driving yet</option></select></div>'
     if driver:
-        second = f'<div class="field"><label for="{f("hours")}">Hours you want to drive</label><select id="{f("hours")}" name="weekly_hours"><option>Under 20 / week</option><option>20–35 / week</option><option>35–50 / week</option><option>50+ / week</option></select></div>'
-        third = f'<div class="row2"><div class="field"><label for="{f("exp")}">Rideshare experience</label><select id="{f("exp")}" name="rideshare_experience"><option>None yet</option><option>Under 1 year</option><option>1–3 years</option><option>3+ years</option></select></div><div class="field"><label for="{f("license")}">Valid California license?</label><select id="{f("license")}" name="has_license"><option>Yes</option><option>Out-of-state license</option><option>No</option></select></div></div>'
+        pick = f'<div class="field"><label for="{f("hours")}">Hours you want to drive</label><select id="{f("hours")}" name="weekly_hours"><option>Under 20 / week</option><option>20–35 / week</option><option>35–50 / week</option><option>50+ / week</option></select></div>'
+        s2 = f'<div class="row2"><div class="field"><label for="{f("exp")}">Rideshare experience</label><select id="{f("exp")}" name="rideshare_experience"><option>None yet</option><option>Under 1 year</option><option>1–3 years</option><option>3+ years</option></select></div><div class="field"><label for="{f("license")}">Valid California license?</label><select id="{f("license")}" name="has_license"><option>Yes</option><option>Out-of-state license</option><option>No</option></select></div></div>'
+        fee_line = f'<span>Verification fee<small>One time · covers license &amp; driving-record check</small></span><b class="accent">${FEE}</b>'
+        upfront = ''
     else:
-        second = f'<div class="field"><label for="{f("car")}">Preferred car</label><select id="{f("car")}" name="car" data-car-select><option value="">First available</option></select></div>'
-        third = f'<div class="row2"><div class="field"><label for="{f("insurance")}">Auto insurance</label><select id="{f("insurance")}" name="insurance_status"><option>Full coverage</option><option>Liability only</option><option>Not yet</option></select></div><div class="field"><label for="{f("license")}">Valid license?</label><select id="{f("license")}" name="has_license"><option>Yes — California</option><option>Yes — another state</option><option>No</option></select></div></div>'
+        pick = f'<div class="field"><label for="{f("car")}">Car you want</label><select id="{f("car")}" name="car" data-car-select><option value="">First available</option></select></div>'
+        s2 = f'<div class="row2"><div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status"><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div><div class="field"><label for="{f("license")}">Valid license?</label><select id="{f("license")}" name="has_license"><option>Yes — California</option><option>Yes — another state</option><option>No</option></select></div></div><p class="fineprint" style="margin-top:-4px">Not fully covered yet? Apply anyway — <a href="/insurance">here&rsquo;s how drivers get insured in 24 hours</a>.</p>'
+        fee_line = f'<span>Verification fee<small>Credited to your first week\'s rent</small></span><b class="accent">${FEE}</b>'
+        upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> $500 refundable deposit + $500 first week = <b>$1,000</b>, minus your $9.99 credit. No credit check.</p>'
     return f'''
-        <div class="row2">
-          <div class="field"><label for="{f("first")}">First name</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
-          <div class="field"><label for="{f("last")}">Last name</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
-        </div>
-        <div class="row2">
+        <div class="fstep" data-step="1">
+          <div class="row2">
+            <div class="field"><label for="{f("first")}">First name</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
+            <div class="field"><label for="{f("last")}">Last name</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
+          </div>
           <div class="field"><label for="{f("phone")}">Mobile number</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" required name="email" type="email" placeholder="you@email.com" autocomplete="email" /></div>
+          <div class="row2">{plat}{pick}</div>
+          <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
+          <div class="fstatus" role="status" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit" data-step-btn="1">{'Check my spot' if driver else 'Check availability'} — free →</button>
+          <p class="fineprint">Free, no credit check, nothing to pay yet. We text you back within minutes (8am–9pm). 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
         </div>
-        <div class="row2">{plat}{second}</div>
-        {third}
-        <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
-        <div class="fee-box"><span>Application fee<small>One time · non-refundable · covers verification</small></span><b class="accent">${FEE}</b></div>
-        <div class="fstatus" id="{f("status")}" role="status" aria-live="polite"></div>
-        <button class="btn btn-primary" type="submit" id="{f("submit")}">{'Apply to drive' if driver else 'Apply now'} — pay ${FEE} →</button>
-        <p class="fineprint">Secure payment by Stripe. Next you'll upload photos of your license — have it handy. You must be 21+. By applying you agree to be contacted by text and email. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>'''
+        <div class="fstep" data-step="2" hidden>
+          <p class="step2-head"><b>✓ You're on the list.</b> Finish now to get verified and hold {'your spot' if driver else 'a car'}:</p>
+          <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="you@email.com" autocomplete="email" data-req2 /></div>
+          {s2}
+          <div class="fee-box">{fee_line}</div>
+          {upfront}
+          <div class="fstatus" role="status" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit" data-step-btn="2">Verify me — pay ${FEE} securely →</button>
+          <p class="fineprint">Paid by Stripe. Next you'll snap photos of your license. Not ready? You can close this — we already have your number and will text you.</p>
+        </div>'''
 
 def modal(app_type='rental'):
     driver = app_type == 'driver'
@@ -153,7 +178,7 @@ def modal(app_type='rental'):
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
     <div id="formWrap">
       <div class="mhead">
-        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Apply to rent a Tesla'}</h3><p id="carPick">Two minutes. Verified within 24–48 hours.</p></div>
+        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Check Tesla availability'}</h3><p id="carPick">Free to start · 30 seconds · no credit check</p></div>
         <button class="mclose" aria-label="Close" data-close>×</button>
       </div>
       <form id="applyForm" data-apply-form novalidate>{apply_fields('f-', driver)}</form>
@@ -174,7 +199,7 @@ def scripts(v):
 def build_page(p, v):
     p = dict(p, v=v)
     body = (PAGES / p['src']).read_text() if p.get('src') else p['body']
-    body = body.replace('{{APPLY_FIELDS}}', apply_fields('h-', p.get('app_type')=='driver')).replace('{{FEE}}', FEE).replace('{{TODAY}}', TODAY)
+    body = body.replace('{{APPLY_FIELDS}}', apply_fields('h-', p.get('app_type')=='driver')).replace('{{FEE}}', FEE).replace('{{TODAY}}', TODAY).replace('{{SMS_HREF}}', sms_href()).replace('{{TEXT_LABEL}}', text_label()).replace('{{HOURS}}', HOURS).replace('{{ORANGE_ADDR}}', ORANGE_ADDR)
     body = re.sub(r'\{\{ico:(\w+)\}\}', lambda m: ico(m.group(1)), body)
     body = re.sub(r'\{\{icon:(\w+)\}\}', lambda m: ICONS[m.group(1)], body)
     html = head(p) + header(p.get('active','')) + body + footer() + (modal(p.get('app_type','rental')) if p.get('modal', True) else '') + scripts(v)

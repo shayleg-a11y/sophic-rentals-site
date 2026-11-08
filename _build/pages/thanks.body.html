@@ -66,7 +66,7 @@
       </ol>
     </div>
     <a class="btn btn-primary" style="margin-top:22px;width:100%" href="/" id="doneBtn" hidden>Done — back to the site</a>
-    <span class="later">Questions? <a data-contact="sms" data-label-email="Email us" style="color:var(--accent)">Text us</a> any time.</span>
+    <span class="later">Questions? <a data-contact="sms" href="{{SMS_HREF}}" style="color:var(--accent)">{{TEXT_LABEL}}</a> any time.</span>
   </div>
   </div>
   <script>
@@ -81,7 +81,7 @@
       document.getElementById('noRef').style.display='block';
       document.getElementById('doneBtn').hidden=false;
     }
-    window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
+    window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
     function idPayload(){ var p={}; if(APP&&APP.ref) p.reference=APP.ref; else if(APP&&APP.id) p.application_id=APP.id; return p; }
     function shrink(file){
       return new Promise(function(resolve){
