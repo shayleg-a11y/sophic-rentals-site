@@ -120,7 +120,7 @@ def footer():
     <div class="foot">
       <div>
         <a class="logo" href="/" aria-label="Sophic Rentals home">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
-        <p>Long-term Tesla rentals for Uber, Lyft and delivery drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC, founded by Shayle Gupta in Irvine.</p>
+        <p>Long-term Tesla rentals for Uber, Lyft and delivery drivers across Los Angeles &amp; Orange County. Sophic Rentals, a California LLC, based in Orange County.</p>
         <p class="small" style="margin-top:8px">Main office: {ORANGE_ADDR} (next to Chapman University). Also near LAX and near John Wayne Airport (SNA) — exact address texted with your pickup time. {HOURS}.</p>
       </div>
       <div><h4>Rent</h4><a href="/#fleet">Available Teslas</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#how">How it works</a><a href="/insurance">Get insured in 24 hours</a><a href="/policies">Deposit &amp; policies</a><a href="/#faq">FAQ</a><a href="/tesla-vs-gas-for-uber">Tesla vs. gas: the weekly math</a></div>
