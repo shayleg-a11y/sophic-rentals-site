@@ -112,7 +112,7 @@
   }
   function loadFleet(){
     if (!$('#fleetGrid') && !$('[data-live]')) return;
-    var fallback = { models: { 'Model 3': { available: 4, total: 10, weekly_rate: 500 }, 'Model Y': { available: 0, total: 2, weekly_rate: 600 }, 'Model X': { available: 0, total: 1, weekly_rate: 700 } } };
+    var fallback = { models: { 'Model 3': { available: 3, total: 11, weekly_rate: 500 }, 'Model Y': { available: 0, total: 2, weekly_rate: 600 }, 'Model X': { available: 0, total: 1, weekly_rate: 700 } } };
     renderFleet(fallback);
     fetch('/api/fleet', { cache: 'no-store' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){ if (d && d.models) renderFleet(d); }).catch(function(){});
   }
