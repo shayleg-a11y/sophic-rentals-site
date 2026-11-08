@@ -128,7 +128,7 @@
       var miles = h * 18;                         // ~18 miles per driving hour incl. deadhead
       var charge = miles * 0.04;                  // Sophic fleet average: about $20 per 500 miles
       var net = gross - rent - charge - insurance;
-      var gas = miles / 28 * 4.9;                 // 28 mpg at ~$4.90/gal (CA regular)
+      var gas = miles / 25 * 6;                   // 25 mpg at ~$6.00/gal (CA)
       $('#c-hours-out').textContent = h + ' hrs'; $('#c-rate-out').textContent = fmt(r) + '/hr';
       if (ins) $('#c-ins-out').textContent = fmt(insurance) + '/wk';
       $('#r-gross').textContent = fmt(gross); $('#r-rent').textContent = '−' + fmt(rent); $('#r-charge').textContent = '−' + fmt(charge);

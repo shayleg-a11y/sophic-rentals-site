@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=202611071644">
+<link rel="stylesheet" href="/assets/site.css?v=202611071648">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals","description":"Long-term Tesla rentals for Uber, Lyft and delivery drivers in Los Angeles and Orange County.","founder":{"@type":"Person","name":"Shayle Gupta"},"url":"https://sophicrentals.com/","email":"Sophicrentals@gmail.com","image":"https://sophicrentals.com/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals \u2014 Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals \u2014 near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals \u2014 near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay the first week plus a refundable deposit equal to your insurance deductible: $1,000 for a Model 3 with a $500 deductible. Applying is free; a $9.99 verification fee is charged when you finish your application and is credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},{"@type":"Question","name":"Does it cost anything to apply?","acceptedAnswer":{"@type":"Answer","text":"Checking availability is free. A $9.99 verification fee is charged when you finish your application and is credited toward your first week's rent. It is not refunded if you are declined."}},{"@type":"Question","name":"What insurance do I need?","acceptedAnswer":{"@type":"Answer","text":"Your own full-coverage auto policy (liability, comprehensive and collision) that extends to a rental vehicle, with Sophic Rentals listed as an additional interest. We verify it with your carrier before pickup."}},{"@type":"Question","name":"What do I need to qualify?","acceptedAnswer":{"@type":"Answer","text":"21 or older, a valid unsuspended U.S. driver's license, and active insurance. No credit check."}},{"@type":"Question","name":"How fast can I start?","acceptedAnswer":{"@type":"Answer","text":"Most drivers are verified within 24-48 hours of uploading their license, then pick up at whichever of our three offices has their car."}},{"@type":"Question","name":"Is there a mileage limit?","acceptedAnswer":{"@type":"Answer","text":"5,000 miles per week are included; $1 per mile over."}},{"@type":"Question","name":"Where do I pick up the car?","acceptedAnswer":{"@type":"Answer","text":"One of three Sophic offices: near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange, depending on where your car is."}}]}</script>
 </head>
@@ -155,7 +155,7 @@
           <div class="ctl"><label for="c-rate">Gross per hour (fares + tips) <output id="c-rate-out">$40/hr</output></label><input type="range" id="c-rate" min="15" max="60" step="1" value="40"></div>
           <div class="ctl"><label for="c-ins">Your insurance per week <output id="c-ins-out">$60/wk</output></label><input type="range" id="c-ins" min="0" max="150" step="5" value="60"></div>
           <div class="ctl"><label for="c-model">Car</label><select id="c-model" style="width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;color:var(--text);font-size:16px"><option>Model 3</option><option>Model Y</option><option>Model X</option></select></div>
-          <p class="note">Assumes about 18 miles per driving hour and our fleet's average charging cost of roughly $20 per 500 miles (4¢ a mile), billed to you automatically through Tesla's fleet system. Gas comparison: 28 mpg at $4.90/gal. Insurance is your own full-coverage policy with a rideshare add-on; California full coverage averages around $60 a week, so set the slider to your quote. Income tax isn't included.</p>
+          <p class="note">Assumes about 18 miles per driving hour and our fleet's average charging cost of roughly $20 per 500 miles (4¢ a mile), billed to you automatically through Tesla's fleet system. Gas comparison: 25 mpg at $6.00/gal. Insurance is your own full-coverage policy with a rideshare add-on; California full coverage averages around $60 a week, so set the slider to your quote. Income tax isn't included.</p>
         </div>
         <div class="res">
           <div class="row"><span>Gross fares + tips</span><b id="r-gross">$2,000</b></div>
@@ -163,8 +163,8 @@
           <div class="row"><span>Charging (<span id="r-miles">900 mi</span>)</span><b id="r-charge">−$36</b></div>
           <div class="row"><span>Your insurance</span><b id="r-ins">−$60</b></div>
           <div class="row big"><span>Left over, before income tax</span><b id="r-net">$1,404</b></div>
-          <div class="row"><span>Gas a 28-mpg car would burn</span><b id="r-gas">$158</b></div>
-          <div class="row" style="border-bottom:0"><span>You save vs. gas, after charging</span><b id="r-save">$122/wk</b></div>
+          <div class="row"><span>Gas a 25-mpg car would burn</span><b id="r-gas">$216</b></div>
+          <div class="row" style="border-bottom:0"><span>You save vs. gas, after charging</span><b id="r-save">$180/wk</b></div>
           <button class="btn btn-primary" style="width:100%;margin-top:14px" data-apply>Check availability — free</button>
         </div>
       </div>
@@ -334,6 +334,6 @@
     </div>
   </div>
 </div>
-<script src="/assets/site.js?v=202611071644" defer></script>
+<script src="/assets/site.js?v=202611071648" defer></script>
 </body>
 </html>
