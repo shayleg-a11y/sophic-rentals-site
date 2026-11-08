@@ -310,3 +310,6 @@ footer.site{border-top:1px solid var(--line);padding:50px 0 100px;margin-top:80p
 .plan li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
 .plan li b{color:var(--text)}
 @media (max-width:760px){.plans{grid-template-columns:1fr}}
+.nav-links .lang-toggle{border:1px solid var(--line-2);border-radius:999px;padding:4px 12px;font-weight:600}
+.nav-links a{white-space:nowrap}
+@media (max-width:1320px){.nav-links a[href$="#cost"],.nav-links a[href$="#locations"]{display:none}}

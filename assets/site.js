@@ -45,6 +45,24 @@
     try { if (window.va) window.va('event', { name: name, data: params }); } catch(e){}
   };
 
+  // ---------- i18n (English default; Spanish pages have <html lang="es">) ----------
+  var ES = (document.documentElement.lang || '').slice(0, 2) === 'es';
+  var STR = ES ? {
+    avail: 'Disponible esta semana', wait: 'Lista de espera', check: 'Ver disponibilidad', joinWait: function(m){ return 'Lista de espera del ' + m; },
+    week: '/ semana', ready: function(n){ return n + ' carro' + (n === 1 ? '' : 's') + ' listo' + (n === 1 ? '' : 's') + ' para recoger esta semana en nuestras tres ubicaciones. Aplica y te asignamos el más cercano.'; },
+    none: 'Todos los carros están en la calle ahorita. Aplica y te damos el próximo que regrese.', reserving: 'Apartando: ', quick: 'Toma 30 segundos · sin revisión de crédito',
+    last: 'Último paso: verificarte', saving: 'Guardando…', restart: 'Empieza otra vez — escribe tu nombre y número.', opening: 'Abriendo pago seguro…', openingBtn: 'Abriendo…',
+    tooMany: 'Demasiados intentos desde esta conexión. Intenta en una hora o escríbenos.', conn: 'No se pudo continuar — revisa tu conexión y vuelve a intentar. Tus respuestas siguen aquí.',
+    trims: { 'Model 3': 'El favorito para rideshare', 'Model Y': 'Espacio y comodidad SUV', 'Model X': 'Premium de 6 asientos' },
+    feats: { 'Model 3': ['5 asientos', '~270 mi de autonomía', 'Autopilot'], 'Model Y': ['5 asientos', 'Cajuela de SUV', 'Doble motor'], 'Model X': ['Puertas de halcón', '6 asientos', 'Interior blanco'] }
+  } : {
+    avail: 'Available this week', wait: 'Waitlist', check: 'Check availability', joinWait: function(m){ return 'Join the ' + m + ' waitlist'; },
+    week: '/ week', ready: function(n){ return n + ' car' + (n === 1 ? '' : 's') + ' ready for pickup this week across our three locations. Apply now and we match you to the nearest one.'; },
+    none: 'Every car is on the road right now. Apply and you get the next one back.', reserving: 'Reserving: ', quick: 'Takes 30 seconds · no credit check',
+    last: 'Last step: get verified', saving: 'Saving…', restart: 'Please start again — enter your name and number.', opening: 'Opening secure checkout…', openingBtn: 'Opening checkout…',
+    tooMany: 'Too many attempts from this connection. Please try again in an hour or text us.', conn: 'Couldn\'t continue — check your connection and tap again. Your answers are still here.'
+  };
+
   // ---------- Helpers ----------
   var $ = function(s, r){ return (r||document).querySelector(s); };
   var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
@@ -96,18 +114,18 @@
   function renderFleet(data){
     var grid = $('#fleetGrid'); if (!grid) return;
     var order = ['Model 3', 'Model Y', 'Model X'];
-    var rows = order.map(function(m){ var d = (data && data.models && data.models[m]) || {}; var meta = FLEET_META[m]; return { name: 'Tesla ' + m, model: m, trim: meta.trim, img: meta.img, feats: meta.feats, rate: d.weekly_rate || meta.rate, available: d.available || 0, total: d.total || 0 }; });
+    var rows = order.map(function(m){ var d = (data && data.models && data.models[m]) || {}; var meta = FLEET_META[m]; return { name: 'Tesla ' + m, model: m, trim: (STR.trims && STR.trims[m]) || meta.trim, img: meta.img, feats: (STR.feats && STR.feats[m]) || meta.feats, rate: d.weekly_rate || meta.rate, available: d.available || 0, total: d.total || 0 }; });
     FLEET.length = 0; rows.forEach(function(r){ FLEET.push(r); });
     grid.innerHTML = rows.map(function(c){
       var avail = c.available > 0;
-      var badge = avail ? '<span class="badge avail"><span class="dot"></span>Available this week</span>' : '<span class="badge soon">Waitlist</span>';
-      var btn = avail ? '<button class="btn btn-primary" data-apply data-car="' + c.name + '">Check availability</button>' : '<button class="btn wait" data-apply data-car="' + c.name + ' (waitlist)">Join the ' + c.model + ' waitlist</button>';
-      return '<div class="car reveal"><div class="img">' + pic(c.img, c.name + ', ' + c.trim) + badge + '</div><div class="body"><h3>' + c.name + '</h3><div class="meta">' + c.trim + '</div><div class="feats">' + c.feats.map(function(f){ return '<span>' + f + '</span>'; }).join('') + '</div><div class="price"><b>$' + c.rate + '</b><small>/ week</small></div>' + btn + '</div></div>';
+      var badge = avail ? '<span class="badge avail"><span class="dot"></span>' + STR.avail + '</span>' : '<span class="badge soon">' + STR.wait + '</span>';
+      var btn = avail ? '<button class="btn btn-primary" data-apply data-car="' + c.name + '">' + STR.check + '</button>' : '<button class="btn wait" data-apply data-car="' + c.name + ' (waitlist)">' + STR.joinWait(c.model) + '</button>';
+      return '<div class="car reveal"><div class="img">' + pic(c.img, c.name + ', ' + c.trim) + badge + '</div><div class="body"><h3>' + c.name + '</h3><div class="meta">' + c.trim + '</div><div class="feats">' + c.feats.map(function(f){ return '<span>' + f + '</span>'; }).join('') + '</div><div class="price"><b>$' + c.rate + '</b><small>' + STR.week + '</small></div>' + btn + '</div></div>';
     }).join('');
     $$('[data-car-select]').forEach(function(sel){ var cur = sel.value; sel.innerHTML = '<option value="">First available</option>' + rows.map(function(c){ return '<option>' + c.name + (c.available ? '' : ' (waitlist)') + '</option>'; }).join(''); if (cur) sel.value = cur; });
     var availTotal = rows.reduce(function(a, c){ return a + c.available; }, 0), fleetTotal = rows.reduce(function(a, c){ return a + c.total; }, 0);
     $$('[data-live="available"]').forEach(function(e){ e.textContent = availTotal; });
-    var line = $('#availLine'); if (line) line.textContent = availTotal ? availTotal + ' car' + (availTotal === 1 ? '' : 's') + ' ready for pickup this week across our three locations. Apply now and we match you to the nearest one.' : 'Every car is on the road right now. Apply and you get the next one back.';
+    var line = $('#availLine'); if (line) line.textContent = availTotal ? STR.ready(availTotal) : STR.none;
     wireApplyButtons(); initReveal();
   }
   function loadFleet(){
@@ -141,6 +159,27 @@
     calc();
   }
 
+  // ---------- Rent-to-own calculator ----------
+  function wireRtoCalc(){
+    var root = $('[data-rto-calc]'); if (!root) return;
+    var ids = ['rc-down','rc-week','rc-value','rc-hours','rc-rate','rc-ins'], el = {};
+    ids.forEach(function(i){ el[i] = document.getElementById(i); });
+    function fmt(n){ return (n < 0 ? '−$' : '$') + Math.abs(Math.round(n)).toLocaleString(); }
+    var WK = ES ? '/sem' : '/wk', RENTAL_WEEKLY = 500, MAINT = 15;
+    function calc(){
+      var down = +el['rc-down'].value, wk = +el['rc-week'].value, val = +el['rc-value'].value, h = +el['rc-hours'].value, r = +el['rc-rate'].value, ins = +el['rc-ins'].value;
+      var total = down + wk * 52, rent = RENTAL_WEEKLY * 52, charge = h * 18 * 0.04, gross = h * r;
+      var take = gross - wk - charge - ins - MAINT, after = gross - charge - ins - MAINT;
+      $('#rc-down-out').textContent = fmt(down); $('#rc-week-out').textContent = fmt(wk); $('#rc-value-out').textContent = fmt(val);
+      $('#rc-hours-out').textContent = h + ' hrs'; $('#rc-rate-out').textContent = fmt(r) + '/hr'; $('#rc-ins-out').textContent = fmt(ins) + WK;
+      $('#rr-pickup').textContent = fmt(down + wk); $('#rr-total').textContent = fmt(total); $('#rr-rent').textContent = fmt(rent);
+      $('#rr-extra').textContent = fmt(total - rent); $('#rr-value').textContent = fmt(val);
+      $('#rr-take').textContent = fmt(take) + WK; $('#rr-after').textContent = fmt(after) + WK;
+    }
+    ids.forEach(function(i){ el[i].addEventListener('input', calc); el[i].addEventListener('change', function(){ track('rto_calc_change', { down: el['rc-down'].value, wk: el['rc-week'].value }); }); });
+    calc();
+  }
+
   // ---------- One-step application (modal + inline hero form) ----------
   var TYPE = document.body.getAttribute('data-app-type') || 'rental';
   var lastFocus = null;
@@ -153,8 +192,8 @@
     if (mf && mf.getAttribute('data-at') !== '2' && sv && sv.ref && Date.now() - (sv.t || 0) < 864e5) { mf.setAttribute('data-ref', sv.ref); setStep(mf, 2); }
     var m = $('.overlay .modal'); if (m) m.scrollTop = 0;
     var pick = $('#carPick');
-    if (car) { if (pick) pick.textContent = 'Reserving: ' + car; var sel = $('#f-car'); if (sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === car) sel.value = sel.options[i].value; } }
-    else if (pick) pick.textContent = 'Takes 30 seconds · no credit check';
+    if (car) { if (pick) pick.textContent = STR.reserving + car; var sel = $('#f-car'); if (sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === car) sel.value = sel.options[i].value; } }
+    else if (pick) pick.textContent = STR.quick;
     track('apply_open', { type: TYPE, car: car || '' });
     setTimeout(function(){ var n = $('#f-first'); if (n && n.offsetParent) n.focus(); }, 60);
   }
@@ -172,7 +211,7 @@
   function setStep(form, n){
     $$('.fstep', form).forEach(function(st){ var on = st.getAttribute('data-step') === String(n); st.hidden = !on; $$('input,select', st).forEach(function(i){ if (i._req == null) i._req = i.required || i.hasAttribute('data-req2'); i.required = on && i._req; }); });
     form.setAttribute('data-at', n);
-    if (n === 2) { var em = form.querySelector('[name="email"]'); if (em) setTimeout(function(){ em.focus({ preventScroll: true }); }, 80); var hd = $('#applyHeading'); if (hd && form.id === 'applyForm') hd.textContent = 'Last step: get verified'; }
+    if (n === 2) { var em = form.querySelector('[name="email"]'); if (em) setTimeout(function(){ em.focus({ preventScroll: true }); }, 80); var hd = $('#applyHeading'); if (hd && form.id === 'applyForm') hd.textContent = STR.last; }
   }
   function saved(){ try { return JSON.parse(sessionStorage.getItem('sophic_app') || 'null'); } catch (_) { return null; } }
   function remember(o){ try { sessionStorage.setItem('sophic_app', JSON.stringify(o)); } catch (_) {} }
@@ -182,7 +221,7 @@
     var btn = box.querySelector('button[type=submit]'), st = box.querySelector('.fstatus');
     if (!form.checkValidity()) { form.reportValidity(); return; }
     var label = btn.textContent;
-    st.className = 'fstatus'; btn.disabled = true; btn.textContent = 'Saving…';
+    st.className = 'fstatus'; btn.disabled = true; btn.textContent = STR.saving;
     try {
       if (step === 1) {
         var payload = { stage: 'lead', application_type: TYPE, first_name: fval(form,'first_name'), last_name: fval(form,'last_name'), phone: fval(form,'phone'), platform: fval(form,'platform'), plan: fval(form,'plan') || 'rental', car: fval(form,'car'), weekly_hours: fval(form,'weekly_hours'), website: fval(form,'website'), source: location.pathname + location.search };
@@ -194,17 +233,17 @@
         setStep(form, 2); return;
       }
       var ref = form.getAttribute('data-ref') || (saved() || {}).ref;
-      if (!ref) { setStep(form, 1); throw new Error('Please start again — enter your name and number.'); }
+      if (!ref) { setStep(form, 1); throw new Error(STR.restart); }
       var det = { stage: 'details', ref: ref, email: fval(form,'email'), insurance_status: fval(form,'insurance_status'), has_license: fval(form,'has_license'), rideshare_experience: fval(form,'rideshare_experience') };
       await postJSON('/api/apply', det);
       track('details_submit', { type: TYPE, insurance: det.insurance_status, value: 9.99, currency: 'USD' });
-      st.textContent = 'Opening secure checkout…'; btn.textContent = 'Opening checkout…';
+      st.textContent = STR.opening; btn.textContent = STR.openingBtn;
       var c = await postJSON('/api/checkout', { reference: ref, application_type: TYPE });
       track('stripe_redirect', { type: TYPE, mode: c.mode || 'session' });
       location.href = c.url; return;
     } catch (err) {
       st.className = 'fstatus bad';
-      st.textContent = err.status === 429 ? 'Too many attempts from this connection. Please try again in an hour or text us.' : (err.status === 400 && err.message ? err.message : (err.message && !err.status ? err.message : 'Couldn\'t continue — check your connection and tap again. Your answers are still here.'));
+      st.textContent = err.status === 429 ? STR.tooMany : (err.status === 400 && err.message ? err.message : (err.message && !err.status ? err.message : STR.conn));
       btn.disabled = false; btn.textContent = label;
     }
   }
@@ -244,5 +283,5 @@
   }
 
   window.openApply = openApply; window.closeApply = closeApply;
-  document.addEventListener('DOMContentLoaded', function(){ wireContact(); wireNav(); wireFaq(); wireForms(); loadFleet(); wireCalc(); initReveal(); });
+  document.addEventListener('DOMContentLoaded', function(){ wireContact(); wireNav(); wireFaq(); wireForms(); loadFleet(); wireCalc(); wireRtoCalc(); initReveal(); });
 })();

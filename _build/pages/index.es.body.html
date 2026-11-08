@@ -1,0 +1,221 @@
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> 53 Teslas · 3 puntos de entrega · LA &amp; Condado de Orange</span>
+        <h1>Maneja un <span class="accent">Tesla</span> para Uber &amp; Lyft. Sé dueño en 12 meses.</h1>
+        <p class="sub">Renta con opción a compra: como $2,000 de enganche y $500 a la semana por un Model 3. Después de 52 pagos, el título es tuyo. Sin revisión de crédito, sin préstamo del banco, sin gasolina. O renta semana a semana. Recoge cerca de LAX, John Wayne Airport o Chapman University.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-apply data-plan="rent-to-own">Empieza: Renta para ser dueño →</button>
+          <a class="btn btn-ghost" data-contact="sms" href="{{SMS_HREF}}">{{ico:chat}} Escríbenos {{PHONE_DISPLAY}}</a>
+        </div>
+        <p class="hero-note">Sin revisión de crédito · <a href="/es/rent-to-own" style="color:inherit;text-decoration:underline">Cómo funciona la renta con opción a compra</a> · ¿Prefieres rentar? <a href="#plans" style="color:inherit;text-decoration:underline">Renta semanal</a></p>
+        <div class="trust">
+          <span class="pill">{{ico:bolt}} Carga ≈ $20 por 500 millas</span>
+          <span class="pill">{{ico:calendar}} 52 pagos semanales y es tuyo</span>
+          <span class="pill">{{ico:check}} Listo para Uber, Lyft, DoorDash &amp; Uber Eats</span>
+          <span class="pill">{{ico:shield}} Sin revisión de crédito</span>
+        </div>
+      </div>
+      <aside class="cost-card apply-card" aria-label="Aplica ahora">
+        <h3>Sé dueño o renta</h3>
+        <div class="lead">Solo necesitamos tu nombre y número. Te mandamos un texto con lo que hay disponible cerca de ti, normalmente en minutos.</div>
+        <form data-apply-form novalidate class="inline-form">{{APPLY_FIELDS}}</form>
+      </aside>
+    </div>
+  </section>
+
+  <section class="strip">
+    <div class="wrap"><div class="grid">
+      <div class="stat"><div class="num accent">53</div><div class="lab">Teslas en la flota de Sophic</div></div>
+      <div class="stat"><div class="num accent">3</div><div class="lab">Puntos de entrega: LAX, SNA, Chapman</div></div>
+      <div class="stat"><div class="num accent">12 meses</div><div class="lab">Renta con opción a compra, y luego el título es tuyo</div></div>
+      <div class="stat"><div class="num accent">No</div><div class="lab">Revisión de crédito, nunca</div></div>
+    </div></div>
+  </section>
+
+  <section id="plans" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Dos formas de manejar</span><h2>Sé dueño o renta</h2><p>Misma solicitud, mismo cargo de verificación de $9.99 (se acredita a tu primera semana). Se muestran precios del Model 3; otros carros varían.</p></div>
+      <div class="plans reveal">
+        <div class="plan featured">
+          <span class="badge avail" style="position:static;display:inline-flex;margin-bottom:10px"><span class="dot"></span>La más popular</span>
+          <h3>Renta para ser dueño</h3>
+          <div class="price"><b>$500</b><small>/ semana · 52 semanas</small></div>
+          <ul>
+            <li>Como <b>$2,000 de enganche</b> + la primera semana al recoger</li>
+            <li><b>El título es tuyo</b> después del pago 52</li>
+            <li>Sin revisión de crédito, sin préstamo del banco</li>
+            <li>Tú pagas el mantenimiento, como en cualquier carro que es tuyo</li>
+            <li>Tu seguro de cobertura completa + rideshare</li>
+          </ul>
+          <button class="btn btn-primary" data-apply data-plan="rent-to-own">Empieza: Renta para ser dueño</button>
+          <a href="/es/rent-to-own" class="small" style="display:block;text-align:center;margin-top:10px;color:var(--accent)">Cómo funciona la renta con opción a compra →</a>
+        </div>
+        <div class="plan">
+          <h3>Renta semanal</h3>
+          <div class="price"><b>$500</b><small>/ semana · mínimo de 1 mes</small></div>
+          <ul>
+            <li>Primera semana + depósito reembolsable igual al deducible de tu seguro</li>
+            <li>El mantenimiento va por nuestra cuenta (llantas, frenos y limpiaparabrisas son tuyos)</li>
+            <li>Devuelves el carro cuando termines</li>
+            <li>Sin revisión de crédito</li>
+            <li>Tu seguro de cobertura completa + rideshare</li>
+          </ul>
+          <button class="btn btn-ghost" data-apply data-plan="rental">Renta semanal</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fleet" class="pad band">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">La flota</span>
+        <h2>Escoge tu Tesla</h2>
+        <p id="availLine">La disponibilidad viene directo de nuestro sistema de flota.</p>
+      </div>
+      <div class="fleet-grid" id="fleetGrid"></div>
+      <p class="small muted" style="text-align:center;margin-top:24px">Todos los carros están aprobados para rideshare, les damos servicio nosotros y te los entregamos cargados. Aplica y te asignamos el carro disponible más cercano.</p>
+    </div>
+  </section>
+
+  <section id="how" class="pad band">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">Proceso sencillo</span>
+        <h2>En la calle en 3 pasos</h2>
+        <p>Sin agencia, sin revisión de crédito, sin préstamo a cinco años. Aquí está cada dólar, desde el principio.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><div class="n">1</div><h3>Aplica</h3><p>Escoge renta con opción a compra o renta semanal, luego tu nombre, número y qué apps manejas. Te mandamos un texto con lo que hay cerca de ti, normalmente en minutos durante el día.</p><span class="tag">30 segundos</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Verifícate</h3><p>Agrega tu correo, fotos de tu licencia y tu seguro, más un cargo de verificación de $9.99 que se acredita a tu primera semana. Verificamos en 24–48 horas. <a href="/insurance" style="color:var(--accent)">¿Necesitas seguro?</a></p><span class="tag">$9.99, acreditados a la semana 1</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>Recoge &amp; maneja</h3><p>Recoge cerca de LAX, cerca de John Wayne Airport o junto a Chapman University, donde esté tu carro. Firmas, revisión del carro de 10 minutos y te vas manejando con el carro cargado.</p><span class="tag">Ser dueño: ~$2,000 de enganche + semana 1 · Renta: semana 1 + depósito</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cost" class="pad">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">Tus números</span>
+        <h2>Lo que te queda cada semana</h2>
+        <p>Mueve las barras. Son estimados con tus propios datos, no una promesa de ganancias.</p>
+      </div>
+      <div class="calc reveal">
+        <div>
+          <h3>Tu semana</h3>
+          <div class="ctl"><label for="c-hours">Horas manejando <output id="c-hours-out">50 hrs</output></label><input type="range" id="c-hours" min="10" max="70" step="5" value="50"></div>
+          <div class="ctl"><label for="c-rate">Bruto por hora (viajes + propinas) <output id="c-rate-out">$40/hr</output></label><input type="range" id="c-rate" min="15" max="60" step="1" value="40"></div>
+          <div class="ctl"><label for="c-ins">Tu seguro por semana <output id="c-ins-out">$60/wk</output></label><input type="range" id="c-ins" min="0" max="150" step="5" value="60"></div>
+          <div class="ctl"><label for="c-model">Carro</label><select id="c-model" style="width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;color:var(--text);font-size:16px"><option>Model 3</option><option>Model Y</option><option>Model X</option></select></div>
+          <p class="note">Se asumen unas 18 millas por hora manejando y el costo promedio de carga de nuestra flota, como $20 por 500 millas (4¢ la milla), cobrado a ti automáticamente por el sistema de flota de Tesla. Comparación con gasolina: 25 mpg a $6.00/galón. El seguro es tu propia póliza de cobertura completa con cobertura para rideshare; en California la cobertura completa promedia unos $60 a la semana, así que pon la barra en tu cotización. No incluye impuestos sobre el ingreso.</p>
+        </div>
+        <div class="res">
+          <div class="row"><span>Bruto de viajes + propinas</span><b id="r-gross">$2,000</b></div>
+          <div class="row"><span>Renta semanal</span><b id="r-rent">−$500</b></div>
+          <div class="row"><span>Carga (<span id="r-miles">900 mi</span>)</span><b id="r-charge">−$36</b></div>
+          <div class="row"><span>Tu seguro</span><b id="r-ins">−$60</b></div>
+          <div class="row big"><span>Te queda, antes de impuestos</span><b id="r-net">$1,404</b></div>
+          <div class="row"><span>Gasolina que gastaría un carro de 25 mpg</span><b id="r-gas">$216</b></div>
+          <div class="row" style="border-bottom:0"><span>Te ahorras vs. gasolina, después de la carga</span><b id="r-save">$180/wk</b></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:14px" data-apply>Ver disponibilidad</button>
+        </div>
+      </div>
+      <div class="pricing-row reveal">
+        <div><b>Model 3</b><span>$500 / semana</span></div>
+        <div><b>Model Y</b><span>$600 / semana</span></div>
+        <div><b>Model X</b><span>$700 / semana</span></div>
+        <div><b>Renta con opción a compra</b><span>~$2,000 de enganche, 52 semanas y es tuyo</span></div>
+        <div><b>Depósito de renta</b><span>Igual al deducible de tu seguro, reembolsable — <a href="/policies" style="color:var(--accent)">cómo te lo devolvemos</a></span></div>
+        <div><b>Carga</b><span>≈ $20 por 500 mi, cobro automático</span></div>
+        <div><b>Millas</b><span>5,000 / semana incluidas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="locations" class="pad band">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Entrega</span><h2>Tres ubicaciones, una cerca de ti</h2><p>Te asignamos el punto de entrega según dónde esté tu carro y te mandamos por texto la dirección y la hora exactas. El carro se queda contigo toda la renta, solo vienes una vez. {{HOURS}}.</p></div>
+      <div class="steps">
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Cerca de LAX</h3><p>Para choferes del Westside, South Bay y el aeropuerto. A minutos del 405 y el 105.</p></div>
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Cerca de John Wayne Airport</h3><p>Irvine, Newport, Costa Mesa y Santa Ana. Justo en el 405 y el 55.</p></div>
+        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Junto a Chapman University</h3><p>Orange, Anaheim, Fullerton y el norte del OC. {{ORANGE_ADDR}}, a minutos del 55, el 22 y el 57.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Por qué los choferes escogen Sophic</span><h2>Hecho para choferes de apps, no para turistas</h2></div>
+      <div class="why-grid">
+        <div class="why reveal"><div class="ic">{{icon:bolt}}</div><h3>Carga, no gasolina</h3><p>Nuestra flota promedia como $20 por 500 millas. Te lo cobramos automáticamente por el sistema de flota de Tesla: sin recibos, sin reembolsos, sin sorpresas.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:cash}}</div><h3>Una tarifa semanal fija</h3><p>La renta es la misma cada semana y se cobra el mismo día. La carga se suma según lo que usaste exactamente.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:shield}}</div><h3>Seguro, sin complicaciones</h3><p>Tú llevas una póliza de cobertura completa con cobertura para rideshare. ¿Todavía no tienes? Nuestra <a href="/insurance" style="color:var(--accent)">guía de seguro en 24 horas</a> te dice exactamente qué pedir y quién lo vende.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:wrench}}</div><h3>Hecho para durar</h3><p>Los Tesla no necesitan cambios de aceite y tienen pocas piezas que se muevan, así que aguantan las millas del rideshare. ¿Rentando? El servicio y las reparaciones por uso normal van por nuestra cuenta. ¿Siendo dueño? El mantenimiento de rutina sale barato.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:check}}</div><h3>Listo para Uber &amp; Lyft</h3><p>Model 3, Y y X cumplen con las reglas de edad del vehículo y de puertas de Uber y Lyft, y califican para viajes de categoría Comfort.</p></div>
+        <div class="why reveal"><div class="ic">{{icon:rocket}}</div><h3>48 horas, no 4 semanas</h3><p>A la mayoría de los choferes los verificamos en dos días. Con 53 carros en tres ubicaciones, casi siempre hay uno listo cerca de ti.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad band">
+    <div class="wrap">
+      <div class="shead reveal">
+        <span class="eyebrow">Los carros</span>
+        <h2>Los pasajeros se fijan. Las calificaciones suben.</h2>
+        <p>Silenciosos, limpios, modernos. Del cockpit del Model 3 al Model X con puertas tipo ala de halcón e interior blanco: todos son carros reales de Sophic.</p>
+      </div>
+      <div class="gallery reveal">
+        <div class="g"><picture><source srcset="/images/int-cockpit.webp" type="image/webp"><img src="/images/int-cockpit.jpg" width="1000" height="667" alt="Cockpit y pantalla táctil del Tesla Model 3" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-screen.webp" type="image/webp"><img src="/images/int-screen.jpg" width="1000" height="667" alt="Pantalla táctil central del Tesla Model 3" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-seats.webp" type="image/webp"><img src="/images/int-seats.jpg" width="1000" height="667" alt="Asientos delanteros del Tesla Model 3" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/int-rear.webp" type="image/webp"><img src="/images/int-rear.jpg" width="1000" height="667" alt="Asientos traseros del Tesla Model 3" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-doors.webp" type="image/webp"><img src="/images/gal-x-doors.jpg" width="1000" height="750" alt="Tesla Model X con las puertas ala de halcón abiertas" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-int.webp" type="image/webp"><img src="/images/gal-x-int.jpg" width="1000" height="750" alt="Interior blanco del Tesla Model X" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-cockpit.webp" type="image/webp"><img src="/images/gal-x-cockpit.jpg" width="1000" height="750" alt="Cockpit del Tesla Model X" loading="lazy" decoding="async"></picture></div>
+        <div class="g"><picture><source srcset="/images/gal-x-rear.webp" type="image/webp"><img src="/images/gal-x-rear.jpg" width="1000" height="750" alt="Vista trasera de tres cuartos del Tesla Model X" loading="lazy" decoding="async"></picture></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="founder" class="pad band">
+    <div class="wrap">
+      <div class="founder reveal">
+        <div class="founder-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div>
+          <span class="eyebrow">A quién le rentas</span>
+          <h2>Una empresa local, no una app</h2>
+          <p>Sophic Rentals es una empresa del Condado de Orange. Empezamos a rentar Teslas a choferes de rideshare porque el pago del carro y la gasolina se comen la mayor parte de la semana de un chofer. Cada carro de nuestra flota es uno al que le damos servicio, todos los clientes reciben los mismos términos por escrito, y cuando nos mandas un texto te contesta nuestro equipo en el Condado de Orange, no un call center.</p>
+          <p class="small muted">Sophic Rentals LLC · {{ORANGE_ADDR}} · <a href="/policies" style="color:var(--accent)">Nuestras políticas por escrito</a> · <a href="/insurance" style="color:var(--accent)">Guía de seguro</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Preguntas</span><h2>Bueno saber</h2></div>
+      <div class="faq">
+        <div class="qa"><button aria-expanded="false" aria-controls="faq0">¿Cómo funciona la renta con opción a compra?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq0"><p>Pagas como $2,000 de enganche más tu primera semana al recoger, y luego como $500 a la semana (Model 3; los precios varían según el carro) por 12 meses. Después del pago 52 te transferimos el título. Sin revisión de crédito. Tú cubres el mantenimiento y llevas tu propio seguro de cobertura completa. Si un pago se atrasa más de 24 horas, pierdes el derecho a ser dueño; mira las <a href="/policies#rto" style="color:var(--accent)">políticas</a>. <a href="/es/rent-to-own" style="color:var(--accent)">Todos los detalles</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq1">¿Cuánto cuesta la renta semanal?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>El Model 3 es $500/semana, el Model Y $600, el Model X $700. Al recoger pagas tu primera semana más un depósito reembolsable igual al deducible de la póliza de tu seguro; con un deducible de $500 son <b>$1,000 en total por un Model 3</b>, menos el cargo de verificación de $9.99 que ya pagaste. Un deducible más bajo significa un depósito más bajo. Después es la renta semanal más la carga (como $20 por 500 millas, cobrada automáticamente). El seguro es tu propia póliza. El plazo mínimo es de un mes.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq2">¿Para qué son los $9.99?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>Cada solicitud (renta con opción a compra o renta) tiene un cargo único de $9.99. Cubre la verificación de tu licencia y tu seguro, y se <b>acredita a tu primer pago semanal</b> al recoger. Si no te aprueban, no se reembolsa. <a href="/policies" style="color:var(--accent)">Política completa</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq3">¿Qué seguro necesito?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Tu propia póliza de auto con cobertura completa (responsabilidad civil más comprehensive y collision) que se extienda a un vehículo rentado, con Sophic Rentals como interés adicional para que nos avisen si se cancela. Si manejas rideshare, dile a tu aseguradora; la mayoría agrega la cobertura para rideshare por unos cuantos dólares al mes. Verificamos con tu aseguradora antes de la entrega y revisamos cada mes. ¿Todavía no la tienes? Lee nuestra <a href="/insurance" style="color:var(--accent)">guía para asegurarte en 24 horas</a> y aplica de todos modos.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq4">¿Qué necesito para calificar?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 años o más, una licencia de manejar válida de EE. UU. que no esté suspendida, y seguro de cobertura completa como se explicó arriba. Sin revisión de crédito. Los carros se quedan en California.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq5">¿Qué tan rápido puedo empezar?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq5"><p>A la mayoría de los choferes los verificamos en 24–48 horas después de subir su licencia. Luego recoges en la ubicación de las tres donde esté tu carro, muchas veces el mismo día o al siguiente.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq6">¿Dónde recojo el carro?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq6"><p>En una de tres oficinas: cerca de LAX, cerca de John Wayne Airport (SNA), o junto a Chapman University en Orange. Te asignamos la ubicación según dónde esté tu carro y te mandamos la dirección por texto cuando te aprueben. Solo vienes una vez, el carro se queda contigo.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq7">¿Cómo funciona la carga?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq7"><p>Carga donde quieras: Superchargers, en tu casa, en el trabajo. Nuestros carros usan el sistema de flota de Tesla, así que la carga se registra por carro y se te cobra automáticamente junto con tu renta semanal. En toda la flota promedia como $20 por 500 millas.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq8">¿Hay límite de millas?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq8"><p>Incluimos 5,000 millas por semana, que alcanzan hasta para manejar tiempo completo. Lo que pase de eso es $1 por milla.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq9">¿Y si el carro necesita servicio?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq9"><p>El servicio programado, el software y las reparaciones mecánicas por uso normal van por nuestra cuenta, y si un carro tiene que salir de circulación, hacemos lo posible por darte otro. Las piezas que se gastan con el uso (llantas, balatas de los frenos, limpiaparabrisas) son responsabilidad del chofer.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad band" style="border-top:0">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Deja de rentar un carro que nunca va a ser tuyo.</h2>
+        <p>Aplica en 30 segundos. Te mandamos un texto, verificamos en 24–48 horas, recoges cerca de LAX, SNA o Chapman, y 12 meses después el carro es tuyo.</p>
+        <button class="btn" data-apply data-plan="rent-to-own">Empieza: Renta para ser dueño →</button>
+      </div>
+    </div>
+  </section>

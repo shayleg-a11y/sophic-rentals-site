@@ -1,0 +1,95 @@
+  <section class="page-hero"><div class="wrap">
+    <span class="eyebrow">Renta para ser dueño · LA &amp; Condado de Orange</span>
+    <h1 style="font-size:clamp(34px,5.4vw,60px);margin-top:12px;max-width:18ch">Sé dueño de un <span class="accent">Tesla</span> en 12 meses. Maneja Uber &amp; Lyft mientras pagas.</h1>
+    <p class="muted" style="font-size:18px;max-width:62ch;margin-top:16px">Como $2,000 de enganche y $500 a la semana por 52 semanas en un Model 3. Haces el último pago y te transferimos el título a tu nombre: el carro es tuyo. Sin revisión de crédito, sin préstamo del banco.</p>
+    <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply data-plan="rent-to-own">Empieza: Renta para ser dueño →</button><a class="btn btn-ghost" data-contact="sms" href="{{SMS_HREF}}">{{ico:chat}} Escríbenos {{PHONE_DISPLAY}}</a></div>
+    <p class="hero-note">Sin revisión de crédito · <b>Al recoger: $2,000 de enganche + primera semana</b> · Los precios varían según el carro</p>
+  </div></section>
+
+  <section class="strip">
+    <div class="wrap"><div class="grid">
+      <div class="stat"><div class="num accent">~$2k</div><div class="lab">De enganche</div></div>
+      <div class="stat"><div class="num accent">$500</div><div class="lab">A la semana, Model 3 típico</div></div>
+      <div class="stat"><div class="num accent">12 meses</div><div class="lab">52 pagos semanales</div></div>
+      <div class="stat"><div class="num accent">Tuyo</div><div class="lab">Título transferido a ti</div></div>
+    </div></div>
+  </section>
+
+  <section class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Cómo funciona</span><h2>De la solicitud al título a tu nombre</h2></div>
+      <div class="steps">
+        <div class="step reveal"><div class="n">1</div><h3>Aplica</h3><p>Nombre, número y el carro que quieres. Te mandamos un texto con lo que hay disponible, y luego agregas tu licencia y tu seguro con el cargo de verificación de $9.99 (acreditado a tu primera semana).</p><span class="tag">30 segundos</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Recoge &amp; maneja</h3><p>Pagas el enganche y tu primera semana, firmas y te vas manejando cerca de LAX, John Wayne Airport o Chapman University. Maneja Uber, Lyft o entregas desde el primer día.</p><span class="tag">~$2,000 + primera semana</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>52 pagos y es tuyo</h3><p>Pagas cada semana, a tiempo, por 12 meses. Después del último pago te firmamos el título a tu nombre, sin pago final grande (balloon).</p><span class="tag">Título a tu nombre</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad-sm band"><div class="wrap">
+    <div class="shead left reveal" style="margin-bottom:24px"><span class="eyebrow">Los números</span><h2>Renta con opción a compra vs. renta semanal</h2></div>
+    <div class="prose" style="margin:0"><div class="tbl"><table>
+      <tr><th></th><th>Renta con opción a compra</th><th>Renta semanal</th></tr>
+      <tr><td>A pagar al recoger (Model 3)</td><td>Como $2,000 de enganche + $500 de la primera semana</td><td>$500 de la primera semana + depósito reembolsable igual al deducible de tu seguro</td></tr>
+      <tr><td>Pago semanal (Model 3)</td><td>Como $500</td><td>$500</td></tr>
+      <tr><td>Plazo</td><td>12 meses (52 semanas)</td><td>Mínimo de un mes, luego semana a semana</td></tr>
+      <tr><td>Al final</td><td><strong>El carro es tuyo</strong>: título transferido a ti</td><td>Devuelves el carro y te regresamos tu depósito</td></tr>
+      <tr><td>Mantenimiento &amp; reparaciones</td><td>Tuyos, como en cualquier carro que es tuyo</td><td>Por nuestra cuenta (llantas, frenos y limpiaparabrisas son tuyos)</td></tr>
+      <tr><td>Seguro</td><td colspan="2">Tu propia póliza de cobertura completa con cobertura para rideshare (endoso): <a href="/insurance" style="color:var(--accent)">asegúrate en 24 horas</a></td></tr>
+      <tr><td>Carga</td><td colspan="2">Pagas lo que uses, cobrado automáticamente</td></tr>
+      <tr><td>Revisión de crédito</td><td colspan="2">Ninguna</td></tr>
+    </table></div></div>
+    <p class="muted small">Los precios varían según el carro; los números del Model 3 de arriba son los típicos. Tu enganche y tu pago semanal exactos están en tu contrato por escrito antes de firmar.</p>
+  </div></section>
+
+  <section id="rto-calc" class="pad">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Calculadora de renta para ser dueño</span><h2>Lo que de verdad cuesta ser dueño — y lo que te queda</h2><p>Mueve los controles. Son estimados con tus propios números, no una promesa de ganancias. Tus números exactos vienen en tu contrato.</p></div>
+      <div class="calc reveal" data-rto-calc>
+        <div>
+          <h3>El carro</h3>
+          <div class="ctl"><label for="rc-down">Enganche <output id="rc-down-out">$2,000</output></label><input type="range" id="rc-down" min="1000" max="5000" step="250" value="2000"></div>
+          <div class="ctl"><label for="rc-week">Pago semanal <output id="rc-week-out">$500</output></label><input type="range" id="rc-week" min="300" max="900" step="25" value="500"></div>
+          <div class="ctl"><label for="rc-value">Lo que vale el carro cuando ya es tuyo <output id="rc-value-out">$20,000</output></label><input type="range" id="rc-value" min="10000" max="40000" step="1000" value="20000"></div>
+          <h3 style="margin-top:22px">Tu manejo</h3>
+          <div class="ctl"><label for="rc-hours">Horas manejando por semana <output id="rc-hours-out">50 hrs</output></label><input type="range" id="rc-hours" min="10" max="70" step="5" value="50"></div>
+          <div class="ctl"><label for="rc-rate">Ganancia bruta por hora (viajes + propinas) <output id="rc-rate-out">$40/hr</output></label><input type="range" id="rc-rate" min="15" max="60" step="1" value="40"></div>
+          <div class="ctl"><label for="rc-ins">Tu seguro por semana <output id="rc-ins-out">$60/sem</output></label><input type="range" id="rc-ins" min="0" max="150" step="5" value="60"></div>
+          <p class="note">52 pagos semanales. Carga al promedio de nuestra flota de unos 4¢ por milla, ~18 millas por hora manejando. Como futuro dueño también cubres el mantenimiento (calculamos $15/semana). El valor del carro es tu propio estimado — revisa anuncios del mismo año y millaje. No incluye impuestos.</p>
+        </div>
+        <div class="res">
+          <div class="row"><span>Al recoger (enganche + primera semana)</span><b id="rr-pickup">$2,500</b></div>
+          <div class="row"><span>Total pagado en 12 meses</span><b id="rr-total">$28,000</b></div>
+          <div class="row"><span>Si mejor rentas esos 12 meses</span><b id="rr-rent">$26,000</b></div>
+          <div class="row"><span>Costo extra por ser dueño vs. rentar</span><b id="rr-extra">$2,000</b></div>
+          <div class="row big"><span>Carro que es tuyo al final</span><b id="rr-value">$20,000</b></div>
+          <div class="row"><span>Lo que te queda por semana mientras pagas</span><b id="rr-take">$1,389</b></div>
+          <div class="row" style="border-bottom:0"><span>Lo que te queda por semana ya liquidado</span><b id="rr-after">$1,889</b></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:14px" data-apply data-plan="rent-to-own">Empieza tu renta para ser dueño →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad-sm"><div class="wrap">
+    <div class="shead left reveal" style="margin-bottom:20px"><span class="eyebrow">Disponibles ahora</span><h2>Carros que puedes hacer tuyos</h2><p id="availLine"></p></div>
+    <div class="fleet-grid" id="fleetGrid"></div>
+  </div></section>
+
+  <section class="pad band">
+    <div class="wrap">
+      <div class="shead reveal"><span class="eyebrow">Preguntas</span><h2>Renta con opción a compra, resuelta</h2></div>
+      <div class="faq">
+        <div class="qa"><button aria-expanded="false" aria-controls="rq1">¿De verdad el carro es mío al final?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq1"><p>Sí. Después de tu pago semanal número 52 te transferimos el título a tu nombre. No hay pago final grande (balloon) ni cargo por quedártelo al final.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="rq2">¿Hay revisión de crédito?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq2"><p>No. Necesitas tener 21 años o más, una licencia de manejar válida de EE. UU. y llevar seguro de cobertura completa con cobertura para rideshare (endoso).</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="rq3">¿Cuánto pago al recoger?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq3"><p>El enganche (como $2,000 en un Model 3) más tu primer pago semanal. No hay depósito de seguridad aparte en la renta con opción a compra. El cargo de verificación de $9.99 que pagaste al aplicar se acredita a tu primera semana.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="rq4">¿Quién paga el mantenimiento?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq4"><p>Tú, porque es tu carro en camino a ser tuyo: el servicio, las reparaciones, las llantas y los frenos son tuyos. Los Tesla no necesitan cambios de aceite y casi no tienen mantenimiento de rutina.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="rq5">¿Qué pasa si me atraso en un pago?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq5"><p>Los pagos son cada semana. Un pago con más de 24 horas de atraso termina tu derecho a quedarte con el carro al final del plazo, y el carro se puede desactivar hasta que te pongas al corriente. Recuperar la opción de ser dueño cuesta $5,000. Todos los detalles están en nuestra <a href="/policies#rto" style="color:var(--accent)">página de políticas</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="rq6">¿Puedo manejar Uber, Lyft y entregas?<span class="ico">{{icon:chev}}</span></button><div class="a" id="rq6"><p>Sí, eso es lo que hace la mayoría de nuestros choferes. Tu seguro necesita cobertura para rideshare (endoso), y el carro tiene que quedarse en California durante el plazo.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad-sm"><div class="wrap">
+    <div class="cta-band reveal"><h2>Deja de rentar un carro que nunca va a ser tuyo.</h2><p>Aplica en 30 segundos. Te mandamos un texto con lo que hay disponible.</p><button class="btn" data-apply data-plan="rent-to-own">Empieza: Renta para ser dueño →</button></div>
+  </div></section>

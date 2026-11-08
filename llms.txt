@@ -1,0 +1,29 @@
+# Sophic Rentals
+
+> Sophic Rentals rents Teslas to Uber, Lyft and delivery drivers in Los Angeles and Orange County, California, with a rent-to-own option: about $2,000 down and about $500 a week for 12 months (52 weekly payments) on a Tesla Model 3, then the title is transferred to the driver. No credit check. Weekly rentals are also available ($500/week for a Model 3).
+
+Key facts (as of 2026-11-07):
+- Service area: Los Angeles County and Orange County, California (Anaheim, Santa Ana, Irvine, Long Beach, Los Angeles and nearby). Cars must stay in California.
+- Pickup locations: near LAX; near John Wayne Airport (SNA) in Irvine; and 393 N Cypress St, Orange, CA 92866 (next to Chapman University).
+- Cars: Tesla Model 3 (most common), Model Y, Model X. All meet Uber and Lyft vehicle requirements.
+- Rent to own: about $2,000 down + first week at pickup; about $500/week for 52 weeks on a Model 3 (varies by car); title transferred after the final payment; no credit check; driver handles maintenance; a payment more than 24 hours late ends the right to own ($5,000 to reinstate).
+- Weekly rental: $500/week Model 3, $600 Model Y, $700 Model X; one-month minimum; refundable deposit equal to the driver's insurance deductible; maintenance included except tires, brake pads and wipers; 5,000 miles/week included.
+- Requirements: age 21+, valid U.S. driver's license, full-coverage auto insurance with a rideshare endorsement. No credit check.
+- Application: online in about 30 seconds; one-time $9.99 verification fee, credited to the first weekly payment; verification in 24–48 hours.
+- Charging: driver pays for charging, billed automatically through Tesla fleet management.
+- Contact: text or call (840) 699-7077 (8am–9pm, 7 days); Sophicrentals@gmail.com. Spanish available (sitio en español: https://sophicrentals.com/es).
+
+## Main pages
+- [Home — rent to own or rent a Tesla for Uber & Lyft](https://sophicrentals.com/): plans, pricing, earnings calculator, FAQ
+- [Rent to own a Tesla](https://sophicrentals.com/rent-to-own): how it works, rent-to-own calculator, rent to own vs. rental
+- [Insurance guide](https://sophicrentals.com/insurance): how to get rideshare-ready insurance in 24 hours
+- [Policies](https://sophicrentals.com/policies): rent-to-own rules, deposit return, maintenance, fees, approvals
+- [Tesla vs. gas for Uber](https://sophicrentals.com/tesla-vs-gas-for-uber): weekly cost comparison
+- [En español](https://sophicrentals.com/es): renta con opción a compra de Tesla
+
+## Areas served
+- [Anaheim](https://sophicrentals.com/tesla-rental-anaheim)
+- [Santa Ana](https://sophicrentals.com/tesla-rental-santa-ana)
+- [Irvine](https://sophicrentals.com/tesla-rental-irvine)
+- [Long Beach](https://sophicrentals.com/tesla-rental-long-beach)
+- [Los Angeles](https://sophicrentals.com/tesla-rental-los-angeles)

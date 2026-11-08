@@ -5,4 +5,70 @@ Disallow: /ops
 Disallow: /thanks
 Disallow: /api/
 
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /ops
+Disallow: /thanks
+
 Sitemap: https://sophicrentals.com/sitemap.xml

@@ -11,8 +11,8 @@ DOMAIN = 'https://sophicrentals.com'
 TODAY = datetime.date.today().isoformat()
 FEE = '9.99'
 # ---- Business contact (single source of truth; site.js reads data-* set from these) ----
-PHONE = ''            # E.164 business texting number, e.g. '+17145550123'. Blank = Text links fall back to email.
-PHONE_DISPLAY = ''    # e.g. '(714) 555-0123'
+PHONE = '+18406997077'  # Google Voice business line (texts forward to Gmail; ops bot replies)
+PHONE_DISPLAY = '(840) 699-7077'
 EMAIL = 'Sophicrentals@gmail.com'
 HOURS = 'Texts answered 8am–9pm, 7 days'
 ORANGE_ADDR = '393 N Cypress St, Orange, CA 92866'
@@ -42,6 +42,12 @@ def ico(name, cls='ico'):
 
 FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2322E3A9'/%3E%3Ctext x='50%25' y='52' font-family='Arial,sans-serif' font-size='44' font-weight='900' text-anchor='middle' fill='%23062018'%3ES%3C/text%3E%3C/svg%3E"
 
+def hreflang(p):
+    alt = p.get('alt')
+    if not alt: return ''
+    en, es = (p['path'], alt) if p.get('lang','en') == 'en' else (alt, p['path'])
+    return f'<link rel="alternate" hreflang="en" href="{DOMAIN}{en}" />\n<link rel="alternate" hreflang="es" href="{DOMAIN}{es}" />\n<link rel="alternate" hreflang="x-default" href="{DOMAIN}{en}" />'
+
 def head(p):
     url = DOMAIN + p['path']
     og_img = DOMAIN + '/images/og-card.jpg'
@@ -49,18 +55,19 @@ def head(p):
     ld = ''.join(f'<script type="application/ld+json">{json.dumps(x, separators=(",",":"))}</script>\n' for x in p.get('ld', []))
     preload = '<link rel="preload" as="image" href="/images/hero.webp" type="image/webp" />' if p.get('hero') else ''
     return f'''<!DOCTYPE html>
-<html lang="en">
+<html lang="{p.get('lang','en')}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>{p['title']}</title>
 <meta name="description" content="{p['desc']}" />
 <link rel="canonical" href="{url}" />
+{hreflang(p)}
 {robots}
 <meta property="og:title" content="{p.get('og_title', p['title'])}" />
 <meta property="og:description" content="{p['desc']}" />
 <meta property="og:type" content="website" />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content="{'es_US' if p.get('lang')=='es' else 'en_US'}" />
 <meta property="og:site_name" content="Sophic Rentals" />
 <meta property="og:url" content="{url}" />
 <meta property="og:image" content="{og_img}" />
@@ -82,7 +89,7 @@ def head(p):
 <a href="#main" class="skip">Skip to content</a>
 '''
 
-def header(active=''):
+def header(active='', alt='/es'):
     def a(href, label, key):
         cur = ' aria-current="page"' if key == active else ''
         return f'<a href="{href}"{cur}>{label}</a>'
@@ -98,7 +105,8 @@ def header(active=''):
         {a('/#how','How it works','how')}
         {a('/insurance','Insurance','insurance')}
         {a('/#faq','FAQ','faq')}
-              </div>
+        <a href="{alt}" hreflang="es" lang="es" class="lang-toggle" data-lang-toggle>Español</a>
+      </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a>
         <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability</span><span class="short">Apply</span></button>
@@ -107,7 +115,7 @@ def header(active=''):
     </nav>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="/rent-to-own">Rent to own</a><a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/insurance">Insurance help</a><a data-contact="sms" href="{sms_href()}">{text_label()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
+    <a href="/rent-to-own">Rent to own</a><a href="/#fleet">Fleet</a><a href="/#cost">Pricing &amp; what you keep</a><a href="/#locations">Pickup locations</a><a href="/#how">How it works</a><a href="/#faq">FAQ</a><a href="/insurance">Insurance help</a><a href="{alt}" hreflang="es" lang="es" data-lang-toggle>Español</a><a data-contact="sms" href="{sms_href()}">{text_label()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
   </div>
 </header>
 <main id="main">
@@ -196,18 +204,128 @@ def modal(app_type='rental'):
 </div>
 '''
 
+ES_SMS = "Hola Sophic, me interesa la renta con opción a compra de un Tesla para rideshare. ¿Tienen carro disponible esta semana?"
+def sms_href_es():
+    from urllib.parse import quote
+    return f'sms:{PHONE}?&body={quote(ES_SMS)}' if PHONE else f'mailto:{EMAIL}'
+def text_label_es():
+    return 'Escríbenos' if PHONE else 'Mándanos un email'
+HOURS_ES = 'Respondemos mensajes de 8am a 9pm, los 7 días'
+
+def header_es(active='', alt='/'):
+    def a(href, label, key):
+        cur = ' aria-current="page"' if key == active else ''
+        return f'<a href="{href}"{cur}>{label}</a>'
+    return f'''<header class="site" id="hdr">
+  <div class="wrap">
+    <nav class="main" aria-label="Principal">
+      <a class="logo" href="/es" aria-label="Sophic Rentals inicio">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
+      <div class="nav-links">
+        {a('/es/rent-to-own','Renta para ser dueño','rto')}
+        {a('/es#fleet','Carros','fleet')}
+        {a('/es#cost','Precios','cost')}
+        {a('/es#locations','Ubicaciones','locations')}
+        {a('/es#how','Cómo funciona','how')}
+        {a('/es#faq','Preguntas','faq')}
+        <a href="{alt}" hreflang="en" lang="en" class="lang-toggle" data-lang-toggle>English</a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href_es()}">{ico('chat')} {text_label_es()}</a>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Ver disponibilidad</span><span class="short">Aplicar</span></button>
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      </div>
+    </nav>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/es/rent-to-own">Renta para ser dueño</a><a href="/es#fleet">Carros</a><a href="/es#cost">Precios</a><a href="/es#locations">Ubicaciones</a><a href="/es#how">Cómo funciona</a><a href="/es#faq">Preguntas</a><a href="/insurance">Ayuda con el seguro (inglés)</a><a href="{alt}" hreflang="en" lang="en" data-lang-toggle>English</a><a data-contact="sms" href="{sms_href_es()}">{text_label_es()}{(' ' + PHONE_DISPLAY) if PHONE_DISPLAY else ''}</a>
+  </div>
+</header>
+<main id="main">
+'''
+
+def footer_es():
+    return f'''</main>
+<footer class="site">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="/es" aria-label="Sophic Rentals inicio">{LOGO_MARK}Sophic&nbsp;<span class="lt">Rentals</span></a>
+        <p>Teslas en renta con opción a compra y renta semanal para choferes de Uber, Lyft y delivery en Los Ángeles y Orange County. Sophic Rentals, una LLC de California con base en Orange County.</p>
+        <p class="small" style="margin-top:8px">Oficina principal: {ORANGE_ADDR} (junto a Chapman University). También cerca de LAX y del aeropuerto John Wayne (SNA) — te mandamos la dirección exacta con tu hora de entrega. {HOURS_ES}.</p>
+      </div>
+      <div><h4>Manejar</h4><a href="/es/rent-to-own">Renta para ser dueño</a><a href="/es#fleet">Teslas disponibles</a><a href="/es#cost">Precios</a><a href="/es#how">Cómo funciona</a><a href="/es#faq">Preguntas</a></div>
+      <div><h4>Más info (en inglés)</h4><a href="/insurance">Cómo conseguir seguro</a><a href="/policies">Políticas y depósito</a><a href="/terms">Términos</a><a href="/privacy">Privacidad</a></div>
+      <div><h4>Contacto</h4>{f'<a data-contact="tel" href="tel:{PHONE}">{PHONE_DISPLAY or PHONE}</a>' if PHONE else ''}<a data-contact="sms" href="{sms_href_es()}">{text_label_es()}</a><a href="mailto:{EMAIL}">{EMAIL}</a><span class="small muted" style="display:block;padding:6px 0">{HOURS_ES}</span></div>
+    </div>
+    <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. Todos los derechos reservados.</span><span><a href="/" style="display:inline;padding:0" hreflang="en" lang="en">English</a></span></div>
+  </div>
+</footer>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href_es()}">{ico('chat')} {text_label_es()}</a><button class="btn btn-primary" data-apply>Aplicar</button></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+'''
+
+def apply_fields_es(prefix):
+    f = lambda k: f'{prefix}{k}'
+    return f'''
+        <div class="fstep" data-step="1">
+          <div class="row2">
+            <div class="field"><label for="{f("first")}">Nombre</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
+            <div class="field"><label for="{f("last")}">Apellido</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
+          </div>
+          <div class="field"><label for="{f("plan")}">¿Cómo quieres manejar?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
+          <div class="field"><label for="{f("phone")}">Celular</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
+          <div class="row2"><div class="field"><label for="{f("platform")}">¿Qué apps manejas?</label><select id="{f("platform")}" name="platform"><option value="Uber">Uber</option><option value="Lyft">Lyft</option><option value="Uber + Lyft">Uber + Lyft</option><option value="Delivery (DoorDash, Uber Eats, Instacart)">Delivery (DoorDash, Uber Eats, Instacart)</option><option value="Rideshare + delivery">Rideshare + delivery</option><option value="Not driving yet">Todavía no manejo</option></select></div><div class="field"><label for="{f("car")}">Carro que quieres</label><select id="{f("car")}" name="car" data-car-select><option value="">El primero disponible</option></select></div></div>
+          <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
+          <div class="fstatus" role="status" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit" data-step-btn="1">Ver disponibilidad →</button>
+          <p class="fineprint">Sin revisión de crédito. Te escribimos en minutos (8am–9pm). Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
+        </div>
+        <div class="fstep" data-step="2" hidden>
+          <p class="step2-head"><b>✓ Ya estás en la lista.</b> Termina ahora para verificarte y apartar un carro:</p>
+          <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
+          <div class="row2"><div class="field"><label for="{f("insurance")}">Tu seguro de auto hoy</label><select id="{f("insurance")}" name="insurance_status"><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I'll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div><div class="field"><label for="{f("license")}">¿Licencia válida?</label><select id="{f("license")}" name="has_license"><option value="Yes — California">Sí — California</option><option value="Yes — another state">Sí — de otro estado</option><option value="No">No</option></select></div></div>
+          <div class="fee-box"><span>Cuota de verificación<small>Se abona a tu primer pago semanal</small></span><b class="accent">${FEE}</b></div>
+          <p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>
+          <div class="fstatus" role="status" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit" data-step-btn="2">Verificarme — pagar ${FEE} seguro →</button>
+          <p class="fineprint">Pago seguro con Stripe. Después tomas fotos de tu licencia. ¿No estás listo? Puedes cerrar esto — ya tenemos tu número y te vamos a escribir.</p>
+        </div>'''
+
+def modal_es():
+    return f'''<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
+    <div id="formWrap">
+      <div class="mhead">
+        <div><h3 id="applyHeading">Ver disponibilidad de Teslas</h3><p id="carPick">Toma 30 segundos · sin revisión de crédito</p></div>
+        <button class="mclose" aria-label="Cerrar" data-close>×</button>
+      </div>
+      <form id="applyForm" data-apply-form novalidate>{apply_fields_es('f-')}</form>
+    </div>
+    <div class="success" id="success">
+      <div class="check" aria-hidden="true">✓</div>
+      <h3>Listo — te vamos a escribir</h3>
+      <p id="successText"></p>
+      <button class="btn btn-ghost" style="margin-top:22px" data-close>Cerrar</button>
+    </div>
+  </div>
+</div>
+'''
+
 def scripts(v):
     return f'<script src="/assets/site.js?v={v}" defer></script>\n</body>\n</html>\n'
 
 def build_page(p, v):
     p = dict(p, v=v)
     body = (PAGES / p['src']).read_text() if p.get('src') else p['body']
-    body = body.replace('{{APPLY_FIELDS}}', apply_fields('h-', p.get('app_type')=='driver')).replace('{{FEE}}', FEE).replace('{{TODAY}}', TODAY).replace('{{SMS_HREF}}', sms_href()).replace('{{TEXT_LABEL}}', text_label()).replace('{{HOURS}}', HOURS).replace('{{ORANGE_ADDR}}', ORANGE_ADDR)
+    es = p.get('lang') == 'es'
+    body = body.replace('{{APPLY_FIELDS}}', apply_fields_es('h-') if es else apply_fields('h-', p.get('app_type')=='driver')).replace('{{FEE}}', FEE).replace('{{TODAY}}', TODAY).replace('{{SMS_HREF}}', sms_href_es() if es else sms_href()).replace('{{TEXT_LABEL}}', text_label_es() if es else text_label()).replace('{{PHONE_DISPLAY}}', PHONE_DISPLAY).replace('{{HOURS}}', HOURS_ES if es else HOURS).replace('{{ORANGE_ADDR}}', ORANGE_ADDR)
     body = re.sub(r'\{\{ico:(\w+)\}\}', lambda m: ico(m.group(1)), body)
     body = re.sub(r'\{\{icon:(\w+)\}\}', lambda m: ICONS[m.group(1)], body)
-    html = head(p) + header(p.get('active','')) + body + footer() + (modal(p.get('app_type','rental')) if p.get('modal', True) else '') + scripts(v)
+    if es: html = head(p) + header_es(p.get('active',''), p.get('alt','/')) + body + footer_es() + (modal_es() if p.get('modal', True) else '') + scripts(v)
+    else: html = head(p) + header(p.get('active',''), p.get('alt','/es')) + body + footer() + (modal(p.get('app_type','rental')) if p.get('modal', True) else '') + scripts(v)
     out = ROOT / (p['path'].strip('/') or 'index')
     out = out.with_suffix('.html') if not str(out).endswith('.html') else out
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html)
     return out
 
@@ -227,5 +345,9 @@ if __name__ == '__main__':
         sm.append(f'  <url><loc>{DOMAIN}{path}</loc><lastmod>{TODAY}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority></url>')
     sm.append('</urlset>')
     (ROOT / 'sitemap.xml').write_text('\n'.join(sm) + '\n')
-    (ROOT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /ops\nDisallow: /thanks\nDisallow: /api/\n\nSitemap: {DOMAIN}/sitemap.xml\n')
+    ai_bots = ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'PerplexityBot', 'Perplexity-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot']
+    rules = 'User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /ops\nDisallow: /thanks\nDisallow: /api/\n\n'
+    rules += ''.join(f'User-agent: {b}\nAllow: /\nDisallow: /admin\nDisallow: /ops\nDisallow: /thanks\n\n' for b in ai_bots)
+    (ROOT / 'robots.txt').write_text(rules + f'Sitemap: {DOMAIN}/sitemap.xml\n')
+    (ROOT / 'llms.txt').write_text((pathlib.Path(__file__).resolve().parent / 'llms.txt').read_text().replace('{{TODAY}}', TODAY))
     print('sitemap:', len(urls), 'urls')
