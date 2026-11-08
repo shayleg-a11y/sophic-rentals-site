@@ -8,7 +8,7 @@
           <button class="btn btn-primary" data-apply>Check availability — free →</button>
           <a class="btn btn-ghost" data-contact="sms" href="{{SMS_HREF}}">{{ico:chat}} {{TEXT_LABEL}}</a>
         </div>
-        <p class="hero-note">Free to apply · No credit check · <b>Upfront at pickup: $500 deposit + $500 first week (Model 3)</b></p>
+        <p class="hero-note">Free to apply · No credit check · <b>Upfront at pickup: first week + a deposit equal to your insurance deductible</b></p>
         <div class="trust">
           <span class="pill">{{ico:bolt}} Charging ≈ $20 per 500 miles</span>
           <span class="pill">{{ico:calendar}} Flat weekly rate, one-month minimum</span>
@@ -55,7 +55,7 @@
       <div class="steps">
         <div class="step reveal"><div class="n">1</div><h3>Check availability</h3><p>Name, number and which apps you drive. We text you what's open near you — usually within minutes during the day.</p><span class="tag">Free</span></div>
         <div class="step reveal"><div class="n">2</div><h3>Get verified</h3><p>Add your email, license photos and insurance, plus a $9.99 verification fee that's credited to your first week. We verify within 24–48 hours. <a href="/insurance" style="color:var(--accent)">Need insurance?</a></p><span class="tag">$9.99, credited to week 1</span></div>
-        <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, 10-minute walkaround, drive off charged.</p><span class="tag">Model 3: $500 deposit + $500 week 1 = $1,000</span></div>
+        <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, 10-minute walkaround, drive off charged.</p><span class="tag">Week 1 + deposit = your deductible</span></div>
       </div>
     </div>
   </section>
@@ -70,20 +70,20 @@
       <div class="calc reveal">
         <div>
           <h3>Your week</h3>
-          <div class="ctl"><label for="c-hours">Hours driving <output id="c-hours-out">40 hrs</output></label><input type="range" id="c-hours" min="10" max="70" step="5" value="40"></div>
-          <div class="ctl"><label for="c-rate">Gross per hour (fares + tips) <output id="c-rate-out">$25/hr</output></label><input type="range" id="c-rate" min="15" max="45" step="1" value="25"></div>
+          <div class="ctl"><label for="c-hours">Hours driving <output id="c-hours-out">50 hrs</output></label><input type="range" id="c-hours" min="10" max="70" step="5" value="50"></div>
+          <div class="ctl"><label for="c-rate">Gross per hour (fares + tips) <output id="c-rate-out">$40/hr</output></label><input type="range" id="c-rate" min="15" max="60" step="1" value="40"></div>
           <div class="ctl"><label for="c-ins">Your insurance per week <output id="c-ins-out">$60/wk</output></label><input type="range" id="c-ins" min="0" max="150" step="5" value="60"></div>
           <div class="ctl"><label for="c-model">Car</label><select id="c-model" style="width:100%;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;color:var(--text);font-size:16px"><option>Model 3</option><option>Model Y</option><option>Model X</option></select></div>
           <p class="note">Assumes about 18 miles per driving hour and our fleet's average charging cost of roughly $20 per 500 miles (4¢ a mile), billed to you automatically through Tesla's fleet system. Gas comparison: 28 mpg at $4.90/gal. Insurance is your own full-coverage policy with a rideshare add-on; California full coverage averages around $60 a week, so set the slider to your quote. Income tax isn't included.</p>
         </div>
         <div class="res">
-          <div class="row"><span>Gross fares + tips</span><b id="r-gross">$1,000</b></div>
+          <div class="row"><span>Gross fares + tips</span><b id="r-gross">$2,000</b></div>
           <div class="row"><span>Weekly rent</span><b id="r-rent">−$500</b></div>
-          <div class="row"><span>Charging (<span id="r-miles">720 mi</span>)</span><b id="r-charge">−$29</b></div>
+          <div class="row"><span>Charging (<span id="r-miles">900 mi</span>)</span><b id="r-charge">−$36</b></div>
           <div class="row"><span>Your insurance</span><b id="r-ins">−$60</b></div>
-          <div class="row big"><span>Left over, before income tax</span><b id="r-net">$411</b></div>
-          <div class="row"><span>Gas a 28-mpg car would burn</span><b id="r-gas">$126</b></div>
-          <div class="row" style="border-bottom:0"><span>You save vs. gas, after charging</span><b id="r-save">$97/wk</b></div>
+          <div class="row big"><span>Left over, before income tax</span><b id="r-net">$1,404</b></div>
+          <div class="row"><span>Gas a 28-mpg car would burn</span><b id="r-gas">$158</b></div>
+          <div class="row" style="border-bottom:0"><span>You save vs. gas, after charging</span><b id="r-save">$122/wk</b></div>
           <button class="btn btn-primary" style="width:100%;margin-top:14px" data-apply>Check availability — free</button>
         </div>
       </div>
@@ -91,7 +91,7 @@
         <div><b>Model 3</b><span>$500 / week</span></div>
         <div><b>Model Y</b><span>$600 / week</span></div>
         <div><b>Model X</b><span>$700 / week</span></div>
-        <div><b>Deposit</b><span>One week's rent, refundable — <a href="/policies" style="color:var(--accent)">how you get it back</a></span></div>
+        <div><b>Deposit</b><span>Equal to your insurance deductible, refundable — <a href="/policies" style="color:var(--accent)">how you get it back</a></span></div>
         <div><b>Charging</b><span>≈ $20 per 500 mi, auto-billed</span></div>
         <div><b>Miles</b><span>5,000 / week included</span></div>
       </div>
@@ -161,7 +161,7 @@
     <div class="wrap">
       <div class="shead reveal"><span class="eyebrow">Questions</span><h2>Good to know</h2></div>
       <div class="faq">
-        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does it cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay a refundable deposit equal to one week's rent plus your first week — <b>$1,000 total for a Model 3</b>, minus the $9.99 verification fee you already paid. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does it cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay your first week plus a refundable deposit equal to your insurance policy's deductible — with a $500 deductible that's <b>$1,000 total for a Model 3</b>, minus the $9.99 verification fee you already paid. A lower deductible means a lower deposit. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq2">What's the $9.99 for?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>Checking availability is free. The $9.99 is paid only when you finish your application, covers verifying your license and insurance, and is <b>credited toward your first week's rent</b> at pickup. If you're not approved it isn't refunded. <a href="/policies" style="color:var(--accent)">Full policy</a>.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq3">What insurance do I need?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Your own auto policy with full coverage — liability plus comprehensive and collision — that extends to a rental vehicle, with Sophic Rentals listed as an additional interest so we're notified if it lapses. If you drive rideshare, tell your carrier; most add rideshare coverage for a few dollars a month. We verify with your carrier before pickup and re-check monthly. Don't have it yet? Read our <a href="/insurance" style="color:var(--accent)">get-insured-in-24-hours guide</a> and apply anyway.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq4">What do I need to qualify?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 or older, a valid U.S. driver's license that isn't suspended, and full-coverage insurance as above. No credit check. Cars stay in California.</p></div></div>
@@ -179,7 +179,7 @@
       <div class="callout reveal">
         <div style="max-width:60ch">
           <span class="eyebrow">No car, no rent</span>
-          <h2>Can't swing the deposit or insurance? Drive on our Uber fleet.</h2>
+          <h2>No insurance yet? Drive on our Uber fleet.</h2>
           <p>We put you in a Tesla with insurance and maintenance included. Half of what you earn goes toward the car until the weekly target is met — then you keep 100% for the rest of the week.</p>
         </div>
         <a href="/drive" class="btn btn-primary">See the fleet driver program →</a>

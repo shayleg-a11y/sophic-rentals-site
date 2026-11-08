@@ -147,7 +147,7 @@ def apply_fields(prefix, driver):
         pick = f'<div class="field"><label for="{f("car")}">Car you want</label><select id="{f("car")}" name="car" data-car-select><option value="">First available</option></select></div>'
         s2 = f'<div class="row2"><div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status"><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div><div class="field"><label for="{f("license")}">Valid license?</label><select id="{f("license")}" name="has_license"><option>Yes — California</option><option>Yes — another state</option><option>No</option></select></div></div><p class="fineprint" style="margin-top:-4px">Not fully covered yet? Apply anyway — <a href="/insurance">here&rsquo;s how drivers get insured in 24 hours</a>.</p>'
         fee_line = f'<span>Verification fee<small>Credited to your first week\'s rent</small></span><b class="accent">${FEE}</b>'
-        upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> $500 refundable deposit + $500 first week = <b>$1,000</b>, minus your $9.99 credit. No credit check.</p>'
+        upfront = '<p class="fineprint upfront"><b>Due at pickup:</b> first week ($500 for a Model 3) + a refundable deposit equal to your insurance deductible, minus your $9.99 credit. No credit check.</p>'
     return f'''
         <div class="fstep" data-step="1">
           <div class="row2">

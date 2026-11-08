@@ -19,7 +19,7 @@ begin
     elsif n = 1 then return 'Hi ' || first || ', Sophic here. Anything I can answer about the fleet driver program? Insurance and maintenance are included. Finish here: ' || link;
     else return 'Last check-in from Sophic Rentals: still want to drive a Tesla this week? Finish in 1 minute: ' || link || ' Reply STOP to opt out.'; end if;
   end if;
-  if n = 0 then return 'Hi ' || first || ', it''s Sophic Rentals - got your request for a Tesla' || coalesce(' (' || nullif(a.preferred_car,'') || ')', '') || '. We have cars near LAX, SNA and Orange. Upfront at pickup is a $500 deposit + $500 first week (Model 3). Finish verification here, $9.99 credited to week 1: ' || link || ' Questions? Just reply. Reply STOP to opt out.';
+  if n = 0 then return 'Hi ' || first || ', it''s Sophic Rentals - got your request for a Tesla' || coalesce(' (' || nullif(a.preferred_car,'') || ')', '') || '. We have cars near LAX, SNA and Orange. Upfront at pickup is your first week ($500 for a Model 3) + a deposit equal to your insurance deductible. Finish verification here, $9.99 credited to week 1: ' || link || ' Questions? Just reply. Reply STOP to opt out.';
   elsif n = 1 then return 'Hi ' || first || ', Sophic here. Any questions I can answer - insurance, pickup, charging? Most drivers are verified in 24-48h. Finish here: ' || link;
   else return 'Last check-in from Sophic Rentals: still want a Tesla this week? Cars go fast. Finish in 1 minute: ' || link || ' Reply STOP to opt out.'; end if;
 end $$;

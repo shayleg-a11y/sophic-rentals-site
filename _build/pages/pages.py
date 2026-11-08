@@ -5,7 +5,7 @@ DOMAIN = 'https://sophicrentals.com'
 BIZ = {"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals","description":"Long-term Tesla rentals for Uber, Lyft and delivery drivers in Los Angeles and Orange County.","founder":{"@type":"Person","name":"Shayle Gupta"},"url":DOMAIN+"/","email":"Sophicrentals@gmail.com","image":DOMAIN+"/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals — Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals — near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals — near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}]}
 
 HOME_FAQ = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
- {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay a refundable deposit equal to one week's rent plus the first week: $1,000 for a Model 3. Applying is free; a $9.99 verification fee is charged when you finish your application and is credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},
+ {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay the first week plus a refundable deposit equal to your insurance deductible: $1,000 for a Model 3 with a $500 deductible. Applying is free; a $9.99 verification fee is charged when you finish your application and is credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},
  {"@type":"Question","name":"Does it cost anything to apply?","acceptedAnswer":{"@type":"Answer","text":"Checking availability is free. A $9.99 verification fee is charged when you finish your application and is credited toward your first week's rent. It is not refunded if you are declined."}},
  {"@type":"Question","name":"What insurance do I need?","acceptedAnswer":{"@type":"Answer","text":"Your own full-coverage auto policy (liability, comprehensive and collision) that extends to a rental vehicle, with Sophic Rentals listed as an additional interest. We verify it with your carrier before pickup."}},
  {"@type":"Question","name":"What do I need to qualify?","acceptedAnswer":{"@type":"Answer","text":"21 or older, a valid unsuspended U.S. driver's license, and active insurance. No credit check."}},
@@ -27,7 +27,7 @@ def city_body(c):
     <h1 style="font-size:clamp(34px,5.4vw,58px);margin-top:12px;max-width:20ch">Tesla rentals for {c['name']} drivers — <span class="accent">pickup near {c['short']}</span>, {c['drive']} away</h1>
     <p class="muted" style="font-size:18px;max-width:60ch;margin-top:16px">We don't have an office in {c['name']}; {c['name']} drivers pick up at {c['office']}, {c['drive']} away, once — then the car lives with you. Flat $500/week for a Model 3, charging around $20 per 500 miles, no credit check. {c['why']}</p>
     <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply>Check availability — free →</button><a class="btn btn-ghost" href="/#cost">See what you keep</a></div>
-    <p class="hero-note">Free to apply · No credit check · Upfront at pickup: $500 deposit + $500 first week</p>
+    <p class="hero-note">Free to apply · No credit check · Upfront at pickup: first week + a deposit equal to your insurance deductible</p>
   </div></section>
 
   <section class="pad-sm"><div class="wrap">
@@ -43,8 +43,8 @@ def city_body(c):
     <div class="prose" style="margin:0"><div class="tbl"><table>
       <tr><th>Item</th><th>Model 3</th><th>Model Y</th><th>Model X</th></tr>
       <tr><td>Weekly rent</td><td>$500</td><td>$600</td><td>$700</td></tr>
-      <tr><td>Refundable deposit (one week)</td><td>$500</td><td>$600</td><td>$700</td></tr>
-      <tr><td>Due at pickup (deposit + first week)</td><td>$1,000</td><td>$1,200</td><td>$1,400</td></tr>
+      <tr><td>Refundable deposit</td><td colspan="3">Equal to your insurance deductible</td></tr>
+      <tr><td>Due at pickup with a $500 deductible</td><td>$1,000</td><td>$1,100</td><td>$1,200</td></tr>
       <tr><td>Verification fee (when you finish applying)</td><td colspan="3">$9.99 — credited to your first week</td></tr>
       <tr><td>Charging</td><td colspan="3">Pay for what you use — about $20 per 500 miles, billed automatically</td></tr>
       <tr><td>Insurance</td><td colspan="3">Your own full-coverage policy (comprehensive + collision)</td></tr>
