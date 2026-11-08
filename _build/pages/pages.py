@@ -6,8 +6,8 @@ BIZ = {"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Renta
 
 HOME_FAQ = {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
  {"@type":"Question","name":"How does rent to own work?","acceptedAnswer":{"@type":"Answer","text":"Pay about $2,000 down plus the first week at pickup, then about $500 a week (Model 3; prices vary by car) for 12 months. After the 52nd payment Sophic transfers the title to you. No credit check. You cover maintenance and carry full-coverage insurance with a rideshare endorsement."}},
- {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay the first week plus a refundable deposit equal to your insurance deductible: $1,000 for a Model 3 with a $500 deductible. Applying is free; a $9.99 verification fee is charged when you finish your application and is credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},
- {"@type":"Question","name":"Does it cost anything to apply?","acceptedAnswer":{"@type":"Answer","text":"Checking availability is free. A $9.99 verification fee is charged when you finish your application and is credited toward your first week's rent. It is not refunded if you are declined."}},
+ {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay the first week plus a refundable deposit equal to your insurance deductible: $1,000 for a Model 3 with a $500 deductible. The application has a one-time $9.99 verification fee, credited to your first week. Charging is about $20 per 500 miles, billed automatically. Insurance is your own full-coverage policy. Minimum term is one month."}},
+ {"@type":"Question","name":"What does it cost to apply?","acceptedAnswer":{"@type":"Answer","text":"The application has a one-time $9.99 verification fee, credited toward your first weekly payment. It is not refunded if you are declined."}},
  {"@type":"Question","name":"What insurance do I need?","acceptedAnswer":{"@type":"Answer","text":"Your own full-coverage auto policy (liability, comprehensive and collision) that extends to a rental vehicle, with Sophic Rentals listed as an additional interest. We verify it with your carrier before pickup."}},
  {"@type":"Question","name":"What do I need to qualify?","acceptedAnswer":{"@type":"Answer","text":"21 or older, a valid unsuspended U.S. driver's license, and active insurance. No credit check."}},
  {"@type":"Question","name":"How fast can I start?","acceptedAnswer":{"@type":"Answer","text":"Most drivers are verified within 24-48 hours of uploading their license, then pick up at whichever of our three offices has their car."}},
@@ -27,8 +27,8 @@ def city_body(c):
     <span class="eyebrow">Serving {c['name']} · pickup near {c['short']}</span>
     <h1 style="font-size:clamp(34px,5.4vw,58px);margin-top:12px;max-width:20ch">Tesla rentals for {c['name']} drivers — <span class="accent">pickup near {c['short']}</span>, {c['drive']} away</h1>
     <p class="muted" style="font-size:18px;max-width:60ch;margin-top:16px">We don't have an office in {c['name']}; {c['name']} drivers pick up at {c['office']}, {c['drive']} away, once — then the car lives with you. Rent to own a Model 3 with about $2,000 down and $500/week — the title is yours after 12 months — or rent it week to week. No credit check. {c['why']}</p>
-    <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply data-plan="rent-to-own">Start rent to own — free →</button><a class="btn btn-ghost" href="/#cost">See what you keep</a></div>
-    <p class="hero-note">Free to apply · No credit check · Own: ~$2,000 down + first week · Rent: first week + deposit equal to your insurance deductible</p>
+    <div class="hero-cta" style="margin-top:26px"><button class="btn btn-primary" data-apply data-plan="rent-to-own">Start rent to own →</button><a class="btn btn-ghost" href="/#cost">See what you keep</a></div>
+    <p class="hero-note">No credit check · Own: ~$2,000 down + first week · Rent: first week + deposit equal to your insurance deductible</p>
   </div></section>
 
   <section class="pad-sm"><div class="wrap">
@@ -61,7 +61,7 @@ def city_body(c):
   </div></section>
 
   <section class="pad-sm"><div class="wrap">
-    <div class="cta-band reveal"><h2>Driving in {c['name']} this week?</h2><p>Check availability free in 30 seconds. We text you back.</p><button class="btn" data-apply data-plan="rent-to-own">Start rent to own — free →</button></div>
+    <div class="cta-band reveal"><h2>Driving in {c['name']} this week?</h2><p>Apply in 30 seconds. We text you back.</p><button class="btn" data-apply data-plan="rent-to-own">Start rent to own →</button></div>
   </div></section>
 '''
 
@@ -78,12 +78,12 @@ PAGES = [
  dict(path='/', src='index.body.html', active='', hero=True, priority='1.0', changefreq='weekly',
       title='Rent to own a Tesla for Uber & Lyft in LA & Orange County | Sophic Rentals',
       og_title='Sophic Rentals — Drive a Tesla for Uber & Lyft. Own it in 12 months.',
-      desc='Rent to own or rent a Tesla for Uber, Lyft & delivery in Los Angeles and Orange County: about $2,000 down and $500/week, own it in 12 months. Free to apply, no credit check, Model 3 from $500/week, pickup near LAX, SNA or Chapman, on the road in 48 hours.',
+      desc='Rent to own or rent a Tesla for Uber, Lyft & delivery in Los Angeles and Orange County: about $2,000 down and $500/week, own it in 12 months. No credit check, Model 3 from $500/week, pickup near LAX, SNA or Chapman, on the road in 48 hours.',
       ld=[BIZ, HOME_FAQ]),
  dict(path='/rent-to-own', src='rent-to-own.body.html', active='rto', priority='0.95', changefreq='weekly',
       title='Rent to own a Tesla for Uber & Lyft — own it in 12 months | Sophic Rentals',
       og_title='Own a Tesla in 12 months. Drive Uber & Lyft while you pay.',
-      desc='Rent to own a Tesla in LA & Orange County: about $2,000 down and $500/week on a Model 3 for 12 months, then the title is yours. No credit check. Free to apply.',
+      desc='Rent to own a Tesla in LA & Orange County: about $2,000 down and $500/week on a Model 3 for 12 months, then the title is yours. No credit check.',
       ld=[dict(BIZ, name='Sophic Rentals — Rent to Own')]),
  dict(path='/thanks', src='thanks.body.html', active='', noindex=True, modal=False,
       title='Last step — upload your license | Sophic Rentals', desc='Finish your Sophic Rentals application by uploading photos of your license.'),

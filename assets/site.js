@@ -101,7 +101,7 @@
     grid.innerHTML = rows.map(function(c){
       var avail = c.available > 0;
       var badge = avail ? '<span class="badge avail"><span class="dot"></span>Available this week</span>' : '<span class="badge soon">Waitlist</span>';
-      var btn = avail ? '<button class="btn btn-primary" data-apply data-car="' + c.name + '">Check availability — free</button>' : '<button class="btn wait" data-apply data-car="' + c.name + ' (waitlist)">Join the ' + c.model + ' waitlist — free</button>';
+      var btn = avail ? '<button class="btn btn-primary" data-apply data-car="' + c.name + '">Check availability</button>' : '<button class="btn wait" data-apply data-car="' + c.name + ' (waitlist)">Join the ' + c.model + ' waitlist</button>';
       return '<div class="car reveal"><div class="img">' + pic(c.img, c.name + ', ' + c.trim) + badge + '</div><div class="body"><h3>' + c.name + '</h3><div class="meta">' + c.trim + '</div><div class="feats">' + c.feats.map(function(f){ return '<span>' + f + '</span>'; }).join('') + '</div><div class="price"><b>$' + c.rate + '</b><small>/ week</small></div>' + btn + '</div></div>';
     }).join('');
     $$('[data-car-select]').forEach(function(sel){ var cur = sel.value; sel.innerHTML = '<option value="">First available</option>' + rows.map(function(c){ return '<option>' + c.name + (c.available ? '' : ' (waitlist)') + '</option>'; }).join(''); if (cur) sel.value = cur; });
@@ -154,7 +154,7 @@
     var m = $('.overlay .modal'); if (m) m.scrollTop = 0;
     var pick = $('#carPick');
     if (car) { if (pick) pick.textContent = 'Reserving: ' + car; var sel = $('#f-car'); if (sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].text === car) sel.value = sel.options[i].value; } }
-    else if (pick) pick.textContent = 'Free to start · 30 seconds · no credit check';
+    else if (pick) pick.textContent = 'Takes 30 seconds · no credit check';
     track('apply_open', { type: TYPE, car: car || '' });
     setTimeout(function(){ var n = $('#f-first'); if (n && n.offsetParent) n.focus(); }, 60);
   }

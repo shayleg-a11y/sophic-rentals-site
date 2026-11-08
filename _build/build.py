@@ -101,7 +101,7 @@ def header(active=''):
               </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a>
-        <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability — free</span><span class="short">Apply free</span></button>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability</span><span class="short">Apply</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
@@ -130,7 +130,7 @@ def footer():
     <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/policies" style="display:inline;padding:0">Deposit &amp; fee policy</a></span></div>
   </div>
 </footer>
-<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a><button class="btn btn-primary" data-apply>Apply free</button></div>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a><button class="btn btn-primary" data-apply>Apply now</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 '''
 
@@ -161,8 +161,8 @@ def apply_fields(prefix, driver):
           <div class="row2">{plat}{pick}</div>
           <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
           <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">{'Check my spot' if driver else 'Check availability'} — free →</button>
-          <p class="fineprint">Free, no credit check, nothing to pay yet. We text you back within minutes (8am–9pm). 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+          <button class="btn btn-primary" type="submit" data-step-btn="1">{'Check my spot' if driver else 'Check availability'} →</button>
+          <p class="fineprint">No credit check. We text you back within minutes (8am–9pm). 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
         </div>
         <div class="fstep" data-step="2" hidden>
           <p class="step2-head"><b>✓ You're on the list.</b> Finish now to get verified and hold {'your spot' if driver else 'a car'}:</p>
@@ -181,7 +181,7 @@ def modal(app_type='rental'):
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
     <div id="formWrap">
       <div class="mhead">
-        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Check Tesla availability'}</h3><p id="carPick">Free to start · 30 seconds · no credit check</p></div>
+        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Check Tesla availability'}</h3><p id="carPick">Takes 30 seconds · no credit check</p></div>
         <button class="mclose" aria-label="Close" data-close>×</button>
       </div>
       <form id="applyForm" data-apply-form novalidate>{apply_fields('f-', driver)}</form>
