@@ -95,7 +95,7 @@
     week: '/ semana', ready: function(n){ return n + ' carro' + (n === 1 ? '' : 's') + ' listo' + (n === 1 ? '' : 's') + ' para recoger esta semana en nuestras tres ubicaciones. Aplica y te asignamos el más cercano.'; },
     none: 'Todos los carros están en la calle ahorita. Aplica y te damos el próximo que regrese.', reserving: 'Apartando: ', quick: 'Toma 30 segundos · sin revisión de crédito',
     last: 'Último paso: aparta tu Tesla', saving: 'Guardando…', restart: 'Empieza otra vez — escribe tu nombre y número.', opening: 'Abriendo pago seguro…', openingBtn: 'Abriendo…',
-    tooMany: 'Demasiados intentos desde esta conexión. Intenta en una hora o escríbenos.', conn: 'No se pudo continuar — revisa tu conexión y vuelve a intentar. Tus respuestas siguen aquí.',
+    tooMany: 'Demasiados intentos desde esta conexión. Intenta en una hora o escríbenos.', conn: 'No pudimos conectar — revisa tu conexión y vuelve a intentar (tus respuestas siguen aquí), o escríbenos al (840) 699-7077.',
     trims: { 'Model 3': 'El favorito para rideshare', 'Model Y': 'Espacio y comodidad SUV', 'Model X': 'Premium de 6 asientos' },
     feats: { 'Model 3': ['5 asientos', '~270 mi de autonomía', 'Autopilot'], 'Model Y': ['5 asientos', 'Cajuela de SUV', 'Doble motor'], 'Model X': ['Puertas de halcón', '6 asientos', 'Interior blanco'] }
   } : {
@@ -103,7 +103,7 @@
     week: '/ week', ready: function(n){ return n + ' car' + (n === 1 ? '' : 's') + ' ready for pickup this week across our three locations. Apply now and we match you to the nearest one.'; },
     none: 'Every car is on the road right now. Apply and you get the next one back.', reserving: 'Reserving: ', quick: 'Takes 30 seconds · no credit check',
     last: 'Last step: reserve your Tesla', saving: 'Saving…', restart: 'Please start again — enter your name and number.', opening: 'Opening secure checkout…', openingBtn: 'Opening checkout…',
-    tooMany: 'Too many attempts from this connection. Please try again in an hour or text us.', conn: 'Couldn\'t continue — check your connection and tap again. Your answers are still here.'
+    tooMany: 'Too many attempts from this connection. Please try again in an hour or text us.', conn: 'Couldn\'t reach us — check your connection and tap again (your answers are saved), or text us at (840) 699-7077.'
   };
 
   // ---------- Helpers ----------
@@ -241,14 +241,33 @@
     setTimeout(function(){ var n = $('#f-first'); if (n && n.offsetParent) n.focus(); }, 60);
   }
   function closeApply(){ var ov = $('#overlay'); if (!ov) return; ov.classList.remove('show'); document.body.style.overflow = ''; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+  // POST JSON with retries. Falls back to XMLHttpRequest if fetch itself fails (some in-app browsers,
+  // extensions and flaky mobile networks break fetch). Network failures throw err.network = true.
+  function xhrJSON(url, body){
+    return new Promise(function(res, rej){
+      try { var x = new XMLHttpRequest(); x.open('POST', url, true); x.setRequestHeader('Content-Type', 'application/json'); x.timeout = 20000;
+        x.onload = function(){ var d = {}; try { d = JSON.parse(x.responseText || '{}'); } catch (_) {} res({ ok: x.status >= 200 && x.status < 300, status: x.status, d: d }); };
+        x.onerror = x.ontimeout = function(){ rej(new TypeError('xhr_failed')); }; x.send(JSON.stringify(body)); } catch (e) { rej(e); }
+    });
+  }
+  function diag(kind, info){ try { var i = new Image(); i.src = '/api/track?diag=' + encodeURIComponent(kind) + '&i=' + encodeURIComponent(String(info).slice(0, 200)) + '&p=' + encodeURIComponent(location.pathname) + '&v=' + VID + '&t=' + Date.now(); } catch (_) {} }
   async function postJSON(url, body){
-    var r, d;
-    for (var attempt = 0; attempt < 2; attempt++) {
-      try { r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); d = await r.json().catch(function(){ return {}; }); break; }
-      catch (e) { if (attempt === 1) throw e; await new Promise(function(res){ setTimeout(res, 1200); }); }
+    var res = null, lastErr = null;
+    for (var attempt = 0; attempt < 3 && !res; attempt++) {
+      try {
+        var ctl = window.AbortController ? new AbortController() : null, to = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : null;
+        var r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), credentials: 'same-origin', cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+        if (to) clearTimeout(to);
+        var d = await r.json().catch(function(){ return {}; });
+        res = { ok: r.ok, status: r.status, d: d };
+      } catch (e) {
+        lastErr = e;
+        try { res = await xhrJSON(url, body); } catch (e2) { lastErr = e2; await new Promise(function(ok){ setTimeout(ok, 900 * (attempt + 1)); }); }
+      }
     }
-    if (!r.ok) { var err = new Error((d && d.error) || 'request failed'); err.status = r.status; throw err; }
-    return d;
+    if (!res) { diag('network', url + ' ' + ((lastErr && (lastErr.name + ':' + lastErr.message)) || '') + ' ' + navigator.userAgent); var ne = new Error(STR.conn); ne.network = true; throw ne; }
+    if (!res.ok) { var err = new Error((res.d && res.d.error) || 'request failed'); err.status = res.status; throw err; }
+    return res.d;
   }
   function fval(form, name){ var el = form.querySelector('[name="' + name + '"]'); return el ? el.value.trim() : ''; }
   function setStep(form, n){
@@ -374,7 +393,7 @@
     } catch (err) {
       st.className = 'fstatus bad';
       if (err.message === 'no_license') { step2Notes(form); st.textContent = ''; btn.innerHTML = label; return; }
-      st.textContent = err.status === 429 ? STR.tooMany : (err.status === 400 && err.message ? err.message : (err.message && !err.status ? err.message : STR.conn));
+      st.textContent = err.status === 429 ? STR.tooMany : (err.status === 400 && err.message ? err.message : (err.network || /fetch|load failed|network|xhr_failed/i.test(err.message || '') ? STR.conn : (err.message && !err.status ? err.message : STR.conn)));
       btn.disabled = false; btn.innerHTML = label;
       track('pay_error', { step: step, status: err.status || 0 });
     }
