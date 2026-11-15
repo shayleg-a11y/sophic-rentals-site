@@ -362,3 +362,5 @@ footer.site{border-top:1px solid var(--line);padding:50px 0 100px;margin-top:80p
 .dark-tiles{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.6)}
 .leaflet-control-attribution{background:rgba(16,20,26,.8)!important;color:#7E8B98!important;font-size:10px!important}
 .leaflet-control-attribution a{color:#9AA6B2!important}
+.paybox{scroll-margin-top:92px}
+body.paying .mbar{display:none!important}

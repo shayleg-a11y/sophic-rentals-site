@@ -340,7 +340,7 @@
         var box = form.querySelector('[data-paybox]'), fields = form.querySelector('.s2-fields'), mount = form.querySelector('[data-paymount]');
         mount.innerHTML = ''; fields.hidden = true; box.hidden = false;
         embedded = await stripe.initEmbeddedCheckout({ fetchClientSecret: function(){ return Promise.resolve(c.client_secret); } });
-        embedded.mount(mount);
+        embedded.mount(mount); document.body.classList.add('paying');
         var m = form.closest('.modal'); if (m) m.scrollTop = 0; else box.scrollIntoView({ behavior: 'smooth', block: 'start' });
         track('checkout_open', { type: TYPE, mode: 'embedded', ref: ref });
         return 'embedded';
@@ -354,7 +354,7 @@
   }
   function wirePayBack(){
     $$('[data-pay-back]').forEach(function(b){ b.addEventListener('click', function(){
-      var f = b.closest('form'); closeEmbedded();
+      var f = b.closest('form'); closeEmbedded(); document.body.classList.remove('paying');
       f.querySelector('[data-paybox]').hidden = true; f.querySelector('.s2-fields').hidden = false;
       var bt = f.querySelector('button[type=submit]'); if (bt) { bt.disabled = false; if (bt._label) bt.innerHTML = bt._label; }
       var st = f.querySelector('.fstatus'); if (st) st.textContent = '';
