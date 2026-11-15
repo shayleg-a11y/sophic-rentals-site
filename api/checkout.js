@@ -39,14 +39,16 @@ async function createSession(app, embedded) {
   ['klarna', 'afterpay_clearpay', 'affirm', 'crypto', 'zip'].forEach((t, i) => p.set(`excluded_payment_method_types[${i}]`, t));
   p.set('branding_settings[display_name]', 'Sophic Rentals');
   p.set('branding_settings[button_color]', '#0FBF8C');
-  p.set('branding_settings[icon][type]', 'url'); p.set('branding_settings[icon][url]', ICON);
-  p.set('branding_settings[logo][type]', 'url'); p.set('branding_settings[logo][url]', LOGO);
+  if (!embedded) { // Stripe refuses logo/icon on embedded sessions (the page around it is ours)
+    p.set('branding_settings[icon][type]', 'url'); p.set('branding_settings[icon][url]', ICON);
+    p.set('branding_settings[logo][type]', 'url'); p.set('branding_settings[logo][url]', LOGO);
+  }
   p.set('custom_text[submit][message]', es
     ? 'Esto aparta tu Tesla. Los $9.99 se abonan a tu primera semana y no son reembolsables. Después subes fotos de tu licencia (30 segundos).'
     : 'This reserves your Tesla. The $9.99 is credited to your first week and is non-refundable. Next you\'ll snap photos of your license (30 seconds).');
   let r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body: p.toString() });
   let d = await r.json();
-  if (!r.ok && /branding|excluded_payment_method_types/.test(JSON.stringify(d.error || ''))) {
+  if (!r.ok && /branding|logo|icon|button_color|display_name|excluded_payment_method_types/.test(JSON.stringify(d.error || ''))) {
     // Never let cosmetics block a payment: retry without them.
     for (const k of [...p.keys()]) if (/^branding_settings|^excluded_payment_method_types/.test(k)) p.delete(k);
     r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body: p.toString() });
