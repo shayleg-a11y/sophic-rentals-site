@@ -1,8 +1,8 @@
 // POST /api/apply — application stages.
-//   stage "lead"    : FREE step 1 (name, phone, platform, car). Creates (or refreshes) a row; returns {id, reference_number}.
+//   stage "lead"    : FREE step 1 (name, phone, plan, pickup location, attribution). Creates (or refreshes) a row; returns {id, reference_number}.
 //                     A DB trigger on applications texts the lead + alerts the owner (see migration lead_texting_funnel).
-//   stage "details" : step 2 (email, license, insurance) on the row identified by ref; then the client opens /api/checkout.
-//   stage "reserve" : after payment, adds DOB + address (thanks page).
+//   stage "details" : step 2 (email, license ["No" is refused before payment], insurance) on the row identified by ref; then the client opens /api/checkout.
+//   stage "reserve" : after payment, adds DOB + address + apps + car (thanks page).
 // Spam protection: honeypot field "website", per-IP rate limit (hashed IP), 24h dedupe by email+type.
 import crypto from 'crypto';
 import { configured, select, insert, update, findByRef, cleanRef } from './_lib/db.js';
@@ -17,6 +17,8 @@ function ipOf(req) {
   return (xf ? String(xf).split(',')[0] : req.socket?.remoteAddress || '').trim();
 }
 function ipHash(ip) { return crypto.createHash('sha256').update((process.env.IP_HASH_SALT || 'sophic') + '|' + ip).digest('hex').slice(0, 32); }
+const PICKUPS = { lax: 'LAX', sna: 'SNA', orange: 'Orange' };
+function pickup(v) { return PICKUPS[String(v || '').toLowerCase()] || null; }
 function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
 function validPhone(p) { const d = p.replace(/\D/g, ''); return d.length === 10 || (d.length === 11 && d[0] === '1'); }
 
@@ -46,7 +48,9 @@ export default async function handler(req, res) {
       const email = s(b.email, 200).toLowerCase();
       if (!validEmail(email)) { res.status(400).json({ error: 'Please enter a valid email address' }); return; }
       const lic = s(b.has_license, 40);
+      if (/^no\b/i.test(lic)) { res.status(400).json({ error: 'no_license' }); return; }
       const patch = { email, stage: 'details', updated_at: new Date().toISOString() };
+      const pk = pickup(b.pickup_location); if (pk) patch.pickup_location = pk;
       if (app.application_type !== 'driver' && s(b.insurance_status, 60)) patch.insurance_status = s(b.insurance_status, 60);
       if (s(b.rideshare_experience, 60)) patch.rideshare_experience = s(b.rideshare_experience, 60);
       if (lic) patch.reviewer_notes = ((app.reviewer_notes || '').replace(/License: [^\n]*/,'').trim() + '\nLicense: ' + lic).trim();
@@ -71,6 +75,8 @@ export default async function handler(req, res) {
         stage: 'reserve',
         updated_at: new Date().toISOString()
       };
+      if (s(b.platform, 40)) patch.platform = s(b.platform, 40);
+      if (s(b.car, 80)) patch.preferred_car = s(b.car, 80);
       for (const k of ['date_of_birth', 'address_line1', 'city', 'state', 'zip_code']) if (!patch[k]) { res.status(400).json({ error: 'Missing required field: ' + k }); return; }
       if (app.payment_status !== 'paid') patch.status = 'pending_payment';
       await update('applications', 'id=eq.' + app.id, patch);
@@ -90,6 +96,10 @@ export default async function handler(req, res) {
       application_type: type,
       plan: b.plan === 'rent-to-own' ? 'rent-to-own' : 'rental',
       source: s(b.source, 200) || null,
+      pickup_location: pickup(b.pickup_location),
+      utm_source: s(b.utm_source, 80) || null, utm_medium: s(b.utm_medium, 80) || null, utm_campaign: s(b.utm_campaign, 120) || null,
+      landing_page: s(b.landing_page, 300) || null, referrer: s(b.referrer, 300) || null, click_id: s(b.click_id, 200) || null,
+      visitor_id: s(b.visitor_id, 64) || null,
       ip_hash: hash,
       stage: 'lead',
       status: 'lead',
@@ -113,6 +123,7 @@ export default async function handler(req, res) {
       if (dup[0]) {
         const patch = Object.assign({}, rec, { updated_at: new Date().toISOString() });
         delete patch.status; delete patch.payment_status; delete patch.stage;
+        for (const k of Object.keys(patch)) if (patch[k] == null) delete patch[k];
         await update('applications', 'id=eq.' + dup[0].id, patch);
         row = Object.assign({}, dup[0], rec); deduped = true;
       }
@@ -123,7 +134,7 @@ export default async function handler(req, res) {
     if (!deduped) {
       try { await notifyAdmin('New ' + type + ' lead: ' + rec.first_name + ' ' + rec.last_name, [
         'Ref: ' + row.reference_number, 'Phone: ' + rec.phone, 'Email: ' + rec.email, 'Platform: ' + rec.platform, 'Car: ' + rec.preferred_car,
-        'Insurance: ' + rec.insurance_status, 'License: ' + lic, 'Experience: ' + rec.rideshare_experience, 'Hours: ' + rec.weekly_hours, 'Source: ' + rec.source,
+        'Plan: ' + rec.plan, 'Pickup: ' + (rec.pickup_location || 'any'), 'Source: ' + (rec.utm_source || rec.referrer || rec.source),
         'Admin: https://sophicrentals.com/admin']); } catch (_) {}
     }
     res.status(200).json({ ok: true, id: row.id, reference_number: row.reference_number, deduped });

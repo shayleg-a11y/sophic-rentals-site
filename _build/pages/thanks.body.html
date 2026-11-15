@@ -29,8 +29,8 @@
   <div class="wrap">
   <div class="tcard">
     <div class="check" aria-hidden="true">✓</div>
-    <h1>Payment received — one last step</h1>
-    <p>To finish, snap or upload photos of your driver's license below. Takes about 30 seconds and lets us verify you today.</p>
+    <h1>Your Tesla is reserved ✓</h1>
+    <p>Your $9.99 is credited to your first week. Last step: snap your driver's license below — about 30 seconds — so we can verify you today.</p>
     <div class="ref" id="refRow" style="display:none">Reference: <b id="refNum"></b></div>
     <div class="upsec" id="uploader">
       <h2>Upload your license</h2>
@@ -49,6 +49,10 @@
           <div class="field"><label for="d-city">City</label><input id="d-city" required name="city" autocomplete="address-level2" /></div>
           <div class="field"><label for="d-state">State</label><select id="d-state" name="state"><option>CA</option><option>AZ</option><option>NV</option><option>OR</option><option>WA</option><option>Other</option></select></div>
           <div class="field"><label for="d-zip">ZIP</label><input id="d-zip" required name="zip_code" inputmode="numeric" maxlength="10" autocomplete="postal-code" /></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="d-platform">Which apps will you drive?</label><select id="d-platform" name="platform"><option value="">Choose…</option><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>Delivery (DoorDash, Uber Eats, Instacart)</option><option>Rideshare + delivery</option><option>Not driving yet</option></select></div>
+          <div class="field"><label for="d-car">Car you want</label><select id="d-car" name="car"><option value="">First available</option><option>Tesla Model 3</option><option>Tesla Model Y</option><option>Tesla Model X</option></select></div>
         </div>
         <div class="fstatus" id="d-status" role="status" aria-live="polite"></div>
         <button class="btn btn-ghost" type="submit" id="d-submit" style="width:100%">Save details</button>
@@ -81,8 +85,13 @@
       document.getElementById('noRef').style.display='block';
       document.getElementById('doneBtn').hidden=false;
     }
-    window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
-    (function(){ var q=new URLSearchParams(location.search); var ref=(APP&&APP.ref)||q.get('ref'); if(!ref) return; fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ref,session_id:q.get('session_id')||''})}).catch(function(){}); })();
+    // Confirm the payment with Stripe (records it even if the webhook is late), then fire Purchase once per reference.
+    (function(){ var ref=(APP&&APP.ref)||q.get('ref'); if(!ref) return;
+      function fire(){ var k='sophic_paid_'+ref; try{ if(localStorage.getItem(k)) return; localStorage.setItem(k,'1'); }catch(_){}
+        var go=function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: ref}, {eventID: ref}); };
+        if(document.readyState==='loading') window.addEventListener('DOMContentLoaded', go); else go(); }
+      fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ref,session_id:q.get('session_id')||''})})
+        .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.paid) fire(); }).catch(function(){}); })();
     function idPayload(){ var p={}; if(APP&&APP.ref) p.reference=APP.ref; else if(APP&&APP.id) p.application_id=APP.id; return p; }
     function shrink(file){
       return new Promise(function(resolve){
@@ -114,7 +123,7 @@
     if (df) df.addEventListener('submit', async function(e){
       e.preventDefault(); if (!df.checkValidity()) { df.reportValidity(); return; }
       var st = document.getElementById('d-status'), b = document.getElementById('d-submit'); st.className='fstatus'; st.textContent='Saving…'; b.disabled = true;
-      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value }, {});
+      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value, platform: df.platform.value, car: df.car.value }, {});
       try { var r = await fetch('/api/apply', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); if (!r.ok) throw new Error('x'); st.textContent = 'Saved ✓'; b.textContent = 'Saved'; if (window.track) window.track('details_saved', {}); }
       catch (err) { st.className='fstatus bad'; st.textContent = 'Couldn\'t save — check your connection and try again.'; b.disabled = false; }
     });

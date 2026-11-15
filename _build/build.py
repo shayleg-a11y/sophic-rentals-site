@@ -79,6 +79,7 @@ def head(p):
 <meta name="twitter:image" content="{og_img}" />
 <meta name="theme-color" content="#0A0C0F" />
 <link rel="icon" href="{FAVICON}" />
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
 {preload}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,7 +110,7 @@ def header(active='', alt='/es'):
       </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a>
-        <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability</span><span class="short">Apply</span></button>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Reserve a Tesla</span><span class="short">Reserve</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
@@ -138,49 +139,85 @@ def footer():
     <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/policies" style="display:inline;padding:0">Deposit &amp; fee policy</a></span></div>
   </div>
 </footer>
-<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a><button class="btn btn-primary" data-apply>Apply now</button></div>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href()}">{ico('chat')} {text_label()}</a><button class="btn btn-primary" data-apply>Reserve a Tesla</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 '''
 
-def apply_fields(prefix, driver):
-    """Two-step application. Step 1 = free lead (name, phone, platform, car/hours). Step 2 = details + $9.99."""
-    f = lambda k: f'{prefix}{k}'
-    plat = f'<div class="field"><label for="{f("platform")}">Which apps?</label><select id="{f("platform")}" name="platform"><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>Delivery (DoorDash, Uber Eats, Instacart)</option><option>Rideshare + delivery</option><option>Not driving yet</option></select></div>'
-    if driver:
-        pick = f'<div class="field"><label for="{f("hours")}">Hours you want to drive</label><select id="{f("hours")}" name="weekly_hours"><option>Under 20 / week</option><option>20–35 / week</option><option>35–50 / week</option><option>50+ / week</option></select></div>'
-        s2 = f'<div class="row2"><div class="field"><label for="{f("exp")}">Rideshare experience</label><select id="{f("exp")}" name="rideshare_experience"><option>None yet</option><option>Under 1 year</option><option>1–3 years</option><option>3+ years</option></select></div><div class="field"><label for="{f("license")}">Valid California license?</label><select id="{f("license")}" name="has_license"><option>Yes</option><option>Out-of-state license</option><option>No</option></select></div></div>'
-        fee_line = f'<span>Verification fee<small>One time · covers license &amp; driving-record check</small></span><b class="accent">${FEE}</b>'
-        upfront = ''
-        planf = ''
+PICKUPS = [('lax', 'Near LAX'), ('sna', 'Near John Wayne (SNA)'), ('orange', 'Orange · Chapman')]
+PICKUPS_ES = [('lax', 'Cerca de LAX'), ('sna', 'Cerca de John Wayne (SNA)'), ('orange', 'Orange · Chapman')]
+
+def pickup_chips(prefix, es=False):
+    items = PICKUPS_ES if es else PICKUPS
+    label = 'Recoger cerca de' if es else 'Pick up near'
+    anyl = 'Cualquiera' if es else 'Any'
+    maplink = 'ver mapa' if es else 'see map'
+    chips = ''.join(f'<label class="chip"><input type="radio" name="pickup_location" value="{v}" data-pickup /><span>{t}</span></label>' for v, t in items)
+    chips += f'<label class="chip"><input type="radio" name="pickup_location" value="" data-pickup checked /><span>{anyl}</span></label>'
+    return f'<fieldset class="field chips"><legend>{label} <a href="#locations" class="map-link">{maplink}</a></legend><div class="chip-row">{chips}</div></fieldset>'
+
+def pay_bits(es=False):
+    if es:
+        fee = f'<div class="fee-box"><span>Aparta tu Tesla<small>Se abona a tu primera semana · no reembolsable</small></span><b class="accent">${FEE}</b></div>'
+        btn = f'Apartar mi Tesla — ${FEE} →'
+        fine = 'Apple Pay, Google Pay o tarjeta · pago seguro con Stripe. Después tomas foto de tu licencia (30 segundos). ¿No estás listo? Cierra esto — ya tenemos tu número y te escribimos.'
+        lic_no = 'Necesitas una licencia de manejo válida de EE. UU. para rentar. Cuando la tengas, escríbenos y te apartamos un carro — no se te cobra nada.'
+        ins_note = '¡Está bien! Puedes apartar hoy; solo necesitas cobertura completa antes de recoger. <a href="/insurance">Así se aseguran los choferes en 24 horas</a>.'
+        back = '← Regresar'; head = 'Aparta tu Tesla'; wait = 'Cargando pago seguro…'; foot = 'Se abona a tu primera semana · no reembolsable · pago seguro con Stripe'
     else:
-        planf = f'<div class="field"><label for="{f("plan")}">How do you want to drive?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Rent to own — the car is yours in 12 months</option><option value="rental">Weekly rental — no down payment</option></select></div>'
-        pick = f'<div class="field"><label for="{f("car")}">Car you want</label><select id="{f("car")}" name="car" data-car-select><option value="">First available</option></select></div>'
-        s2 = f'<div class="row2"><div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status"><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div><div class="field"><label for="{f("license")}">Valid license?</label><select id="{f("license")}" name="has_license"><option>Yes — California</option><option>Yes — another state</option><option>No</option></select></div></div><p class="fineprint" style="margin-top:-4px">Not fully covered yet? Apply anyway — <a href="/insurance">here&rsquo;s how drivers get insured in 24 hours</a>.</p>'
-        fee_line = f'<span>Verification fee<small>Credited to your first week\'s rent</small></span><b class="accent">${FEE}</b>'
-        upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> rent to own = $2,000 down + first week ($500). Weekly rental = first week ($500) + a refundable deposit equal to your insurance deductible. Your $9.99 is credited either way. No credit check.</p>'
+        fee = f'<div class="fee-box"><span>Reserve your Tesla<small>Credited to your first week · non-refundable</small></span><b class="accent">${FEE}</b></div>'
+        btn = f'Reserve my Tesla — ${FEE} →'
+        fine = 'Apple Pay, Google Pay or card · secured by Stripe. Next you snap your license (30 seconds). Not ready? Close this — we have your number and will text you.'
+        lic_no = "You need a valid U.S. driver's license to rent. Text us once you have one and we'll hold a car for you — nothing is charged."
+        ins_note = 'That\'s fine — you can reserve today. You just need full coverage before pickup. <a href="/insurance">How drivers get insured in 24 hours</a>.'
+        back = '← Back'; head = 'Reserve your Tesla'; wait = 'Loading secure checkout…'; foot = 'Credited to your first week · non-refundable · secured by Stripe'
+    paybox = (f'<div class="paybox" data-paybox hidden><div class="paybox-head"><button type="button" class="linkbtn" data-pay-back>{back}</button>'
+              f'<span>{head} · <b>${FEE}</b></span></div><div class="paymount" data-paymount><div class="paywait">{wait}</div></div>'
+              f'<p class="fineprint">{foot}</p></div>')
+    return fee, btn, fine, lic_no, ins_note, paybox
+
+def license_ins(prefix, es=False):
+    f = lambda k: f'{prefix}{k}'
+    fee, btn, fine, lic_no, ins_note, paybox = pay_bits(es)
+    if es:
+        lic = f'<div class="field"><label for="{f("license")}">Licencia de manejo</label><select id="{f("license")}" name="has_license" data-license><option value="Yes — California">Válida — California</option><option value="Yes — another state">Válida — otro estado de EE. UU.</option><option value="No">Todavía no tengo</option></select></div>'
+        ins = f'<div class="field"><label for="{f("insurance")}">Tu seguro de auto hoy</label><select id="{f("insurance")}" name="insurance_status" data-insurance><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I\'ll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div>'
+    else:
+        lic = f'<div class="field"><label for="{f("license")}">Driver\'s license</label><select id="{f("license")}" name="has_license" data-license><option value="Yes — California">Valid — California</option><option value="Yes — another state">Valid — another U.S. state</option><option value="No">I don\'t have one yet</option></select></div>'
+        ins = f'<div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status" data-insurance><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div>'
+    return f'<div class="row2">{lic}{ins}</div><p class="note warn" data-lic-note hidden>{lic_no}</p><p class="note" data-ins-note hidden>{ins_note}</p>'
+
+def apply_fields(prefix, driver=False):
+    """Two-step application. Step 1 = free lead (name, phone, plan, pickup). Step 2 = email, license, insurance + $9.99 reservation."""
+    f = lambda k: f'{prefix}{k}'
+    fee, btn, fine, lic_no, ins_note, paybox = pay_bits()
+    upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> rent to own = $2,000 down + first week ($500). Weekly rental = first week ($500) + a refundable deposit equal to your insurance deductible. Your $9.99 is credited either way. No credit check.</p>'
     return f'''
         <div class="fstep" data-step="1">
           <div class="row2">
             <div class="field"><label for="{f("first")}">First name</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
             <div class="field"><label for="{f("last")}">Last name</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
           </div>
-          {planf}
           <div class="field"><label for="{f("phone")}">Mobile number</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="row2">{plat}{pick}</div>
+          <div class="field"><label for="{f("plan")}">How do you want to drive?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Rent to own — the car is yours in 12 months</option><option value="rental">Weekly rental — no down payment</option></select></div>
+          {pickup_chips(prefix)}
+          <input type="hidden" name="car" id="{f("car")}" data-car-input />
           <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
           <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">{'Check my spot' if driver else 'Check availability'} →</button>
+          <button class="btn btn-primary" type="submit" data-step-btn="1">Check availability →</button>
           <p class="fineprint">No credit check. We text you back within minutes (8am–9pm). 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
         </div>
         <div class="fstep" data-step="2" hidden>
-          <p class="step2-head"><b>✓ You're on the list.</b> Finish now to get verified and hold {'your spot' if driver else 'a car'}:</p>
-          <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="you@email.com" autocomplete="email" data-req2 /></div>
-          {s2}
-          <div class="fee-box">{fee_line}</div>
-          {upfront}
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="2">Verify me — pay ${FEE} securely →</button>
-          <p class="fineprint">Paid by Stripe. Next you'll snap photos of your license. Not ready? You can close this — we already have your number and will text you.</p>
+          <div class="s2-fields">
+            <p class="step2-head"><b>✓ You're on the list.</b> Reserve your Tesla now so it's held for you:</p>
+            <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="you@email.com" autocomplete="email" data-req2 /></div>
+            {license_ins(prefix)}
+            {fee}
+            {upfront}
+            <div class="fstatus" role="status" aria-live="polite"></div>
+            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">{btn}</button>
+            <p class="fineprint">{fine}</p>
+          </div>
+          {paybox}
         </div>'''
 
 def modal(app_type='rental'):
@@ -189,7 +226,7 @@ def modal(app_type='rental'):
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
     <div id="formWrap">
       <div class="mhead">
-        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Check Tesla availability'}</h3><p id="carPick">Takes 30 seconds · no credit check</p></div>
+        <div><h3 id="applyHeading">{'Apply to drive' if driver else 'Reserve your Tesla'}</h3><p id="carPick">Takes 30 seconds · no credit check</p></div>
         <button class="mclose" aria-label="Close" data-close>×</button>
       </div>
       <form id="applyForm" data-apply-form novalidate>{apply_fields('f-', driver)}</form>
@@ -231,7 +268,7 @@ def header_es(active='', alt='/'):
       </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="{sms_href_es()}">{ico('chat')} {text_label_es()}</a>
-        <button class="btn btn-primary btn-sm" data-apply><span class="long">Ver disponibilidad</span><span class="short">Aplicar</span></button>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Apartar un Tesla</span><span class="short">Apartar</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
@@ -260,35 +297,41 @@ def footer_es():
     <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. Todos los derechos reservados.</span><span><a href="/" style="display:inline;padding:0" hreflang="en" lang="en">English</a></span></div>
   </div>
 </footer>
-<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href_es()}">{ico('chat')} {text_label_es()}</a><button class="btn btn-primary" data-apply>Aplicar</button></div>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="{sms_href_es()}">{ico('chat')} {text_label_es()}</a><button class="btn btn-primary" data-apply>Apartar un Tesla</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 '''
 
 def apply_fields_es(prefix):
     f = lambda k: f'{prefix}{k}'
+    fee, btn, fine, lic_no, ins_note, paybox = pay_bits(True)
+    upfront = '<p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>'
     return f'''
         <div class="fstep" data-step="1">
           <div class="row2">
             <div class="field"><label for="{f("first")}">Nombre</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
             <div class="field"><label for="{f("last")}">Apellido</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
           </div>
-          <div class="field"><label for="{f("plan")}">¿Cómo quieres manejar?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
           <div class="field"><label for="{f("phone")}">Celular</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="row2"><div class="field"><label for="{f("platform")}">¿Qué apps manejas?</label><select id="{f("platform")}" name="platform"><option value="Uber">Uber</option><option value="Lyft">Lyft</option><option value="Uber + Lyft">Uber + Lyft</option><option value="Delivery (DoorDash, Uber Eats, Instacart)">Delivery (DoorDash, Uber Eats, Instacart)</option><option value="Rideshare + delivery">Rideshare + delivery</option><option value="Not driving yet">Todavía no manejo</option></select></div><div class="field"><label for="{f("car")}">Carro que quieres</label><select id="{f("car")}" name="car" data-car-select><option value="">El primero disponible</option></select></div></div>
+          <div class="field"><label for="{f("plan")}">¿Cómo quieres manejar?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
+          {pickup_chips(prefix, True)}
+          <input type="hidden" name="car" id="{f("car")}" data-car-input />
           <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
           <div class="fstatus" role="status" aria-live="polite"></div>
           <button class="btn btn-primary" type="submit" data-step-btn="1">Ver disponibilidad →</button>
           <p class="fineprint">Sin revisión de crédito. Te escribimos en minutos (8am–9pm). Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
         </div>
         <div class="fstep" data-step="2" hidden>
-          <p class="step2-head"><b>✓ Ya estás en la lista.</b> Termina ahora para verificarte y apartar un carro:</p>
-          <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
-          <div class="row2"><div class="field"><label for="{f("insurance")}">Tu seguro de auto hoy</label><select id="{f("insurance")}" name="insurance_status"><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I'll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div><div class="field"><label for="{f("license")}">¿Licencia válida?</label><select id="{f("license")}" name="has_license"><option value="Yes — California">Sí — California</option><option value="Yes — another state">Sí — de otro estado</option><option value="No">No</option></select></div></div>
-          <div class="fee-box"><span>Cuota de verificación<small>Se abona a tu primer pago semanal</small></span><b class="accent">${FEE}</b></div>
-          <p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="2">Verificarme — pagar ${FEE} seguro →</button>
-          <p class="fineprint">Pago seguro con Stripe. Después tomas fotos de tu licencia. ¿No estás listo? Puedes cerrar esto — ya tenemos tu número y te vamos a escribir.</p>
+          <div class="s2-fields">
+            <p class="step2-head"><b>✓ Ya estás en la lista.</b> Aparta tu Tesla ahora para que te lo guardemos:</p>
+            <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
+            {license_ins(prefix, True)}
+            {fee}
+            {upfront}
+            <div class="fstatus" role="status" aria-live="polite"></div>
+            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">{btn}</button>
+            <p class="fineprint">{fine}</p>
+          </div>
+          {paybox}
         </div>'''
 
 def modal_es():
@@ -296,7 +339,7 @@ def modal_es():
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyHeading">
     <div id="formWrap">
       <div class="mhead">
-        <div><h3 id="applyHeading">Ver disponibilidad de Teslas</h3><p id="carPick">Toma 30 segundos · sin revisión de crédito</p></div>
+        <div><h3 id="applyHeading">Aparta tu Tesla</h3><p id="carPick">Toma 30 segundos · sin revisión de crédito</p></div>
         <button class="mclose" aria-label="Cerrar" data-close>×</button>
       </div>
       <form id="applyForm" data-apply-form novalidate>{apply_fields_es('f-')}</form>

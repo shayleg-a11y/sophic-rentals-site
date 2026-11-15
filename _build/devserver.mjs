@@ -3,12 +3,17 @@
 import http from 'http'; import fs from 'fs'; import path from 'path'; import url from 'url';
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const MOCK = process.env.MOCK === '1';
-const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.xml': 'application/xml', '.txt': 'text/plain', '.svg': 'image/svg+xml' };
+const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.xml': 'application/xml', '.txt': 'text/plain', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const EVENTS = [];
 const mockDB = {};
 async function mockApi(name, req, res, body) {
   const json = (c, o) => { res.writeHead(c, { 'content-type': 'application/json' }); res.end(JSON.stringify(o)); };
-  if (name === 'fleet') return json(200, { models: { 'Model 3': { available: 4, total: 10, weekly_rate: 500 }, 'Model Y': { available: 0, total: 2, weekly_rate: 600 }, 'Model X': { available: 0, total: 1, weekly_rate: 700 } } });
-  if (name === 'apply') { const b = JSON.parse(body || '{}'); if (b.website) return json(200, { ok: true, id: 'hp', reference_number: 'HP' }); if (b.stage === 'reserve' || b.stage === 'details') { if (b.stage === 'details' && !/@/.test(b.email || '')) return json(400, { error: 'Please enter a valid email address' }); if (!mockDB[b.ref]) return json(404, { error: 'not_found' }); Object.assign(mockDB[b.ref], b); return json(200, { ok: true, id: mockDB[b.ref].id, reference_number: b.ref }); } for (const k of ['first_name','last_name','phone']) if (!b[k]) return json(400, { error: 'Missing required field: ' + k }); const ref = 'T' + Math.random().toString(36).slice(2, 8).toUpperCase(); mockDB[ref] = Object.assign({ id: 'id-' + ref }, b); return json(200, { ok: true, id: 'id-' + ref, reference_number: ref }); }
+  if (name === 'fleet') return json(200, { models: { 'Model 3': { available: 4, total: 10, weekly_rate: 500 }, 'Model Y': { available: 0, total: 2, weekly_rate: 600 }, 'Model X': { available: 0, total: 1, weekly_rate: 700 } }, locations: process.env.MOCK_LOC ? { lax: { available: 1 }, sna: { available: 2 }, orange: { available: 0 } } : null });
+  if (name === 'config') return json(200, { stripe_pk: process.env.MOCK_PK || '', ga4: '', meta_pixel: '' });
+  if (name === 'track') { try { EVENTS.push(...JSON.parse(body || '{}').events.map((e) => e.name)); } catch (_) {} res.writeHead(204); return res.end(); }
+  if (name === '__events') return json(200, { events: EVENTS, db: mockDB });
+  if (name === 'verify-payment') return json(200, { paid: true });
+  if (name === 'apply') { const b = JSON.parse(body || '{}'); if (b.website) return json(200, { ok: true, id: 'hp', reference_number: 'HP' }); if (b.stage === 'reserve' || b.stage === 'details') { if (b.stage === 'details' && !/@/.test(b.email || '')) return json(400, { error: 'Please enter a valid email address' }); if (b.stage === 'details' && /^no/i.test(b.has_license || '')) return json(400, { error: 'no_license' }); if (!mockDB[b.ref]) return json(404, { error: 'not_found' }); Object.assign(mockDB[b.ref], b); return json(200, { ok: true, id: mockDB[b.ref].id, reference_number: b.ref }); } for (const k of ['first_name','last_name','phone']) if (!b[k]) return json(400, { error: 'Missing required field: ' + k }); const ref = 'T' + Math.random().toString(36).slice(2, 8).toUpperCase(); mockDB[ref] = Object.assign({ id: 'id-' + ref }, b); return json(200, { ok: true, id: 'id-' + ref, reference_number: ref }); }
   if (name === 'checkout') { const b = JSON.parse(body || '{}'); return json(200, { url: '/thanks?ref=' + (b.reference || 'X') + '&mock=1', mode: 'mock' }); }
   if (name === 'sign-upload') return json(200, { path: 'x/y/z.jpg', uploadUrl: '/__upload' });
   if (name === 'finalize') return json(200, { ok: true });

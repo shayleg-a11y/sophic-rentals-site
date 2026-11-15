@@ -17,8 +17,8 @@
         </div>
       </div>
       <aside class="cost-card apply-card" aria-label="Apply now">
-        <h3>Own it or rent it</h3>
-        <div class="lead">Name and number is all it takes. We text you what's available near you, usually within minutes.</div>
+        <h3>Reserve your Tesla</h3>
+        <div class="lead">Name and number to start — we text you what's open near you, usually within minutes.</div>
         <form data-apply-form novalidate class="inline-form">{{APPLY_FIELDS}}</form>
       </aside>
     </div>
@@ -35,7 +35,7 @@
 
   <section id="plans" class="pad">
     <div class="wrap">
-      <div class="shead reveal"><span class="eyebrow">Two ways to drive</span><h2>Own it, or rent it</h2><p>Same application, same $9.99 verification fee (credited to your first week). Model 3 prices shown; other cars vary.</p></div>
+      <div class="shead reveal"><span class="eyebrow">Two ways to drive</span><h2>Own it, or rent it</h2><p>Same application. Reserve your Tesla for $9.99 — credited to your first week. Model 3 prices shown; other cars vary.</p></div>
       <div class="plans reveal">
         <div class="plan featured">
           <span class="badge avail" style="position:static;display:inline-flex;margin-bottom:10px"><span class="dot"></span>Most popular</span>
@@ -75,7 +75,7 @@
         <p id="availLine">Availability comes straight from our fleet system.</p>
       </div>
       <div class="fleet-grid" id="fleetGrid"></div>
-      <p class="small muted" style="text-align:center;margin-top:24px">Every car is rideshare-approved, serviced by us, and delivered charged. Apply and we match you to the nearest open car.</p>
+      <p class="small muted" style="text-align:center;margin-top:24px">Every car is rideshare-approved, serviced by us, and handed over charged. Reserve one and we hold it at the pickup spot you choose.</p>
     </div>
   </section>
 
@@ -88,7 +88,7 @@
       </div>
       <div class="steps">
         <div class="step reveal"><div class="n">1</div><h3>Apply</h3><p>Pick rent to own or weekly rental, then name, number and which apps you drive. We text you what's open near you — usually within minutes during the day.</p><span class="tag">30 seconds</span></div>
-        <div class="step reveal"><div class="n">2</div><h3>Get verified</h3><p>Add your email, license photos and insurance, plus a $9.99 verification fee that's credited to your first week. We verify within 24–48 hours. <a href="/insurance" style="color:var(--accent)">Need insurance?</a></p><span class="tag">$9.99, credited to week 1</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Reserve &amp; get verified</h3><p>Add your email and insurance, reserve your Tesla for $9.99 (credited to your first week), then snap your license. We verify within 24–48 hours. <a href="/insurance" style="color:var(--accent)">Need insurance?</a></p><span class="tag">$9.99 reserves it · credited to week 1</span></div>
         <div class="step reveal"><div class="n">3</div><h3>Pick up &amp; drive</h3><p>Pick up near LAX, near John Wayne Airport, or next to Chapman University — whichever has your car. Sign, 10-minute walkaround, drive off charged.</p><span class="tag">Own: ~$2,000 down + week 1 · Rent: week 1 + deposit</span></div>
       </div>
     </div>
@@ -135,11 +135,15 @@
 
   <section id="locations" class="pad band">
     <div class="wrap">
-      <div class="shead reveal"><span class="eyebrow">Pickup</span><h2>Three locations, one close to you</h2><p>We assign your pickup based on where your car is and text you the exact address and time. Cars stay with you for the whole rental — you come in once. {{HOURS}}.</p></div>
-      <div class="steps">
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Near LAX</h3><p>Westside, South Bay and airport drivers. Minutes from the 405 and 105.</p></div>
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Near John Wayne Airport</h3><p>Irvine, Newport, Costa Mesa and Santa Ana. Right off the 405 and 55.</p></div>
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Next to Chapman University</h3><p>Orange, Anaheim, Fullerton and north OC. {{ORANGE_ADDR}} — minutes from the 55, 22 and 57.</p></div>
+      <div class="shead reveal"><span class="eyebrow">Pickup</span><h2>Pick the spot closest to you</h2><p>Tap a location to pick it — we'll hold your car there. You come in once; the car stays with you for the whole rental. Exact address and time are texted after you're approved. {{HOURS}}.</p></div>
+      <div class="pickup-wrap reveal">
+        <div class="pickup-map" id="pickupMap" role="region" aria-label="Map of Sophic Rentals pickup locations"><div class="map-fallback">Loading map…</div></div>
+        <div class="pickup-list" role="radiogroup" aria-label="Pickup location">
+          <button type="button" class="ploc" data-ploc="lax" role="radio" aria-checked="false"><span class="ploc-top"><b>Near LAX</b><span class="ploc-avail" data-ploc-avail="lax"></span></span><span class="ploc-sub">Westside, South Bay &amp; airport drivers · minutes from the 405 and 105</span></button>
+          <button type="button" class="ploc" data-ploc="sna" role="radio" aria-checked="false"><span class="ploc-top"><b>Near John Wayne Airport</b><span class="ploc-avail" data-ploc-avail="sna"></span></span><span class="ploc-sub">Irvine, Newport, Costa Mesa &amp; Santa Ana · right off the 405 and 55</span></button>
+          <button type="button" class="ploc" data-ploc="orange" role="radio" aria-checked="false"><span class="ploc-top"><b>Orange · next to Chapman</b><span class="ploc-avail" data-ploc-avail="orange"></span></span><span class="ploc-sub">{{ORANGE_ADDR}} · Anaheim, Fullerton &amp; north OC · near the 55, 22 and 57</span></button>
+          <button type="button" class="btn btn-primary" data-apply data-from-map>Reserve at this location →</button>
+        </div>
       </div>
     </div>
   </section>
@@ -197,12 +201,12 @@
       <div class="shead reveal"><span class="eyebrow">Questions</span><h2>Good to know</h2></div>
       <div class="faq">
         <div class="qa"><button aria-expanded="false" aria-controls="faq0">How does rent to own work?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq0"><p>Pay about $2,000 down plus your first week at pickup, then about $500 a week (Model 3; prices vary by car) for 12 months. After the 52nd payment we transfer the title to you. No credit check. You cover maintenance and carry your own full-coverage insurance. Payments more than 24 hours late end the right to own — see <a href="/policies#rto" style="color:var(--accent)">policies</a>. <a href="/rent-to-own" style="color:var(--accent)">Full details</a>.</p></div></div>
-        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does a weekly rental cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay your first week plus a refundable deposit equal to your insurance policy's deductible — with a $500 deductible that's <b>$1,000 total for a Model 3</b>, minus the $9.99 verification fee you already paid. A lower deductible means a lower deposit. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
-        <div class="qa"><button aria-expanded="false" aria-controls="faq2">What's the $9.99 for?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>Every application (rent to own or rental) has a one-time $9.99 fee. It covers verifying your license and insurance, and is <b>credited toward your first weekly payment</b> at pickup. If you're not approved it isn't refunded. <a href="/policies" style="color:var(--accent)">Full policy</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq1">What does a weekly rental cost?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>Model 3 is $500/week, Model Y $600, Model X $700. At pickup you pay your first week plus a refundable deposit equal to your insurance policy's deductible — with a $500 deductible that's <b>$1,000 total for a Model 3</b>, minus the $9.99 reservation you already paid. A lower deductible means a lower deposit. After that it's the weekly rent plus charging (about $20 per 500 miles, billed automatically). Insurance is your own policy. Minimum term is one month.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq2">What's the $9.99 reservation?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>$9.99 reserves your Tesla while we verify your license and insurance, and it's <b>credited toward your first weekly payment</b> at pickup — so it costs you nothing extra. It's non-refundable, including if you're not approved. <a href="/policies" style="color:var(--accent)">Full policy</a>.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq3">What insurance do I need?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Your own auto policy with full coverage — liability plus comprehensive and collision — that extends to a rental vehicle, with Sophic Rentals listed as an additional interest so we're notified if it lapses. If you drive rideshare, tell your carrier; most add rideshare coverage for a few dollars a month. We verify with your carrier before pickup and re-check monthly. Don't have it yet? Read our <a href="/insurance" style="color:var(--accent)">get-insured-in-24-hours guide</a> and apply anyway.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq4">What do I need to qualify?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 or older, a valid U.S. driver's license that isn't suspended, and full-coverage insurance as above. No credit check. Cars stay in California.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq5">How fast can I start?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq5"><p>Most drivers are verified within 24–48 hours of uploading their license. Then you pick up at whichever of our three locations has your car — often the same or next day.</p></div></div>
-        <div class="qa"><button aria-expanded="false" aria-controls="faq6">Where do I pick up?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq6"><p>One of three offices: near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange. We assign the location based on where your car is and text you the address once you're approved. You only come in once — the car stays with you.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq6">Where do I pick up?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq6"><p>One of three offices: near LAX, near John Wayne Airport (SNA), or next to Chapman University in Orange. Pick the one closest to you when you apply (or tap it on the map) and we hold your car there; we text you the exact address once you're approved. You only come in once — the car stays with you.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq7">How does charging work?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq7"><p>Charge anywhere — Superchargers, home, work. Our cars run on Tesla's fleet management, so charging is tracked per car and billed to you automatically with your weekly rent. Across the fleet it averages about $20 per 500 miles.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq8">Is there a mileage limit?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq8"><p>5,000 miles per week is included, which covers even full-time driving. Over that is $1 per mile.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq9">What if the car needs service?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq9"><p>Scheduled service, software and mechanical repairs from normal use are on us, and if a car has to come off the road we work to get you into another one. Wear-and-tear items you consume — tires, brake pads, wipers — are the driver's responsibility.</p></div></div>

@@ -23,11 +23,12 @@
 <meta name="twitter:image" content="https://sophicrentals.com/images/og-card.jpg" />
 <meta name="theme-color" content="#0A0C0F" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2322E3A9'/%3E%3Ctext x='50%25' y='52' font-family='Arial,sans-serif' font-size='44' font-weight='900' text-anchor='middle' fill='%23062018'%3ES%3C/text%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=202611071723">
+<link rel="stylesheet" href="/assets/site.css?v=202611141916">
 </head>
 <body data-app-type="rental">
 <a href="#main" class="skip">Skip to content</a>
@@ -47,7 +48,7 @@
       </div>
       <div class="nav-cta">
         <a class="btn btn-ghost btn-sm" data-contact="sms" href="sms:+18406997077?&body=Hi%20Sophic%2C%20I%27m%20interested%20in%20renting%20a%20Tesla%20for%20rideshare.%20Is%20a%20car%20available%20this%20week%3F"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a>
-        <button class="btn btn-primary btn-sm" data-apply><span class="long">Check availability</span><span class="short">Apply</span></button>
+        <button class="btn btn-primary btn-sm" data-apply><span class="long">Reserve a Tesla</span><span class="short">Reserve</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
     </nav>
@@ -88,8 +89,8 @@
   <div class="wrap">
   <div class="tcard">
     <div class="check" aria-hidden="true">✓</div>
-    <h1>Payment received — one last step</h1>
-    <p>To finish, snap or upload photos of your driver's license below. Takes about 30 seconds and lets us verify you today.</p>
+    <h1>Your Tesla is reserved ✓</h1>
+    <p>Your $9.99 is credited to your first week. Last step: snap your driver's license below — about 30 seconds — so we can verify you today.</p>
     <div class="ref" id="refRow" style="display:none">Reference: <b id="refNum"></b></div>
     <div class="upsec" id="uploader">
       <h2>Upload your license</h2>
@@ -108,6 +109,10 @@
           <div class="field"><label for="d-city">City</label><input id="d-city" required name="city" autocomplete="address-level2" /></div>
           <div class="field"><label for="d-state">State</label><select id="d-state" name="state"><option>CA</option><option>AZ</option><option>NV</option><option>OR</option><option>WA</option><option>Other</option></select></div>
           <div class="field"><label for="d-zip">ZIP</label><input id="d-zip" required name="zip_code" inputmode="numeric" maxlength="10" autocomplete="postal-code" /></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="d-platform">Which apps will you drive?</label><select id="d-platform" name="platform"><option value="">Choose…</option><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>Delivery (DoorDash, Uber Eats, Instacart)</option><option>Rideshare + delivery</option><option>Not driving yet</option></select></div>
+          <div class="field"><label for="d-car">Car you want</label><select id="d-car" name="car"><option value="">First available</option><option>Tesla Model 3</option><option>Tesla Model Y</option><option>Tesla Model X</option></select></div>
         </div>
         <div class="fstatus" id="d-status" role="status" aria-live="polite"></div>
         <button class="btn btn-ghost" type="submit" id="d-submit" style="width:100%">Save details</button>
@@ -140,8 +145,13 @@
       document.getElementById('noRef').style.display='block';
       document.getElementById('doneBtn').hidden=false;
     }
-    window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
-    (function(){ var q=new URLSearchParams(location.search); var ref=(APP&&APP.ref)||q.get('ref'); if(!ref) return; fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ref,session_id:q.get('session_id')||''})}).catch(function(){}); })();
+    // Confirm the payment with Stripe (records it even if the webhook is late), then fire Purchase once per reference.
+    (function(){ var ref=(APP&&APP.ref)||q.get('ref'); if(!ref) return;
+      function fire(){ var k='sophic_paid_'+ref; try{ if(localStorage.getItem(k)) return; localStorage.setItem(k,'1'); }catch(_){}
+        var go=function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: ref}, {eventID: ref}); };
+        if(document.readyState==='loading') window.addEventListener('DOMContentLoaded', go); else go(); }
+      fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ref,session_id:q.get('session_id')||''})})
+        .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.paid) fire(); }).catch(function(){}); })();
     function idPayload(){ var p={}; if(APP&&APP.ref) p.reference=APP.ref; else if(APP&&APP.id) p.application_id=APP.id; return p; }
     function shrink(file){
       return new Promise(function(resolve){
@@ -173,7 +183,7 @@
     if (df) df.addEventListener('submit', async function(e){
       e.preventDefault(); if (!df.checkValidity()) { df.reportValidity(); return; }
       var st = document.getElementById('d-status'), b = document.getElementById('d-submit'); st.className='fstatus'; st.textContent='Saving…'; b.disabled = true;
-      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value }, {});
+      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value, platform: df.platform.value, car: df.car.value }, {});
       try { var r = await fetch('/api/apply', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); if (!r.ok) throw new Error('x'); st.textContent = 'Saved ✓'; b.textContent = 'Saved'; if (window.track) window.track('details_saved', {}); }
       catch (err) { st.className='fstatus bad'; st.textContent = 'Couldn\'t save — check your connection and try again.'; b.disabled = false; }
     });
@@ -197,8 +207,8 @@
     <div class="copy"><span>© <span id="yr"></span> Sophic Rentals LLC. All rights reserved.</span><span><a href="/privacy" style="display:inline;padding:0">Privacy</a> · <a href="/terms" style="display:inline;padding:0">Terms</a> · <a href="/policies" style="display:inline;padding:0">Deposit &amp; fee policy</a></span></div>
   </div>
 </footer>
-<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="sms:+18406997077?&body=Hi%20Sophic%2C%20I%27m%20interested%20in%20renting%20a%20Tesla%20for%20rideshare.%20Is%20a%20car%20available%20this%20week%3F"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a><button class="btn btn-primary" data-apply>Apply now</button></div>
+<div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="sms:+18406997077?&body=Hi%20Sophic%2C%20I%27m%20interested%20in%20renting%20a%20Tesla%20for%20rideshare.%20Is%20a%20car%20available%20this%20week%3F"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a><button class="btn btn-primary" data-apply>Reserve a Tesla</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/assets/site.js?v=202611071723" defer></script>
+<script src="/assets/site.js?v=202611141916" defer></script>
 </body>
 </html>

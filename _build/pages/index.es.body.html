@@ -17,7 +17,7 @@
         </div>
       </div>
       <aside class="cost-card apply-card" aria-label="Aplica ahora">
-        <h3>Sé dueño o renta</h3>
+        <h3>Aparta tu Tesla</h3>
         <div class="lead">Solo necesitamos tu nombre y número. Te mandamos un texto con lo que hay disponible cerca de ti, normalmente en minutos.</div>
         <form data-apply-form novalidate class="inline-form">{{APPLY_FIELDS}}</form>
       </aside>
@@ -35,7 +35,7 @@
 
   <section id="plans" class="pad">
     <div class="wrap">
-      <div class="shead reveal"><span class="eyebrow">Dos formas de manejar</span><h2>Sé dueño o renta</h2><p>Misma solicitud, mismo cargo de verificación de $9.99 (se acredita a tu primera semana). Se muestran precios del Model 3; otros carros varían.</p></div>
+      <div class="shead reveal"><span class="eyebrow">Dos formas de manejar</span><h2>Sé dueño o renta</h2><p>Misma solicitud. Aparta tu Tesla por $9.99 — se abona a tu primera semana. Se muestran precios del Model 3; otros carros varían.</p></div>
       <div class="plans reveal">
         <div class="plan featured">
           <span class="badge avail" style="position:static;display:inline-flex;margin-bottom:10px"><span class="dot"></span>La más popular</span>
@@ -88,7 +88,7 @@
       </div>
       <div class="steps">
         <div class="step reveal"><div class="n">1</div><h3>Aplica</h3><p>Escoge renta con opción a compra o renta semanal, luego tu nombre, número y qué apps manejas. Te mandamos un texto con lo que hay cerca de ti, normalmente en minutos durante el día.</p><span class="tag">30 segundos</span></div>
-        <div class="step reveal"><div class="n">2</div><h3>Verifícate</h3><p>Agrega tu correo, fotos de tu licencia y tu seguro, más un cargo de verificación de $9.99 que se acredita a tu primera semana. Verificamos en 24–48 horas. <a href="/insurance" style="color:var(--accent)">¿Necesitas seguro?</a></p><span class="tag">$9.99, acreditados a la semana 1</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Aparta y verifícate</h3><p>Agrega tu correo y tu seguro, aparta tu Tesla por $9.99 (se abona a tu primera semana) y toma foto de tu licencia. Verificamos en 24–48 horas. <a href="/insurance" style="color:var(--accent)">¿Necesitas seguro?</a></p><span class="tag">$9.99 lo aparta · se abona a la semana 1</span></div>
         <div class="step reveal"><div class="n">3</div><h3>Recoge &amp; maneja</h3><p>Recoge cerca de LAX, cerca de John Wayne Airport o junto a Chapman University, donde esté tu carro. Firmas, revisión del carro de 10 minutos y te vas manejando con el carro cargado.</p><span class="tag">Ser dueño: ~$2,000 de enganche + semana 1 · Renta: semana 1 + depósito</span></div>
       </div>
     </div>
@@ -135,11 +135,15 @@
 
   <section id="locations" class="pad band">
     <div class="wrap">
-      <div class="shead reveal"><span class="eyebrow">Entrega</span><h2>Tres ubicaciones, una cerca de ti</h2><p>Te asignamos el punto de entrega según dónde esté tu carro y te mandamos por texto la dirección y la hora exactas. El carro se queda contigo toda la renta, solo vienes una vez. {{HOURS}}.</p></div>
-      <div class="steps">
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Cerca de LAX</h3><p>Para choferes del Westside, South Bay y el aeropuerto. A minutos del 405 y el 105.</p></div>
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Cerca de John Wayne Airport</h3><p>Irvine, Newport, Costa Mesa y Santa Ana. Justo en el 405 y el 55.</p></div>
-        <div class="step reveal"><div class="n">{{icon:car}}</div><h3>Junto a Chapman University</h3><p>Orange, Anaheim, Fullerton y el norte del OC. {{ORANGE_ADDR}}, a minutos del 55, el 22 y el 57.</p></div>
+      <div class="shead reveal"><span class="eyebrow">Entrega</span><h2>Elige el punto más cerca de ti</h2><p>Toca una ubicación para elegirla — ahí te guardamos tu carro. Solo vienes una vez; el carro se queda contigo toda la renta. La dirección y la hora exactas te las mandamos por texto cuando te aprueben. {{HOURS}}.</p></div>
+      <div class="pickup-wrap reveal">
+        <div class="pickup-map" id="pickupMap" role="region" aria-label="Mapa de ubicaciones de Sophic Rentals"><div class="map-fallback">Cargando mapa…</div></div>
+        <div class="pickup-list" role="radiogroup" aria-label="Punto de entrega">
+          <button type="button" class="ploc" data-ploc="lax" role="radio" aria-checked="false"><span class="ploc-top"><b>Cerca de LAX</b><span class="ploc-avail" data-ploc-avail="lax"></span></span><span class="ploc-sub">Westside, South Bay y el aeropuerto · a minutos del 405 y el 105</span></button>
+          <button type="button" class="ploc" data-ploc="sna" role="radio" aria-checked="false"><span class="ploc-top"><b>Cerca de John Wayne Airport</b><span class="ploc-avail" data-ploc-avail="sna"></span></span><span class="ploc-sub">Irvine, Newport, Costa Mesa y Santa Ana · en el 405 y el 55</span></button>
+          <button type="button" class="ploc" data-ploc="orange" role="radio" aria-checked="false"><span class="ploc-top"><b>Orange · junto a Chapman</b><span class="ploc-avail" data-ploc-avail="orange"></span></span><span class="ploc-sub">{{ORANGE_ADDR}} · Anaheim, Fullerton y el norte del OC</span></button>
+          <button type="button" class="btn btn-primary" data-apply data-from-map>Apartar en esta ubicación →</button>
+        </div>
       </div>
     </div>
   </section>
@@ -198,7 +202,7 @@
       <div class="faq">
         <div class="qa"><button aria-expanded="false" aria-controls="faq0">¿Cómo funciona la renta con opción a compra?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq0"><p>Pagas como $2,000 de enganche más tu primera semana al recoger, y luego como $500 a la semana (Model 3; los precios varían según el carro) por 12 meses. Después del pago 52 te transferimos el título. Sin revisión de crédito. Tú cubres el mantenimiento y llevas tu propio seguro de cobertura completa. Si un pago se atrasa más de 24 horas, pierdes el derecho a ser dueño; mira las <a href="/policies#rto" style="color:var(--accent)">políticas</a>. <a href="/es/rent-to-own" style="color:var(--accent)">Todos los detalles</a>.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq1">¿Cuánto cuesta la renta semanal?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq1"><p>El Model 3 es $500/semana, el Model Y $600, el Model X $700. Al recoger pagas tu primera semana más un depósito reembolsable igual al deducible de la póliza de tu seguro; con un deducible de $500 son <b>$1,000 en total por un Model 3</b>, menos el cargo de verificación de $9.99 que ya pagaste. Un deducible más bajo significa un depósito más bajo. Después es la renta semanal más la carga (como $20 por 500 millas, cobrada automáticamente). El seguro es tu propia póliza. El plazo mínimo es de un mes.</p></div></div>
-        <div class="qa"><button aria-expanded="false" aria-controls="faq2">¿Para qué son los $9.99?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>Cada solicitud (renta con opción a compra o renta) tiene un cargo único de $9.99. Cubre la verificación de tu licencia y tu seguro, y se <b>acredita a tu primer pago semanal</b> al recoger. Si no te aprueban, no se reembolsa. <a href="/policies" style="color:var(--accent)">Política completa</a>.</p></div></div>
+        <div class="qa"><button aria-expanded="false" aria-controls="faq2">¿Qué es el apartado de $9.99?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq2"><p>$9.99 aparta tu Tesla mientras verificamos tu licencia y tu seguro, y se <b>abona a tu primer pago semanal</b> al recoger — no te cuesta nada extra. No es reembolsable, aunque no te aprueben. <a href="/policies" style="color:var(--accent)">Política completa</a>.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq3">¿Qué seguro necesito?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq3"><p>Tu propia póliza de auto con cobertura completa (responsabilidad civil más comprehensive y collision) que se extienda a un vehículo rentado, con Sophic Rentals como interés adicional para que nos avisen si se cancela. Si manejas rideshare, dile a tu aseguradora; la mayoría agrega la cobertura para rideshare por unos cuantos dólares al mes. Verificamos con tu aseguradora antes de la entrega y revisamos cada mes. ¿Todavía no la tienes? Lee nuestra <a href="/insurance" style="color:var(--accent)">guía para asegurarte en 24 horas</a> y aplica de todos modos.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq4">¿Qué necesito para calificar?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq4"><p>21 años o más, una licencia de manejar válida de EE. UU. que no esté suspendida, y seguro de cobertura completa como se explicó arriba. Sin revisión de crédito. Los carros se quedan en California.</p></div></div>
         <div class="qa"><button aria-expanded="false" aria-controls="faq5">¿Qué tan rápido puedo empezar?<span class="ico">{{icon:chev}}</span></button><div class="a" id="faq5"><p>A la mayoría de los choferes los verificamos en 24–48 horas después de subir su licencia. Luego recoges en la ubicación de las tres donde esté tu carro, muchas veces el mismo día o al siguiente.</p></div></div>
