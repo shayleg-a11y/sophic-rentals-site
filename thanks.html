@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=202611142021">
+<link rel="stylesheet" href="/assets/site.css?v=202611142033">
 </head>
 <body data-app-type="rental">
 <a href="#main" class="skip">Skip to content</a>
@@ -110,6 +110,7 @@
           <div class="field"><label for="d-state">State</label><select id="d-state" name="state"><option>CA</option><option>AZ</option><option>NV</option><option>OR</option><option>WA</option><option>Other</option></select></div>
           <div class="field"><label for="d-zip">ZIP</label><input id="d-zip" required name="zip_code" inputmode="numeric" maxlength="10" autocomplete="postal-code" /></div>
         </div>
+        <div class="field"><label for="d-insurance">Your auto insurance today</label><select id="d-insurance" name="insurance_status"><option value="">Choose…</option><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I'll upgrade)</option><option>No insurance yet — help me</option></select><p class="hint" style="font-size:13px;margin-top:4px">You'll need full coverage before pickup — <a href="/insurance" style="color:var(--accent)">how drivers get insured in 24 hours</a>.</p></div>
         <div class="row2">
           <div class="field"><label for="d-platform">Which apps will you drive?</label><select id="d-platform" name="platform"><option value="">Choose…</option><option>Uber</option><option>Lyft</option><option>Uber + Lyft</option><option>Delivery (DoorDash, Uber Eats, Instacart)</option><option>Rideshare + delivery</option><option>Not driving yet</option></select></div>
           <div class="field"><label for="d-car">Car you want</label><select id="d-car" name="car"><option value="">First available</option><option>Tesla Model 3</option><option>Tesla Model Y</option><option>Tesla Model X</option></select></div>
@@ -183,7 +184,7 @@
     if (df) df.addEventListener('submit', async function(e){
       e.preventDefault(); if (!df.checkValidity()) { df.reportValidity(); return; }
       var st = document.getElementById('d-status'), b = document.getElementById('d-submit'); st.className='fstatus'; st.textContent='Saving…'; b.disabled = true;
-      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value, platform: df.platform.value, car: df.car.value }, {});
+      var body = Object.assign({ stage:'reserve', ref: APP && APP.ref, date_of_birth: df.date_of_birth.value, address_line1: df.address_line1.value, city: df.city.value, state: df.state.value, zip_code: df.zip_code.value, platform: df.platform.value, car: df.car.value, insurance_status: df.insurance_status.value }, {});
       try { var r = await fetch('/api/apply', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); if (!r.ok) throw new Error('x'); st.textContent = 'Saved ✓'; b.textContent = 'Saved'; if (window.track) window.track('details_saved', {}); }
       catch (err) { st.className='fstatus bad'; st.textContent = 'Couldn\'t save — check your connection and try again.'; b.disabled = false; }
     });
@@ -209,6 +210,6 @@
 </footer>
 <div class="mbar"><a class="btn btn-ghost" data-contact="sms" href="sms:+18406997077?&body=Hi%20Sophic%2C%20I%27m%20interested%20in%20renting%20a%20Tesla%20for%20rideshare.%20Is%20a%20car%20available%20this%20week%3F"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Text us</a><button class="btn btn-primary" data-apply>Reserve a Tesla</button></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/assets/site.js?v=202611142021" defer></script>
+<script src="/assets/site.js?v=202611142033" defer></script>
 </body>
 </html>

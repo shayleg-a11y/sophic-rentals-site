@@ -41,6 +41,9 @@ export async function markPaidFromSession(sess) {
     }
   }
   const app = rows[0] || null;
+  // One-step form: the email is collected by Stripe, so copy it onto the application if we don't have one.
+  const payEmail = String((sess.customer_details && sess.customer_details.email) || '').toLowerCase().slice(0, 200);
+  if (app && !app.email && payEmail) { try { await update('applications', 'id=eq.' + app.id, { email: payEmail }); app.email = payEmail; } catch (_) {} }
   if (app && !(app.license_front_path && app.license_back_path)) { try { await notifyApplicant(app, 'uploadDocs'); } catch (_) {} }
   if (app) { await recordPurchase(app, sess).catch((e) => console.error('recordPurchase', e)); }
   return app;

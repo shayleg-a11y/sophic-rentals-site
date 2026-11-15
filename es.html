@@ -30,7 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=202611142021">
+<link rel="stylesheet" href="/assets/site.css?v=202611142033">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"AutoRental","name":"Sophic Rentals","description":"Long-term Tesla rentals for Uber, Lyft and delivery drivers in Los Angeles and Orange County.","url":"https://sophicrentals.com/","email":"Sophicrentals@gmail.com","telephone":"+1-840-699-7077","image":"https://sophicrentals.com/images/og-card.jpg","priceRange":"$500-$700 / week","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":33.7925,"longitude":-117.8531},"areaServed":[{"@type":"City","name":"Los Angeles"},{"@type":"AdministrativeArea","name":"Orange County"}],"location":[{"@type":"Place","name":"Sophic Rentals \u2014 Orange (next to Chapman University)","address":{"@type":"PostalAddress","streetAddress":"393 N Cypress St","addressLocality":"Orange","addressRegion":"CA","postalCode":"92866"}},{"@type":"Place","name":"Sophic Rentals \u2014 near John Wayne Airport (SNA)","address":{"@type":"PostalAddress","addressLocality":"Irvine","addressRegion":"CA"}},{"@type":"Place","name":"Sophic Rentals \u2014 near LAX","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA"}}],"makesOffer":[{"@type":"Offer","name":"Tesla Model 3 rent to own \u2014 about $2,000 down, $500/week for 12 months, then the title is yours","priceCurrency":"USD","price":"500"},{"@type":"Offer","name":"Tesla Model 3 weekly rental for rideshare","priceCurrency":"USD","price":"500","priceSpecification":{"@type":"UnitPriceSpecification","price":"500","priceCurrency":"USD","unitText":"week"}},{"@type":"Offer","name":"Tesla Model Y weekly rental for rideshare","priceCurrency":"USD","price":"600"},{"@type":"Offer","name":"Tesla Model X weekly rental for rideshare","priceCurrency":"USD","price":"700"}],"inLanguage":"es"}</script>
 </head>
 <body data-app-type="rental">
@@ -80,32 +80,24 @@
       </div>
       <aside class="cost-card apply-card" aria-label="Aplica ahora">
         <h3>Aparta tu Tesla</h3>
-        <div class="lead">Solo necesitamos tu nombre y número. Te mandamos un texto con lo que hay disponible cerca de ti, normalmente en minutos.</div>
+        <div class="lead">30 segundos, sin revisión de crédito. Aparta ahora y te mandamos por texto los detalles para recoger.</div>
         <form data-apply-form novalidate class="inline-form">
         <div class="fstep" data-step="1">
-          <div class="row2">
-            <div class="field"><label for="h-first">Nombre</label><input id="h-first" required name="first_name" autocomplete="given-name" /></div>
-            <div class="field"><label for="h-last">Apellido</label><input id="h-last" required name="last_name" autocomplete="family-name" /></div>
-          </div>
-          <div class="field"><label for="h-phone">Celular</label><input id="h-phone" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="field"><label for="h-plan">¿Cómo quieres manejar?</label><select id="h-plan" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
-          <fieldset class="field chips"><legend>Recoger cerca de <a href="#locations" class="map-link">ver mapa</a></legend><div class="chip-row"><label class="chip"><input type="radio" name="pickup_location" value="lax" data-pickup /><span>Cerca de LAX</span></label><label class="chip"><input type="radio" name="pickup_location" value="sna" data-pickup /><span>Cerca de John Wayne (SNA)</span></label><label class="chip"><input type="radio" name="pickup_location" value="orange" data-pickup /><span>Orange · Chapman</span></label><label class="chip"><input type="radio" name="pickup_location" value="" data-pickup checked /><span>Cualquiera</span></label></div></fieldset>
-          <input type="hidden" name="car" id="h-car" data-car-input />
-          <div class="hp" aria-hidden="true"><label for="h-website">Website</label><input id="h-website" name="website" tabindex="-1" autocomplete="off" /></div>
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">Ver disponibilidad →</button>
-          <p class="fineprint">Sin revisión de crédito. Te escribimos en minutos (8am–9pm). Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
-        </div>
-        <div class="fstep" data-step="2" hidden>
           <div class="s2-fields">
-            <p class="step2-head"><b>✓ Ya estás en la lista.</b> Aparta tu Tesla ahora para que te lo guardemos:</p>
-            <div class="field"><label for="h-email">Email</label><input id="h-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
-            <div class="row2"><div class="field"><label for="h-license">Licencia de manejo</label><select id="h-license" name="has_license" data-license><option value="Yes — California">Válida — California</option><option value="Yes — another state">Válida — otro estado de EE. UU.</option><option value="No">Todavía no tengo</option></select></div><div class="field"><label for="h-insurance">Tu seguro de auto hoy</label><select id="h-insurance" name="insurance_status" data-insurance><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I'll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div></div><p class="note warn" data-lic-note hidden>Necesitas una licencia de manejo válida de EE. UU. para rentar. Cuando la tengas, escríbenos y te apartamos un carro — no se te cobra nada.</p><p class="note" data-ins-note hidden>¡Está bien! Puedes apartar hoy; solo necesitas cobertura completa antes de recoger. <a href="/insurance">Así se aseguran los choferes en 24 horas</a>.</p>
-            <div class="fee-box"><span>Aparta tu Tesla<small>Se abona a tu primera semana · no reembolsable</small></span><b class="accent">$9.99</b></div>
-            <p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>
+            <div class="row2">
+              <div class="field"><label for="h-first">Nombre</label><input id="h-first" required name="first_name" autocomplete="given-name" /></div>
+              <div class="field"><label for="h-last">Apellido</label><input id="h-last" required name="last_name" autocomplete="family-name" /></div>
+            </div>
+            <div class="field"><label for="h-phone">Celular</label><input id="h-phone" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
+            <div class="field"><label for="h-plan">¿Cómo quieres manejar?</label><select id="h-plan" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
+            <fieldset class="field chips"><legend>Recoger cerca de <a href="#locations" class="map-link">ver mapa</a></legend><div class="chip-row"><label class="chip"><input type="radio" name="pickup_location" value="lax" data-pickup /><span>Cerca de LAX</span></label><label class="chip"><input type="radio" name="pickup_location" value="sna" data-pickup /><span>Cerca de John Wayne (SNA)</span></label><label class="chip"><input type="radio" name="pickup_location" value="orange" data-pickup /><span>Orange · Chapman</span></label><label class="chip"><input type="radio" name="pickup_location" value="" data-pickup checked /><span>Cualquiera</span></label></div></fieldset>
+            <fieldset class="field chips"><legend>¿Licencia de manejo válida?</legend><div class="chip-row"><label class="chip"><input type="radio" name="has_license" value="Yes" data-license checked /><span>Sí</span></label><label class="chip"><input type="radio" name="has_license" value="No" data-license /><span>No</span></label></div></fieldset>
+            <p class="note warn" data-lic-note hidden>Necesitas una licencia de manejo válida de EE. UU. para rentar. Cuando la tengas, escríbenos y te apartamos un carro — no se te cobra nada.</p>
+            <input type="hidden" name="car" id="h-car" data-car-input />
+            <div class="hp" aria-hidden="true"><label for="h-website">Website</label><input id="h-website" name="website" tabindex="-1" autocomplete="off" /></div>
             <div class="fstatus" role="status" aria-live="polite"></div>
-            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">Apartar mi Tesla — $9.99 →</button>
-            <p class="fineprint">Apple Pay, Google Pay o tarjeta · pago seguro con Stripe. Después tomas foto de tu licencia (30 segundos). ¿No estás listo? Cierra esto — ya tenemos tu número y te escribimos.</p>
+            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="1">Apartar ahora — $9.99 →</button>
+            <p class="fineprint">$9.99 se abona a tu primera semana · no reembolsable · Apple Pay, Google Pay o tarjeta. Después tomas foto de tu licencia (30 segundos). Sin revisión de crédito. Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
           </div>
           <div class="paybox" data-paybox hidden><div class="paybox-head"><button type="button" class="linkbtn" data-pay-back>← Regresar</button><span>Aparta tu Tesla · <b>$9.99</b></span></div><div class="paymount" data-paymount><div class="paywait">Cargando pago seguro…</div></div><p class="fineprint">Se abona a tu primera semana · no reembolsable · pago seguro con Stripe</p></div>
         </div></form>
@@ -177,7 +169,7 @@
       </div>
       <div class="steps">
         <div class="step reveal"><div class="n">1</div><h3>Aplica</h3><p>Escoge renta con opción a compra o renta semanal, luego tu nombre, número y qué apps manejas. Te mandamos un texto con lo que hay cerca de ti, normalmente en minutos durante el día.</p><span class="tag">30 segundos</span></div>
-        <div class="step reveal"><div class="n">2</div><h3>Aparta y verifícate</h3><p>Agrega tu correo y tu seguro, aparta tu Tesla por $9.99 (se abona a tu primera semana) y toma foto de tu licencia. Verificamos en 24–48 horas. <a href="/insurance" style="color:var(--accent)">¿Necesitas seguro?</a></p><span class="tag">$9.99 lo aparta · se abona a la semana 1</span></div>
+        <div class="step reveal"><div class="n">2</div><h3>Aparta y verifícate</h3><p>Aparta tu Tesla por $9.99 (se abona a tu primera semana), luego toma foto de tu licencia y agrega tu seguro. Verificamos en 24–48 horas. <a href="/insurance" style="color:var(--accent)">¿Necesitas seguro?</a></p><span class="tag">$9.99 lo aparta · se abona a la semana 1</span></div>
         <div class="step reveal"><div class="n">3</div><h3>Recoge &amp; maneja</h3><p>Recoge cerca de LAX, cerca de John Wayne Airport o junto a Chapman University, donde esté tu carro. Firmas, revisión del carro de 10 minutos y te vas manejando con el carro cargado.</p><span class="tag">Ser dueño: ~$2,000 de enganche + semana 1 · Renta: semana 1 + depósito</span></div>
       </div>
     </div>
@@ -339,29 +331,21 @@
       </div>
       <form id="applyForm" data-apply-form novalidate>
         <div class="fstep" data-step="1">
-          <div class="row2">
-            <div class="field"><label for="f-first">Nombre</label><input id="f-first" required name="first_name" autocomplete="given-name" /></div>
-            <div class="field"><label for="f-last">Apellido</label><input id="f-last" required name="last_name" autocomplete="family-name" /></div>
-          </div>
-          <div class="field"><label for="f-phone">Celular</label><input id="f-phone" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="field"><label for="f-plan">¿Cómo quieres manejar?</label><select id="f-plan" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
-          <fieldset class="field chips"><legend>Recoger cerca de <a href="#locations" class="map-link">ver mapa</a></legend><div class="chip-row"><label class="chip"><input type="radio" name="pickup_location" value="lax" data-pickup /><span>Cerca de LAX</span></label><label class="chip"><input type="radio" name="pickup_location" value="sna" data-pickup /><span>Cerca de John Wayne (SNA)</span></label><label class="chip"><input type="radio" name="pickup_location" value="orange" data-pickup /><span>Orange · Chapman</span></label><label class="chip"><input type="radio" name="pickup_location" value="" data-pickup checked /><span>Cualquiera</span></label></div></fieldset>
-          <input type="hidden" name="car" id="f-car" data-car-input />
-          <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">Ver disponibilidad →</button>
-          <p class="fineprint">Sin revisión de crédito. Te escribimos en minutos (8am–9pm). Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
-        </div>
-        <div class="fstep" data-step="2" hidden>
           <div class="s2-fields">
-            <p class="step2-head"><b>✓ Ya estás en la lista.</b> Aparta tu Tesla ahora para que te lo guardemos:</p>
-            <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
-            <div class="row2"><div class="field"><label for="f-license">Licencia de manejo</label><select id="f-license" name="has_license" data-license><option value="Yes — California">Válida — California</option><option value="Yes — another state">Válida — otro estado de EE. UU.</option><option value="No">Todavía no tengo</option></select></div><div class="field"><label for="f-insurance">Tu seguro de auto hoy</label><select id="f-insurance" name="insurance_status" data-insurance><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I'll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div></div><p class="note warn" data-lic-note hidden>Necesitas una licencia de manejo válida de EE. UU. para rentar. Cuando la tengas, escríbenos y te apartamos un carro — no se te cobra nada.</p><p class="note" data-ins-note hidden>¡Está bien! Puedes apartar hoy; solo necesitas cobertura completa antes de recoger. <a href="/insurance">Así se aseguran los choferes en 24 horas</a>.</p>
-            <div class="fee-box"><span>Aparta tu Tesla<small>Se abona a tu primera semana · no reembolsable</small></span><b class="accent">$9.99</b></div>
-            <p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>
+            <div class="row2">
+              <div class="field"><label for="f-first">Nombre</label><input id="f-first" required name="first_name" autocomplete="given-name" /></div>
+              <div class="field"><label for="f-last">Apellido</label><input id="f-last" required name="last_name" autocomplete="family-name" /></div>
+            </div>
+            <div class="field"><label for="f-phone">Celular</label><input id="f-phone" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
+            <div class="field"><label for="f-plan">¿Cómo quieres manejar?</label><select id="f-plan" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
+            <fieldset class="field chips"><legend>Recoger cerca de <a href="#locations" class="map-link">ver mapa</a></legend><div class="chip-row"><label class="chip"><input type="radio" name="pickup_location" value="lax" data-pickup /><span>Cerca de LAX</span></label><label class="chip"><input type="radio" name="pickup_location" value="sna" data-pickup /><span>Cerca de John Wayne (SNA)</span></label><label class="chip"><input type="radio" name="pickup_location" value="orange" data-pickup /><span>Orange · Chapman</span></label><label class="chip"><input type="radio" name="pickup_location" value="" data-pickup checked /><span>Cualquiera</span></label></div></fieldset>
+            <fieldset class="field chips"><legend>¿Licencia de manejo válida?</legend><div class="chip-row"><label class="chip"><input type="radio" name="has_license" value="Yes" data-license checked /><span>Sí</span></label><label class="chip"><input type="radio" name="has_license" value="No" data-license /><span>No</span></label></div></fieldset>
+            <p class="note warn" data-lic-note hidden>Necesitas una licencia de manejo válida de EE. UU. para rentar. Cuando la tengas, escríbenos y te apartamos un carro — no se te cobra nada.</p>
+            <input type="hidden" name="car" id="f-car" data-car-input />
+            <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
             <div class="fstatus" role="status" aria-live="polite"></div>
-            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">Apartar mi Tesla — $9.99 →</button>
-            <p class="fineprint">Apple Pay, Google Pay o tarjeta · pago seguro con Stripe. Después tomas foto de tu licencia (30 segundos). ¿No estás listo? Cierra esto — ya tenemos tu número y te escribimos.</p>
+            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="1">Apartar ahora — $9.99 →</button>
+            <p class="fineprint">$9.99 se abona a tu primera semana · no reembolsable · Apple Pay, Google Pay o tarjeta. Después tomas foto de tu licencia (30 segundos). Sin revisión de crédito. Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
           </div>
           <div class="paybox" data-paybox hidden><div class="paybox-head"><button type="button" class="linkbtn" data-pay-back>← Regresar</button><span>Aparta tu Tesla · <b>$9.99</b></span></div><div class="paymount" data-paymount><div class="paywait">Cargando pago seguro…</div></div><p class="fineprint">Se abona a tu primera semana · no reembolsable · pago seguro con Stripe</p></div>
         </div></form>
@@ -374,6 +358,6 @@
     </div>
   </div>
 </div>
-<script src="/assets/site.js?v=202611142021" defer></script>
+<script src="/assets/site.js?v=202611142033" defer></script>
 </body>
 </html>

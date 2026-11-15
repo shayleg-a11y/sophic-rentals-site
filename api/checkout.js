@@ -62,7 +62,7 @@ async function createSession(app, embedded) {
   }
   if (!r.ok) console.error('stripe session error', JSON.stringify(d.error || d).slice(0, 300));
   if (!r.ok || !(embedded ? d.client_secret : d.url)) throw new Error('stripe_session_failed:' + JSON.stringify(d.error || d).slice(0, 300));
-  try { await update('applications', 'id=eq.' + app.id, { stripe_session_id: d.id, updated_at: new Date().toISOString() }); } catch (_) {}
+  try { await update('applications', 'id=eq.' + app.id, Object.assign({ stripe_session_id: d.id, updated_at: new Date().toISOString() }, app.payment_status !== 'paid' && app.status === 'lead' ? { status: 'pending_payment' } : {})); } catch (_) {}
   return embedded ? { client_secret: d.client_secret, id: d.id } : { url: d.url, id: d.id };
 }
 

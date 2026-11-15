@@ -232,7 +232,7 @@
     ov.classList.add('show'); document.body.style.overflow = 'hidden';
     $('#formWrap').style.display = 'block'; $('#success').classList.remove('show');
     var mf = $('#applyForm'), sv = saved();
-    if (mf && mf.getAttribute('data-at') !== '2' && sv && sv.ref && Date.now() - (sv.t || 0) < 864e5) { mf.setAttribute('data-ref', sv.ref); setStep(mf, 2); }
+    
     var m = $('.overlay .modal'); if (m) m.scrollTop = 0;
     var pick = $('#carPick');
     if (car) { if (pick) pick.textContent = STR.reserving + car; setCar(car); }
@@ -300,12 +300,12 @@
 
   // ---------- Step 2 helpers: license knock-out + insurance note ----------
   function step2Notes(form){
-    var lic = form.querySelector('[data-license]'), ins = form.querySelector('[data-insurance]');
-    var ln = form.querySelector('[data-lic-note]'), inn = form.querySelector('[data-ins-note]'), pay = form.querySelector('[data-step-btn="2"]');
+    var lic = form.querySelector('[data-license]:checked') || form.querySelector('select[data-license]');
+    var ln = form.querySelector('[data-lic-note]'), inn = form.querySelector('[data-ins-note]'), pay = form.querySelector('button[type=submit]');
     var noLic = !!(lic && lic.value === 'No');
     if (ln) ln.hidden = !noLic;
     if (pay) pay.disabled = noLic;
-    if (inn) inn.hidden = !(ins && /Liability|No insurance/.test(ins.value));
+    var ins = form.querySelector('[data-insurance]'); if (inn) inn.hidden = !(ins && /Liability|No insurance/.test(ins.value));
     return !noLic;
   }
   function wireStep2(){
@@ -356,38 +356,29 @@
     $$('[data-pay-back]').forEach(function(b){ b.addEventListener('click', function(){
       var f = b.closest('form'); closeEmbedded();
       f.querySelector('[data-paybox]').hidden = true; f.querySelector('.s2-fields').hidden = false;
-      var bt = f.querySelector('[data-step-btn="2"]'); if (bt) { bt.disabled = false; if (bt._label) bt.innerHTML = bt._label; }
-      var st = f.querySelector('.fstep[data-step="2"] .fstatus'); if (st) st.textContent = '';
+      var bt = f.querySelector('button[type=submit]'); if (bt) { bt.disabled = false; if (bt._label) bt.innerHTML = bt._label; }
+      var st = f.querySelector('.fstatus'); if (st) st.textContent = '';
     }); });
   }
 
   async function submitApply(e){
     e.preventDefault();
-    var form = e.currentTarget, step = +(form.getAttribute('data-at') || 1), box = form.querySelector('.fstep[data-step="' + step + '"]');
-    var btn = box.querySelector('button[type=submit]'), st = box.querySelector('.fstatus');
-    if (step === 2 && !step2Notes(form)) { track('license_knockout', { at: 'submit' }); return; }
+    var form = e.currentTarget, btn = form.querySelector('button[type=submit]'), st = form.querySelector('.fstatus');
+    if (!step2Notes(form)) { track('license_knockout', { at: 'submit' }); return; }
     if (!form.checkValidity()) { form.reportValidity(); return; }
     if (!btn._label) btn._label = btn.innerHTML;
     var label = btn._label;
-    st.className = 'fstatus'; btn.disabled = true; btn.textContent = STR.saving;
+    st.className = 'fstatus'; btn.disabled = true; btn.textContent = STR.opening;
     try {
-      if (step === 1) {
-        var payload = { stage: 'lead', application_type: TYPE, first_name: fval(form,'first_name'), last_name: fval(form,'last_name'), phone: fval(form,'phone'), plan: fval(form,'plan') || 'rental',
-          pickup_location: pickupVal(form), car: fval(form,'car'), website: fval(form,'website'), source: location.pathname + location.search,
-          utm_source: ATTR.utm_source, utm_medium: ATTR.utm_medium, utm_campaign: ATTR.utm_campaign, landing_page: ATTR.landing_page, referrer: ATTR.referrer, click_id: ATTR.click_id, visitor_id: VID };
-        var d = await postJSON('/api/apply', payload);
-        remember({ id: d.id, ref: d.reference_number, t: Date.now() });
-        $$('[data-apply-form]').forEach(function(f){ f.setAttribute('data-ref', d.reference_number); });
-        track('lead_submit', { type: TYPE, plan: payload.plan, pickup: payload.pickup_location || 'any', ref: d.reference_number }, { eventID: 'lead-' + d.reference_number });
-        btn.disabled = false; btn.innerHTML = label; st.textContent = '';
-        setStep(form, 2); return;
-      }
-      var ref = form.getAttribute('data-ref') || (saved() || {}).ref;
-      if (!ref) { setStep(form, 1); throw new Error(STR.restart); }
-      var det = { stage: 'details', ref: ref, email: fval(form,'email'), insurance_status: fval(form,'insurance_status'), has_license: fval(form,'has_license'), pickup_location: pickupVal(form) };
-      await postJSON('/api/apply', det);
-      track('details_submit', { type: TYPE, insurance: det.insurance_status, value: 9.99, currency: 'USD', ref: ref }, { eventID: 'checkout-' + ref });
-      st.textContent = STR.opening; btn.textContent = STR.openingBtn;
+      var payload = { stage: 'lead', application_type: TYPE, first_name: fval(form,'first_name'), last_name: fval(form,'last_name'), phone: fval(form,'phone'), plan: fval(form,'plan') || 'rental',
+        pickup_location: pickupVal(form), has_license: (form.querySelector('[data-license]:checked') || {}).value || '', car: fval(form,'car'), website: fval(form,'website'), source: location.pathname + location.search,
+        utm_source: ATTR.utm_source, utm_medium: ATTR.utm_medium, utm_campaign: ATTR.utm_campaign, landing_page: ATTR.landing_page, referrer: ATTR.referrer, click_id: ATTR.click_id, visitor_id: VID };
+      var d = await postJSON('/api/apply', payload);
+      var ref = d.reference_number;
+      remember({ id: d.id, ref: ref, t: Date.now() });
+      $$('[data-apply-form]').forEach(function(f){ f.setAttribute('data-ref', ref); });
+      track('lead_submit', { type: TYPE, plan: payload.plan, pickup: payload.pickup_location || 'any', ref: ref }, { eventID: 'lead-' + ref });
+      track('details_submit', { type: TYPE, value: 9.99, currency: 'USD', ref: ref }, { eventID: 'checkout-' + ref });
       var how = await startPayment(form, ref);
       if (how === 'embedded') { btn.disabled = false; btn.innerHTML = label; st.textContent = ''; }
     } catch (err) {
@@ -395,7 +386,7 @@
       if (err.message === 'no_license') { step2Notes(form); st.textContent = ''; btn.innerHTML = label; return; }
       st.textContent = err.status === 429 ? STR.tooMany : (err.status === 400 && err.message ? err.message : (err.network || /fetch|load failed|network|xhr_failed/i.test(err.message || '') ? STR.conn : (err.message && !err.status ? err.message : STR.conn)));
       btn.disabled = false; btn.innerHTML = label;
-      track('pay_error', { step: step, status: err.status || 0 });
+      track('pay_error', { status: err.status || 0 });
     }
   }
   function wireFormStart(){
@@ -427,7 +418,7 @@
       remember({ ref: resume, t: Date.now() });
       var target = innerWidth < 940 ? $('.inline-form') : $('#applyForm');
       if (!target) target = $('#applyForm') || $('.inline-form');
-      if (target) { target.setAttribute('data-ref', resume); setStep(target, 2); if (target.id === 'applyForm') openApply(); else target.scrollIntoView({ block: 'start' }); track('resume_open', { type: TYPE }); }
+      if (target) { target.setAttribute('data-ref', resume); if (target.id === 'applyForm') openApply(); else target.scrollIntoView({ block: 'start' }); track('resume_open', { type: TYPE, ref: resume }); startPayment(target, resume).catch(function(){ var st = target.querySelector('.fstatus'); if (st) { st.className = 'fstatus bad'; st.textContent = STR.conn; } }); }
     }
     if (q.get('apply') || location.hash === '#apply') openApply();
     wireApplyButtons();

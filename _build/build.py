@@ -175,50 +175,46 @@ def pay_bits(es=False):
               f'<p class="fineprint">{foot}</p></div>')
     return fee, btn, fine, lic_no, ins_note, paybox
 
-def license_ins(prefix, es=False):
+def license_chips(prefix, es=False):
+    label = '¿Licencia de manejo válida?' if es else "Valid driver's license?"
+    yes, no = ('Sí', 'No') if es else ('Yes', 'No')
+    return (f'<fieldset class="field chips"><legend>{label}</legend><div class="chip-row">'
+            f'<label class="chip"><input type="radio" name="has_license" value="Yes" data-license checked /><span>{yes}</span></label>'
+            f'<label class="chip"><input type="radio" name="has_license" value="No" data-license /><span>{no}</span></label></div></fieldset>')
+
+def one_step(prefix, es=False):
+    """One screen: name, phone, plan, pickup, license -> straight to the $9.99 Stripe payment."""
     f = lambda k: f'{prefix}{k}'
     fee, btn, fine, lic_no, ins_note, paybox = pay_bits(es)
     if es:
-        lic = f'<div class="field"><label for="{f("license")}">Licencia de manejo</label><select id="{f("license")}" name="has_license" data-license><option value="Yes — California">Válida — California</option><option value="Yes — another state">Válida — otro estado de EE. UU.</option><option value="No">Todavía no tengo</option></select></div>'
-        ins = f'<div class="field"><label for="{f("insurance")}">Tu seguro de auto hoy</label><select id="{f("insurance")}" name="insurance_status" data-insurance><option value="Full coverage + rideshare endorsement">Cobertura completa + endoso de rideshare</option><option value="Full coverage, no rideshare add-on yet">Cobertura completa, sin endoso de rideshare</option><option value="Liability only (I\'ll upgrade)">Solo responsabilidad civil (voy a subirlo)</option><option value="No insurance yet — help me">Todavía no tengo seguro — ayúdenme</option></select></div>'
+        L = dict(first='Nombre', last='Apellido', phone='Celular', plan='¿Cómo quieres manejar?', rto='Renta para ser dueño — el carro es tuyo en 12 meses', rent='Renta semanal — sin enganche',
+                 btn=f'Apartar ahora — ${FEE} →', fine=f'${FEE} se abona a tu primera semana · no reembolsable · Apple Pay, Google Pay o tarjeta. Después tomas foto de tu licencia (30 segundos). Sin revisión de crédito. Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a>')
     else:
-        lic = f'<div class="field"><label for="{f("license")}">Driver\'s license</label><select id="{f("license")}" name="has_license" data-license><option value="Yes — California">Valid — California</option><option value="Yes — another state">Valid — another U.S. state</option><option value="No">I don\'t have one yet</option></select></div>'
-        ins = f'<div class="field"><label for="{f("insurance")}">Your auto insurance today</label><select id="{f("insurance")}" name="insurance_status" data-insurance><option>Full coverage + rideshare endorsement</option><option>Full coverage, no rideshare add-on yet</option><option>Liability only (I\'ll upgrade)</option><option>No insurance yet — help me</option></select></div>'
-    return f'<div class="row2">{lic}{ins}</div><p class="note warn" data-lic-note hidden>{lic_no}</p><p class="note" data-ins-note hidden>{ins_note}</p>'
-
-def apply_fields(prefix, driver=False):
-    """Two-step application. Step 1 = free lead (name, phone, plan, pickup). Step 2 = email, license, insurance + $9.99 reservation."""
-    f = lambda k: f'{prefix}{k}'
-    fee, btn, fine, lic_no, ins_note, paybox = pay_bits()
-    upfront = '<p class="fineprint upfront"><b>Due at pickup (Model 3):</b> rent to own = $2,000 down + first week ($500). Weekly rental = first week ($500) + a refundable deposit equal to your insurance deductible. Your $9.99 is credited either way. No credit check.</p>'
+        L = dict(first='First name', last='Last name', phone='Mobile number', plan='How do you want to drive?', rto='Rent to own — the car is yours in 12 months', rent='Weekly rental — no down payment',
+                 btn=f'Reserve now — ${FEE} →', fine=f'${FEE} is credited to your first week · non-refundable · Apple Pay, Google Pay or card. Next you snap your license (30 seconds). No credit check. 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>')
     return f'''
         <div class="fstep" data-step="1">
-          <div class="row2">
-            <div class="field"><label for="{f("first")}">First name</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
-            <div class="field"><label for="{f("last")}">Last name</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
-          </div>
-          <div class="field"><label for="{f("phone")}">Mobile number</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="field"><label for="{f("plan")}">How do you want to drive?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Rent to own — the car is yours in 12 months</option><option value="rental">Weekly rental — no down payment</option></select></div>
-          {pickup_chips(prefix)}
-          <input type="hidden" name="car" id="{f("car")}" data-car-input />
-          <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">Check availability →</button>
-          <p class="fineprint">No credit check. We text you back within minutes (8am–9pm). 21+. By continuing you agree to texts and email about your application; reply STOP to opt out. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
-        </div>
-        <div class="fstep" data-step="2" hidden>
           <div class="s2-fields">
-            <p class="step2-head"><b>✓ You're on the list.</b> Reserve your Tesla now so it's held for you:</p>
-            <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="you@email.com" autocomplete="email" data-req2 /></div>
-            {license_ins(prefix)}
-            {fee}
-            {upfront}
+            <div class="row2">
+              <div class="field"><label for="{f("first")}">{L["first"]}</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
+              <div class="field"><label for="{f("last")}">{L["last"]}</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
+            </div>
+            <div class="field"><label for="{f("phone")}">{L["phone"]}</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
+            <div class="field"><label for="{f("plan")}">{L["plan"]}</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">{L["rto"]}</option><option value="rental">{L["rent"]}</option></select></div>
+            {pickup_chips(prefix, es)}
+            {license_chips(prefix, es)}
+            <p class="note warn" data-lic-note hidden>{lic_no}</p>
+            <input type="hidden" name="car" id="{f("car")}" data-car-input />
+            <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
             <div class="fstatus" role="status" aria-live="polite"></div>
-            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">{btn}</button>
-            <p class="fineprint">{fine}</p>
+            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="1">{L["btn"]}</button>
+            <p class="fineprint">{L["fine"]}</p>
           </div>
           {paybox}
         </div>'''
+
+def apply_fields(prefix, driver=False):
+    return one_step(prefix)
 
 def modal(app_type='rental'):
     driver = app_type == 'driver'
@@ -302,37 +298,7 @@ def footer_es():
 '''
 
 def apply_fields_es(prefix):
-    f = lambda k: f'{prefix}{k}'
-    fee, btn, fine, lic_no, ins_note, paybox = pay_bits(True)
-    upfront = '<p class="fineprint upfront"><b>Al recoger (Model 3):</b> renta para ser dueño = $2,000 de enganche + primera semana ($500). Renta semanal = primera semana ($500) + depósito reembolsable igual al deducible de tu seguro. Tus $9.99 se abonan en ambos casos. Sin revisión de crédito.</p>'
-    return f'''
-        <div class="fstep" data-step="1">
-          <div class="row2">
-            <div class="field"><label for="{f("first")}">Nombre</label><input id="{f("first")}" required name="first_name" autocomplete="given-name" /></div>
-            <div class="field"><label for="{f("last")}">Apellido</label><input id="{f("last")}" required name="last_name" autocomplete="family-name" /></div>
-          </div>
-          <div class="field"><label for="{f("phone")}">Celular</label><input id="{f("phone")}" required name="phone" type="tel" inputmode="tel" placeholder="(714) 555-0123" autocomplete="tel" data-phone /></div>
-          <div class="field"><label for="{f("plan")}">¿Cómo quieres manejar?</label><select id="{f("plan")}" name="plan" data-plan-select><option value="rent-to-own">Renta para ser dueño — el carro es tuyo en 12 meses</option><option value="rental">Renta semanal — sin enganche</option></select></div>
-          {pickup_chips(prefix, True)}
-          <input type="hidden" name="car" id="{f("car")}" data-car-input />
-          <div class="hp" aria-hidden="true"><label for="{f("website")}">Website</label><input id="{f("website")}" name="website" tabindex="-1" autocomplete="off" /></div>
-          <div class="fstatus" role="status" aria-live="polite"></div>
-          <button class="btn btn-primary" type="submit" data-step-btn="1">Ver disponibilidad →</button>
-          <p class="fineprint">Sin revisión de crédito. Te escribimos en minutos (8am–9pm). Mayores de 21. Al continuar aceptas recibir mensajes y emails sobre tu solicitud; responde STOP para no recibir más. <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
-        </div>
-        <div class="fstep" data-step="2" hidden>
-          <div class="s2-fields">
-            <p class="step2-head"><b>✓ Ya estás en la lista.</b> Aparta tu Tesla ahora para que te lo guardemos:</p>
-            <div class="field"><label for="{f("email")}">Email</label><input id="{f("email")}" name="email" type="email" placeholder="tu@email.com" autocomplete="email" data-req2 /></div>
-            {license_ins(prefix, True)}
-            {fee}
-            {upfront}
-            <div class="fstatus" role="status" aria-live="polite"></div>
-            <button class="btn btn-primary btn-pay" type="submit" data-step-btn="2">{btn}</button>
-            <p class="fineprint">{fine}</p>
-          </div>
-          {paybox}
-        </div>'''
+    return one_step(prefix, True)
 
 def modal_es():
     return f'''<div class="overlay" id="overlay">

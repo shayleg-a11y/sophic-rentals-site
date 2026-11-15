@@ -76,6 +76,7 @@ export default async function handler(req, res) {
         updated_at: new Date().toISOString()
       };
       if (s(b.platform, 40)) patch.platform = s(b.platform, 40);
+      if (s(b.insurance_status, 60)) patch.insurance_status = s(b.insurance_status, 60);
       if (s(b.car, 80)) patch.preferred_car = s(b.car, 80);
       for (const k of ['date_of_birth', 'address_line1', 'city', 'state', 'zip_code']) if (!patch[k]) { res.status(400).json({ error: 'Missing required field: ' + k }); return; }
       if (app.payment_status !== 'paid') patch.status = 'pending_payment';
@@ -107,6 +108,7 @@ export default async function handler(req, res) {
     };
     const lic = s(b.has_license, 40);
     if (lic) rec.reviewer_notes = 'License: ' + lic;
+    if (/^no\b/i.test(lic)) { res.status(400).json({ error: 'no_license' }); return; }
     for (const k of ['first_name', 'last_name', 'phone']) if (!rec[k]) { res.status(400).json({ error: 'Missing required field: ' + k }); return; }
     if (!rec.email) delete rec.email;                       // email is collected in step 2
     else if (!validEmail(rec.email)) { res.status(400).json({ error: 'Please enter a valid email address' }); return; }
