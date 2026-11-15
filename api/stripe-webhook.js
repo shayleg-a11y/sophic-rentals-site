@@ -1,13 +1,14 @@
 // POST /api/stripe-webhook — Stripe webhook receiver.
 // Marks applications paid when the application-fee checkout completes, then sends the license-upload link.
+// Fixed 2026-11-14: endpoint had been disabled + pointed at an old vercel.app path. If the signing secret
+// doesn't match, the event is re-fetched from Stripe by id (authoritative), so a secret mismatch can't drop payments.
 // Setup (Stripe Dashboard → Developers → Webhooks):
 //   endpoint https://sophicrentals.com/api/stripe-webhook, event checkout.session.completed,
 //   signing secret -> Vercel env STRIPE_WEBHOOK_SECRET.
 // NOTE (fixed 2026-09-10): previously set status='submitted', which the DB check constraint rejected,
 // so no application was ever marked paid. status is now 'paid' (allowed) — and the constraint now allows 'submitted' too.
 import crypto from 'crypto';
-import { select, update } from './_lib/db.js';
-import { notifyApplicant } from './_lib/notify.js';
+import { markPaidFromSession, stripeGet } from './_lib/payments.js';
 
 export const config = { api: { bodyParser: false } };
 
@@ -28,36 +29,25 @@ function verifyStripeSignature(rawBody, sigHeader, secret, toleranceSec = 300) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
-  const whSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!whSecret || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) { res.status(500).json({ error: 'Server not configured' }); return; }
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) { res.status(500).json({ error: 'Server not configured' }); return; }
   try {
     const raw = await readRawBody(req);
-    if (!verifyStripeSignature(raw, req.headers['stripe-signature'], whSecret)) { res.status(400).json({ error: 'invalid_signature' }); return; }
-    const event = JSON.parse(raw.toString('utf8'));
-    if (event.type !== 'checkout.session.completed') { res.status(200).json({ received: true, ignored: event.type }); return; }
+    const whSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    let event = null;
+    if (whSecret && verifyStripeSignature(raw, req.headers['stripe-signature'], whSecret)) {
+      event = JSON.parse(raw.toString('utf8'));
+    } else {
+      // Signature didn't verify: trust nothing in the body except the event id, and fetch the real event from Stripe.
+      let id = '';
+      try { id = String(JSON.parse(raw.toString('utf8')).id || ''); } catch (_) {}
+      if (!/^evt_[A-Za-z0-9]+$/.test(id) || !process.env.STRIPE_SECRET_KEY) { res.status(400).json({ error: 'invalid_signature' }); return; }
+      try { event = await stripeGet('/events/' + id); } catch (_) { res.status(400).json({ error: 'invalid_signature' }); return; }
+    }
+    const handled = ['checkout.session.completed', 'checkout.session.async_payment_succeeded'];
+    if (!handled.includes(event.type)) { res.status(200).json({ received: true, ignored: event.type }); return; }
     const sess = (event.data && event.data.object) || {};
-    if (sess.payment_status && sess.payment_status !== 'paid') { res.status(200).json({ received: true, ignored: 'unpaid_session' }); return; }
-    const ref = String(sess.client_reference_id || (sess.metadata && sess.metadata.reference) || '').replace(/[^a-zA-Z0-9-]/g, '').slice(0, 40);
-    const now = new Date().toISOString();
-    const patch = { payment_status: 'paid', status: 'paid', stage: 'reserve', paid_at: now, submitted_at: now, updated_at: now,
-      stripe_session_id: String(sess.id || '').slice(0, 120) || null, stripe_payment_intent: String(sess.payment_intent || '').slice(0, 120) || null };
-
-    let rows = [];
-    if (ref) {
-      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}$/.test(ref);
-      const col = isUuid ? 'id' : 'reference_number';
-      try { rows = await update('applications', col + '=eq.' + encodeURIComponent(ref), patch, true) || []; } catch (e) { console.error('patch by ref failed', e); }
-    }
-    if (!rows.length) {
-      // Fallback: most recent unpaid application with the payer's email
-      const email = String((sess.customer_details && sess.customer_details.email) || sess.customer_email || '').toLowerCase().slice(0, 200);
-      if (email) {
-        const found = await select('applications', 'select=id&email=eq.' + encodeURIComponent(email) + '&payment_status=eq.unpaid&order=created_at.desc&limit=1');
-        if (found[0]) { try { rows = await update('applications', 'id=eq.' + found[0].id, patch, true) || []; } catch (e) { console.error('patch by email failed', e); } }
-      }
-    }
-    const app = rows[0];
-    if (app && !(app.license_front_path && app.license_back_path)) { try { await notifyApplicant(app, 'uploadDocs'); } catch (_) {} }
-    res.status(200).json({ received: true, matched: rows.length });
-  } catch (e) { res.status(500).json({ error: String(e).slice(0, 200) }); }
+    if (sess.payment_status !== 'paid') { res.status(200).json({ received: true, ignored: 'unpaid_session' }); return; }
+    const app = await markPaidFromSession(sess);
+    res.status(200).json({ received: true, matched: app ? 1 : 0 });
+  } catch (e) { console.error('stripe-webhook', e); res.status(500).json({ error: String(e).slice(0, 200) }); }
 }

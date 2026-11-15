@@ -82,6 +82,7 @@
       document.getElementById('doneBtn').hidden=false;
     }
     window.addEventListener('DOMContentLoaded', function(){ if(window.track) window.track('payment_complete', {value: 9.99, currency: 'USD', ref: APP&&APP.ref||'', linked: !!(APP&&(APP.id||APP.ref))}); });
+    (function(){ var q=new URLSearchParams(location.search); var ref=(APP&&APP.ref)||q.get('ref'); if(!ref) return; fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:ref,session_id:q.get('session_id')||''})}).catch(function(){}); })();
     function idPayload(){ var p={}; if(APP&&APP.ref) p.reference=APP.ref; else if(APP&&APP.id) p.application_id=APP.id; return p; }
     function shrink(file){
       return new Promise(function(resolve){
