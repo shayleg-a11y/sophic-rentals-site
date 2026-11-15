@@ -54,6 +54,13 @@ async function createSession(app, embedded) {
     r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body: p.toString() });
     d = await r.json();
   }
+  if (!r.ok && embedded && /ui_mode/.test(JSON.stringify(d.error || ''))) {
+    // Older Stripe API versions call embedded mode "embedded" instead of "embedded_page".
+    p.set('ui_mode', 'embedded');
+    r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body: p.toString() });
+    d = await r.json();
+  }
+  if (!r.ok) console.error('stripe session error', JSON.stringify(d.error || d).slice(0, 300));
   if (!r.ok || !(embedded ? d.client_secret : d.url)) throw new Error('stripe_session_failed:' + JSON.stringify(d.error || d).slice(0, 300));
   try { await update('applications', 'id=eq.' + app.id, { stripe_session_id: d.id, updated_at: new Date().toISOString() }); } catch (_) {}
   return embedded ? { client_secret: d.client_secret, id: d.id } : { url: d.url, id: d.id };
